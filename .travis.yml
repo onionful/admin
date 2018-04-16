@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+  - "stable"
+cache:
+  directories:
+  - node_modules
+script:
+  - npm install
+  - npm test
+  - npm run build
+deploy:
+  provider: s3
+  access_key_id:
+    secure: BMy20Hoai5Hwy2SacaC99P04ZSgBKvpyMwyDnVJ1Oo91GZQBvZoRKtrDmMCzLFgngOzW32zXioYGCvtFyrCfx8V4XQNmXi2vC4L+sekJFY5o8CHpno+kx/G/aA+lXQcOj9BgC0xtWPpqIjnVh854eMWACe5zsmM2y3gwjhXBuw9Yn5M/iCD1ij+oAmv7QzYWiAfFgX3m/CWoMMGkEoaKN/MnCwJRndhK24Y4xk6wTAdX92+ZP0Jpr1Sqa7ArA8tb9Mchfqu+a0BCIoYVSfEREcUws3YYbk7kpKu4HRq7lZUMbP89ksfisyhXl2fQgkdm4NnF3frU+YUsWlWbjEwEJXgzqke0XtUmzRMTkNIjKgsr1O0QR15EGUW/o5En8rAFCx+0y0DYu9stGHdgwxjur6kq2+PGRylv/J+wgg97xlSqmxVAc5ZLyDnU1zPs/wj/jbqc6OSl/GcCh8YMsLWt/qMPCQcgpkFwFYIwilaKDXn5dKi2Mu3TaQw0pyCaXV9csSckCo/vEIPhx6TCDihsK30kj4upjtMMNT5G+G++FflHqLuo8FIzo+3YnXiV6NANipRCpdsWzwne0vO2tSSN9papGy2DC0cYpOkT9CaJbzRTUfb6uDyiVlxlbQlwZTwksRLz+dqyGq9gv300wAw3QbZbWbraksTD9kHbrEo9U5k=
+  secret_access_key:
+    secure: Cqw6iEmf+MDLaM43VopPEu/zfUgkJbDQC/BUcfF7zECCcXcxY3ltxIcj5xdpCOPCuSTtPNHP3nuFP81d0cDdOHRKHVdtC+PkY6x8OoJH3bh467gWTjm0yclQNXLf0vab3mQOymcfoPiboECH2A5JCTaa60vP3TTVr+k+Bi0L6Okbmt2xcmbyLyCahaI4kV1SPZoE0IZPqk/dq4AU+1p68+swz+yBC22qvBpjVno0AHSwY2xWowNELd1aHmDVac9Xf8EDYFNMIMuAv0RsLemdl0cdrY9RdEnMY1XEf5HuVthNZw68nvzpB1Dz+QqGtquze2GabVCGxOkCKAmOHOVm0CmUVpNutxQbsU71uiVIvd+y9ACji7YeTrGUJtQxpX9xg9n4sjLupq1ov5BC0vHmP3b/PTxw1JDz9wT8ldxVswuo8p7Aw1GrCBN66q/k79v8IZWFlw1q1ZbOtcoa66R9Wsx2630ODs8X0speRcpxTEiK3njqYDBoxlOqfcODdj4TzfZMXkdYEL+SHrFvEedEt6bKKRm6TgF8SIbsPxTqzw1fiMAi/9gxdMVD4VRHSx89TEq62vJ9afJTUY+ofCOCi5UUDzMzktmbCjtKPnKSZLlzvTit5LPRAep/ygIOTOoQeZFm5xl+HARjl/vai8T0t/HnYV24JRLVjkhlPKV0RN8=
+  bucket: admin.onionful.com
+  skip_cleanup: true
+  acl: public_read
+  region: eu-west-1
+  local_dir: build
+  on:
+    branch: master
