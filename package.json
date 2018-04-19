@@ -3,14 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^3.4.1",
+    "auth0-js": "latest",
+    "glamor": "^2.20.40",
+    "glamorous": "^4.12.3",
+    "history": "latest",
+    "jwt-decode": "^2.2.0",
+    "normalize.css": "^8.0.0",
+    "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "react-scripts": "1.1.4"
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.1.4",
+    "redux": "^3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-app-rewired eject"
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.7.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-import-resolver-node": "^0.3.2",
+    "eslint-plugin-import": "^2.11.0",
+    "react-app-rewire-eslint": "^0.2.3",
+    "react-app-rewire-less": "^2.1.1",
+    "react-app-rewire-yaml": "^1.0.0",
+    "react-app-rewired": "^1.5.0"
   }
 }
