@@ -1,10 +1,10 @@
-import { compose, createStore, combineReducers } from 'redux';
-import authReducer from 'reducers/auth';
+import { routerReducer } from 'react-router-redux';
+import { reducer as formReducer } from 'redux-form/immutable';
+import { combineReducers } from 'redux-immutable';
+import auth from './auth';
 
-export default preloadedState => createStore(
-  combineReducers({
-    auth: authReducer,
-  }),
-  preloadedState,
-  compose(window.devToolsExtension ? window.devToolsExtension() : f => f),
-);
+export default combineReducers({
+  form: formReducer,
+  routing: routerReducer,
+  auth,
+});

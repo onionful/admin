@@ -1,5 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { React, PropTypes } from 'utils/create';
+import { colors } from 'utils';
 
 export const Logo = ({ className, fill }) => (
   <svg className={className} fill={fill} x="0px" y="0px" viewBox="-16.161 -16.177 100 100">
@@ -14,7 +14,7 @@ Logo.propTypes = {
 
 Logo.defaultProps = {
   className: '',
-  fill: '#ffcc00',
+  fill: colors.onion,
 };
 
 export default Logo;

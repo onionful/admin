@@ -1,47 +1,83 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import glamorous from 'glamorous';
-import { connect } from 'react-redux';
+import { React, PropTypes, connect, glamorous } from 'utils/create';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { Layout, Menu, Icon, Breadcrumb } from 'antd';
+import { Avatar, Breadcrumb, Icon, Layout, Menu, Tooltip } from 'antd';
 import { HomePage, ContentPage, NotFoundPage } from 'containers';
 import { Logo } from 'components';
-import { authActions } from 'reducers/auth';
-import { withAuth, authPropTypes } from 'utils';
+import { handleLogout, handleGetProfile } from 'reducers/auth/actions';
+import { Map } from 'immutable';
+import { noop } from 'lodash';
+import { colors } from 'utils';
 
 const { Sider, Content, Footer } = Layout;
 
-const StyledLogo = glamorous(Logo)(({ collapsed }) => ({
-  margin: !collapsed ? '3rem' : '1rem',
-}));
+const StyledLogo = glamorous(Logo)(({ collapsed }) => ({ margin: !collapsed ? '3rem' : '1rem' }));
+
+const UserInfo = glamorous.div({
+  cursor: 'pointer',
+  backgroundColor: colors.triggerBackground,
+  padding: '1rem 0',
+  textAlign: 'center',
+
+  '& div': {
+    color: colors.white,
+    paddingTop: '1rem',
+    opacity: 0.65,
+  },
+});
 
 class App extends React.Component {
   state = {
     collapsed: false,
   };
 
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.isAuthenticated !== prevProps.isAuthenticated) {
+      this.fetchData();
+    }
+  }
+
   onCollapse = (collapsed) => {
     this.setState({ collapsed });
   };
 
+  onProfileClick = () => {
+    console.log('onProfileClick!');
+  };
+
   onMenuClick = ({ key }) => {
+    const { logout } = this.props;
+
     switch (key) {
       case 'content':
         return '';
       case 'logout':
-        return this.props.auth.logout();
+        return logout();
       default:
         throw new Error(`Unknown action: ${key}`);
     }
   };
 
-  render() {
-    const { collapsed } = this.state;
-    const { auth } = this.props;
+  fetchData = () => {
+    const { isAuthenticated, getProfile } = this.props;
 
-    if (!auth.isAuthenticated()) {
+    if (isAuthenticated) {
+      getProfile();
+    }
+  };
+
+  render() {
+    const { isAuthenticated, profile } = this.props;
+    const { collapsed } = this.state;
+
+    if (!isAuthenticated) {
       return <Redirect to="/login" />;
     }
+
+    const profileName = profile ? (profile.get('name') || profile.get('nickname')) : '';
 
     return (
       <Layout style={{ minHeight: '100vh' }}>
@@ -52,7 +88,20 @@ class App extends React.Component {
           onCollapse={this.onCollapse}
         >
           <StyledLogo collapsed={collapsed} />
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} onClick={this.onMenuClick}>
+          {profile && (
+            <Tooltip placement="right" trigger={collapsed ? 'hover' : ''} title={profileName}>
+              <UserInfo onClick={this.onProfileClick}>
+                <Avatar size="large" src={profile.get('picture')} />
+                {!collapsed && <div>{profileName}</div>}
+              </UserInfo>
+            </Tooltip>
+          )}
+          <Menu
+            theme="dark"
+            mode="inline"
+            defaultSelectedKeys={['4']}
+            onClick={this.onMenuClick}
+          >
             <Menu.Item key="content">
               <Icon type="form" />
               <span>Content</span>
@@ -104,20 +153,30 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  ...authPropTypes,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  loginSuccess: PropTypes.func.isRequired,
-  loginError: PropTypes.func.isRequired,
+  logout: PropTypes.func,
+  getProfile: PropTypes.func,
+  isAuthenticated: PropTypes.bool,
+  profile: PropTypes.map,
 };
 
+App.defaultProps = {
+  logout: noop,
+  getProfile: noop,
+  isAuthenticated: false,
+  profile: Map(),
+};
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
+  profile: state.getIn(['auth', 'profile']),
+});
+
 const mapDispatchToProps = dispatch => ({
-  loginSuccess: profile => dispatch(authActions.loginSuccess(profile)),
-  loginError: error => dispatch(authActions.loginError(error)),
+  logout: handleLogout(dispatch),
+  getProfile: handleGetProfile(dispatch),
 });
 
 export default withRouter(connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
-)(withAuth(App)));
+)(App));

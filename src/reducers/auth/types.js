@@ -1,4 +1,7 @@
-export const LOGIN_REQUEST = 'auth/LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'auth/LOGIN_SUCCESS';
-export const LOGIN_ERROR = 'auth/LOGIN_ERROR';
-export const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const PROFILE_REQUEST = 'PROFILE_REQUEST';
+export const PROFILE_SUCCESS = 'PROFILE_SUCCESS';
+export const PROFILE_FAILURE = 'PROFILE_FAILURE';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
