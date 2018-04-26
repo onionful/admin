@@ -45,7 +45,7 @@ class App extends React.Component {
   };
 
   onProfileClick = () => {
-    console.log('onProfileClick!');
+    console.log('onProfileClick!'); // eslint-disable-line no-console
   };
 
   onMenuClick = ({ key }) => {
