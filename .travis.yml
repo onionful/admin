@@ -19,6 +19,7 @@ deploy:
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: $AWS_BUCKET_NAME
   skip_cleanup: true
+  cache_control: max-age=0
   acl: public_read
   region: $AWS_REGION
   local_dir: build
