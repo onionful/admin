@@ -86,8 +86,7 @@ class App extends React.Component {
     }
   };
 
-  onSpaceChange = (e) => {
-    console.log('e', e);
+  onSpaceChange = () => {
   };
 
   fetchData = () => {
@@ -132,10 +131,9 @@ class App extends React.Component {
             placeholder="Select space"
             optionFilterProp="children"
             onChange={this.onSpaceChange}
-            filterOption={(input, option) => {
-              console.log('x');
-              return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-            }}
+            filterOption={(input, option) =>
+              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
           >
             <Select.Option value="jack">Jack</Select.Option>
             <Select.Option value="lucy">Lucy</Select.Option>
