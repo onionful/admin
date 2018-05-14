@@ -9,14 +9,14 @@
     "eject": "react-app-rewired eject"
   },
   "dependencies": {
-    "antd": "^3.4.1",
-    "auth0-js": "latest",
+    "antd": "^3.5.2",
+    "auth0-js": "^9.5.1",
     "glamor": "^2.20.40",
-    "glamorous": "^4.12.3",
+    "glamorous": "^4.13.0",
     "history": "latest",
-    "immutable": "latest",
+    "immutable": "^3.8.2",
     "jwt-decode": "^2.2.0",
-    "lodash": "latest",
+    "lodash": "^4.17.10",
     "normalize.css": "^8.0.0",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
@@ -41,6 +41,6 @@
     "react-app-rewire-eslint": "^0.2.3",
     "react-app-rewire-less": "^2.1.1",
     "react-app-rewire-yaml": "^1.0.0",
-    "react-app-rewired": "^1.5.0"
+    "react-app-rewired": "^1.5.2"
   }
 }

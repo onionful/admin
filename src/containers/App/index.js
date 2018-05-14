@@ -1,6 +1,7 @@
 import { React, PropTypes, connect, glamorous } from 'utils/create';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { Avatar, Breadcrumb, Icon, Layout, Menu, Tooltip } from 'antd';
+import { push } from 'react-router-redux';
+import { Avatar, Breadcrumb, Icon, Layout, Menu, Tooltip, Select } from 'antd';
 import { HomePage, ContentPage, NotFoundPage } from 'containers';
 import { Logo } from 'components';
 import { handleLogout, handleGetProfile } from 'reducers/auth/actions';
@@ -16,6 +17,7 @@ const UserInfo = glamorous.div({
   cursor: 'pointer',
   backgroundColor: colors.triggerBackground,
   padding: '1rem 0',
+  marginBottom: '1rem',
   textAlign: 'center',
 
   '& div': {
@@ -24,6 +26,30 @@ const UserInfo = glamorous.div({
     opacity: 0.65,
   },
 });
+
+const SpaceSelect = glamorous(Select)({
+  width: '100%',
+  padding: '1rem',
+});
+
+const menuItems = [
+  {
+    key: 'space',
+    title: 'Current space',
+    items: [
+      { key: 'content', title: 'Content', icon: 'form' },
+      { key: 'tags', title: 'Tags', icon: 'tags' },
+    ],
+  }, {
+    key: 'system',
+    title: 'System',
+    items: [
+      { key: 'spaces', title: 'Spaces', icon: 'book' },
+      { key: 'users', title: 'Users', icon: 'user' },
+      { key: 'settings', title: 'Settings', icon: 'setting' },
+      { key: 'logout', title: 'Logout', icon: 'logout' },
+    ],
+  }];
 
 class App extends React.Component {
   state = {
@@ -45,20 +71,23 @@ class App extends React.Component {
   };
 
   onProfileClick = () => {
-    console.log('onProfileClick!'); // eslint-disable-line no-console
+    const { pushState } = this.props;
+    pushState('/profile');
   };
 
   onMenuClick = ({ key }) => {
-    const { logout } = this.props;
+    const { pushState, logout } = this.props;
 
     switch (key) {
-      case 'content':
-        return '';
       case 'logout':
         return logout();
       default:
-        throw new Error(`Unknown action: ${key}`);
+        return pushState(`/${key}`);
     }
+  };
+
+  onSpaceChange = (e) => {
+    console.log('e', e);
   };
 
   fetchData = () => {
@@ -88,6 +117,7 @@ class App extends React.Component {
           onCollapse={this.onCollapse}
         >
           <StyledLogo collapsed={collapsed} />
+
           {profile && (
             <Tooltip placement="right" trigger={collapsed ? 'hover' : ''} title={profileName}>
               <UserInfo onClick={this.onProfileClick}>
@@ -96,36 +126,33 @@ class App extends React.Component {
               </UserInfo>
             </Tooltip>
           )}
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={['4']}
-            onClick={this.onMenuClick}
+
+          <SpaceSelect
+            showSearch
+            placeholder="Select space"
+            optionFilterProp="children"
+            onChange={this.onSpaceChange}
+            filterOption={(input, option) => {
+              console.log('x');
+              return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+            }}
           >
-            <Menu.Item key="content">
-              <Icon type="form" />
-              <span>Content</span>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <Icon type="tags" />
-              <span>Tags</span>
-            </Menu.Item>
-            <Menu.Item key="3">
-              <Icon type="user" />
-              <span>Users</span>
-            </Menu.Item>
-            <Menu.Item key="4">
-              <Icon type="book" />
-              <span>Spaces</span>
-            </Menu.Item>
-            <Menu.Item key="5">
-              <Icon type="setting" />
-              <span>Settings</span>
-            </Menu.Item>
-            <Menu.Item key="logout">
-              <Icon type="logout" />
-              <span>Logout</span>
-            </Menu.Item>
+            <Select.Option value="jack">Jack</Select.Option>
+            <Select.Option value="lucy">Lucy</Select.Option>
+            <Select.Option value="tom">Tom</Select.Option>
+          </SpaceSelect>
+
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} onClick={this.onMenuClick}>
+            {menuItems.map(({ key: groupKey, title: groupTitle, items }) => (
+              <Menu.ItemGroup key={groupKey} title={groupTitle}>
+                {items.map(({ key, title, icon }) => (
+                  <Menu.Item key={key}>
+                    <Icon type={icon} />
+                    <span>{title}</span>
+                  </Menu.Item>
+                ))}
+              </Menu.ItemGroup>
+            ))}
           </Menu>
         </Sider>
         <Layout>
@@ -144,7 +171,7 @@ class App extends React.Component {
             </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            Ant Design ©2016 Created by Ant UED
+            Onionful (MIT) created by <a href="https://hsz.mobi">hsz</a>
           </Footer>
         </Layout>
       </Layout>
@@ -155,6 +182,7 @@ class App extends React.Component {
 App.propTypes = {
   logout: PropTypes.func,
   getProfile: PropTypes.func,
+  pushState: PropTypes.func,
   isAuthenticated: PropTypes.bool,
   profile: PropTypes.map,
 };
@@ -162,6 +190,7 @@ App.propTypes = {
 App.defaultProps = {
   logout: noop,
   getProfile: noop,
+  pushState: noop,
   isAuthenticated: false,
   profile: Map(),
 };
@@ -174,6 +203,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   logout: handleLogout(dispatch),
   getProfile: handleGetProfile(dispatch),
+  pushState: path => dispatch(push(path)),
 });
 
 export default withRouter(connect(
