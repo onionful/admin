@@ -2,7 +2,7 @@ import { React, PropTypes, connect, glamorous } from 'utils/create';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { Avatar, Breadcrumb, Icon, Layout, Menu, Tooltip, Select } from 'antd';
-import { HomePage, ContentPage, NotFoundPage } from 'containers';
+import { HomePage, ContentPage, UsersPage, NotFoundPage } from 'containers';
 import { Logo } from 'components';
 import { handleLogout, handleGetProfile } from 'reducers/auth/actions';
 import { Map } from 'immutable';
@@ -77,6 +77,9 @@ class App extends React.Component {
 
   onMenuClick = ({ key }) => {
     const { pushState, logout } = this.props;
+    if (!key) {
+      return null; // because of https://github.com/ant-design/ant-design/issues/10368
+    }
 
     switch (key) {
       case 'logout':
@@ -164,6 +167,7 @@ class App extends React.Component {
               <Switch>
                 <Route exact path="/" component={HomePage} />
                 <Route path="/content" component={ContentPage} />
+                <Route path="/users" component={UsersPage} />
                 <Route component={NotFoundPage} />
               </Switch>
             </div>

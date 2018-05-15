@@ -4,4 +4,7 @@ export default {
     domain: process.env.REACT_APP_AUTH0_DOMAIN,
     callbackUrl: process.env.REACT_APP_AUTH0_CALLBACKURL,
   },
+  api: {
+    endpoint: process.env.REACT_APP_API_ENDPOINT,
+  },
 };

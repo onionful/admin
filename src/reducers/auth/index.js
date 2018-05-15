@@ -1,10 +1,41 @@
-import authReducer from './reducer';
-import * as authTypes from './types';
-import * as authActions from './actions';
+import typeToReducer from 'type-to-reducer';
+import { fromJS } from 'immutable';
+import { Auth } from 'utils';
+import * as types from './types';
 
-export {
-  authTypes,
-  authActions,
-};
+const auth = new Auth();
 
-export default authReducer;
+const initialState = fromJS({
+  isAuthenticated: auth.isAuthenticated(),
+  isLoading: false,
+  profile: null,
+  error: null,
+});
+
+export default typeToReducer({
+  [types.LOGIN_REQUEST]: state => state.merge({ isLoading: true, error: null }),
+  [types.LOGIN_SUCCESS]: state => state.merge({
+    isLoading: false,
+    isAuthenticated: true,
+  }),
+  [types.LOGIN_FAILURE]: (state, { error }) => state.merge({
+    isLoading: false,
+    isAuthenticated: false,
+    error,
+  }),
+  [types.LOGOUT_SUCCESS]: state => state.merge({
+    isAuthenticated: false,
+    profile: null,
+  }),
+  [types.PROFILE_REQUEST]: state => state.merge({ isLoading: true, error: null }),
+  [types.PROFILE_SUCCESS]: (state, { profile }) => state.merge({
+    isLoading: false,
+    profile,
+  }),
+  [types.PROFILE_FAILURE]: (state, { error }) => state.merge({
+    isLoading: false,
+    profile: null,
+    error,
+  }),
+}, initialState);
+
