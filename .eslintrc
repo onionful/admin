@@ -19,7 +19,8 @@
       "aspects": ["noHref", "invalidHref", "preferButton"]
     }],
     "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
-    "react/no-typos": 0
+    "react/no-typos": 0,
+    "spaced-comment": 0
   },
   "settings" : {
     "import/resolver": {

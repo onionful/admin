@@ -7,13 +7,16 @@ const auth = new Auth();
 
 const initialState = fromJS({
   isAuthenticated: auth.isAuthenticated(),
-  isLoading: false,
+  isLoading: true,
   profile: null,
   error: null,
 });
 
 export default typeToReducer({
-  [types.LOGIN_REQUEST]: state => state.merge({ isLoading: true, error: null }),
+  [types.LOGIN_REQUEST]: state => state.merge({
+    isLoading: true,
+    error: null,
+  }),
   [types.LOGIN_SUCCESS]: state => state.merge({
     isLoading: false,
     isAuthenticated: true,
@@ -23,11 +26,16 @@ export default typeToReducer({
     isAuthenticated: false,
     error,
   }),
+
   [types.LOGOUT_SUCCESS]: state => state.merge({
     isAuthenticated: false,
     profile: null,
   }),
-  [types.PROFILE_REQUEST]: state => state.merge({ isLoading: true, error: null }),
+
+  [types.PROFILE_REQUEST]: state => state.merge({
+    isLoading: true,
+    error: null,
+  }),
   [types.PROFILE_SUCCESS]: (state, { profile }) => state.merge({
     isLoading: false,
     profile,
@@ -39,3 +47,10 @@ export default typeToReducer({
   }),
 }, initialState);
 
+export const isAllowed = (state, permission) => {
+  const permissions = state.getIn(['auth', 'profile', 'permissions']);
+  //console.log('permission', permission);
+  //console.log('permissions', permissions);
+  //console.log(!permission || (permissions && permissions.contains(permission)));
+  return !permission || (permissions && permissions.contains(permission));
+};

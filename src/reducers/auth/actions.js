@@ -1,5 +1,7 @@
 import { push } from 'react-router-redux';
+import { mapKeys } from 'lodash';
 import { Auth } from 'utils';
+import config from 'config';
 import * as types from './types';
 
 const auth = new Auth();
@@ -49,7 +51,6 @@ export const profileRequest = () => ({
   type: types.PROFILE_REQUEST,
 });
 
-
 export const profileSuccess = profile => ({
   type: types.PROFILE_SUCCESS,
   profile,
@@ -66,7 +67,9 @@ export const handleGetProfile = dispatch => () => {
     if (err) {
       dispatch(profileFailure(`${err.error}: ${err.errorDescription}`));
     } else {
-      dispatch(profileSuccess(data));
+      const { auth0: { claimDomain } } = config;
+      const parsed = mapKeys(data, (value, key) => key.replace(claimDomain, ''));
+      dispatch(profileSuccess(parsed));
     }
   });
 };

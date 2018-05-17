@@ -4,6 +4,8 @@ import config from 'config';
 export { default as Auth } from './Auth';
 export { default as create } from './create';
 export { default as colors } from './colors';
+export { default as permissions } from './permissions';
+export { default as withPermissions } from './withPermissions';
 
 export const api = axios.create({
   baseURL: config.api.endpoint,

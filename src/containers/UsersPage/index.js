@@ -1,9 +1,10 @@
-import { React, Component, PropTypes, connect, glamorous } from 'utils/create';
+import { React, Component, PropTypes, compose, connect, glamorous } from 'utils/create';
 import moment from 'moment';
 import { noop } from 'lodash';
 import { Avatar, Icon, Input, Table } from 'antd';
 import { Map } from 'immutable';
 import { fetchUsers } from 'reducers/users/actions';
+import { permissions, withPermissions } from 'utils';
 
 const columns = [{
   dataIndex: 'picture',
@@ -155,7 +156,7 @@ const mapDispatchToProps = dispatch => ({
   handleFetchUsers: params => dispatch(fetchUsers(params)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withPermissions(permissions.USERS_LIST),
 )(UsersPage);
