@@ -2,7 +2,7 @@ import { React, PropTypes, compose, connect, glamorous } from 'utils/create';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { Avatar, Breadcrumb, Icon, Layout, Menu, Tooltip, Select, Spin } from 'antd';
-import { ContentPage, ErrorPage, HomePage, NotFoundPage, UsersPage } from 'containers';
+import { ContentPage, ErrorPage, HomePage, NotFoundPage, SpacesPage, UsersPage } from 'containers';
 import { Logo } from 'components';
 import { handleLogout, handleGetProfile } from 'reducers/auth/actions';
 import { Map } from 'immutable';
@@ -193,6 +193,7 @@ class App extends React.Component {
                     <Switch>
                       <Route exact path="/" component={HomePage} />
                       <Route path="/content" component={ContentPage} />
+                      <Route path="/spaces" component={SpacesPage} />
                       <Route path="/users" component={UsersPage} />
                       <Route component={NotFoundPage} />
                     </Switch>

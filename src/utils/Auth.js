@@ -8,7 +8,7 @@ export default class Auth {
     redirectUri: config.auth0.callbackUrl,
     audience: `https://${config.auth0.domain}/userinfo`,
     responseType: 'token id_token',
-    scope: 'openid profile',
+    scope: 'openid profile email',
   });
 
   login = () => this.auth0.authorize();

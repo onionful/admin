@@ -49,8 +49,5 @@ export default typeToReducer({
 
 export const isAllowed = (state, permission) => {
   const permissions = state.getIn(['auth', 'profile', 'permissions']);
-  //console.log('permission', permission);
-  //console.log('permissions', permissions);
-  //console.log(!permission || (permissions && permissions.contains(permission)));
   return !permission || (permissions && permissions.contains(permission));
 };

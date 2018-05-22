@@ -50,18 +50,6 @@ const SearchQuery = glamorous.div({
 });
 
 class UsersPage extends Component {
-  static propTypes = {
-    handleFetchUsers: PropTypes.func,
-    isLoading: PropTypes.bool,
-    data: PropTypes.map,
-  };
-
-  static defaultProps = {
-    handleFetchUsers: noop,
-    isLoading: false,
-    data: Map(),
-  };
-
   state = {
     search: '',
     searchCurrent: '',
@@ -146,6 +134,18 @@ class UsersPage extends Component {
     );
   }
 }
+
+UsersPage.propTypes = {
+  handleFetchUsers: PropTypes.func,
+  isLoading: PropTypes.bool,
+  data: PropTypes.map,
+};
+
+UsersPage.defaultProps = {
+  handleFetchUsers: noop,
+  isLoading: false,
+  data: Map(),
+};
 
 const mapStateToProps = state => ({
   data: state.getIn(['users', 'data']),
