@@ -4,7 +4,10 @@ import { handleAuthentication } from 'reducers/auth/actions';
 
 export class Authorize extends Component {
   componentDidMount() {
-    const { authenticate, location: { hash } } = this.props;
+    const {
+      authenticate,
+      location: { hash },
+    } = this.props;
     authenticate(hash);
   }
 
@@ -31,7 +34,4 @@ const mapDispatchToProps = dispatch => ({
   authenticate: handleAuthentication(dispatch),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(Authorize);
+export default connect(null, mapDispatchToProps)(Authorize);

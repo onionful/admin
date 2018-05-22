@@ -19,19 +19,20 @@ const StyledLogo = glamorous(Logo)({
   maxWidth: '10rem',
 });
 
-export const Login = ({ login, isAuthenticated }) => (isAuthenticated ? (
-  <Redirect to="/" />
-) : (
-  <StyledRow type="flex" align="middle" justify="center">
-    <Col>
-      <StyledLogo />
-      <Button ghost onClick={login}>
-        Login
-        <Icon type="login" />
-      </Button>
-    </Col>
-  </StyledRow>
-));
+export const Login = ({ login, isAuthenticated }) =>
+  isAuthenticated ? (
+    <Redirect to="/" />
+  ) : (
+    <StyledRow type="flex" align="middle" justify="center">
+      <Col>
+        <StyledLogo />
+        <Button ghost onClick={login}>
+          Login
+          <Icon type="login" />
+        </Button>
+      </Col>
+    </StyledRow>
+  );
 
 Login.propTypes = {
   isAuthenticated: PropTypes.bool,
@@ -51,7 +52,4 @@ const mapDispatchToProps = dispatch => ({
   login: handleLogin(dispatch),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

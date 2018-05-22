@@ -24,7 +24,7 @@ export const loginFailure = error => ({
   error,
 });
 
-export const handleAuthentication = dispatch => (hash) => {
+export const handleAuthentication = dispatch => hash => {
   if (/access_token|id_token|error/.test(hash)) {
     auth.handleAuthentication((err, data) => {
       if (err) {
@@ -67,7 +67,9 @@ export const handleGetProfile = dispatch => () => {
     if (err) {
       dispatch(profileFailure(`${err.error}: ${err.errorDescription}`));
     } else {
-      const { auth0: { claimDomain } } = config;
+      const {
+        auth0: { claimDomain },
+      } = config;
       const parsed = mapKeys(data, (value, key) => key.replace(claimDomain, ''));
       dispatch(profileSuccess(parsed));
     }

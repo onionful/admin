@@ -53,7 +53,8 @@ const menuItems = [
       { key: 'content', title: 'Content', icon: 'form' },
       { key: 'tags', title: 'Tags', icon: 'tags' },
     ],
-  }, {
+  },
+  {
     key: 'system',
     title: 'System',
     items: [
@@ -72,7 +73,8 @@ class App extends React.Component {
     errorInfo: null,
   };
 
-  componentDidCatch(error, errorInfo) { // eslint-disable-line react/sort-comp
+  // eslint-disable-next-line react/sort-comp
+  componentDidCatch(error, errorInfo) {
     this.setState({ error, errorInfo });
   }
 
@@ -86,7 +88,7 @@ class App extends React.Component {
     }
   }
 
-  onCollapse = (collapsed) => {
+  onCollapse = collapsed => {
     this.setState({ collapsed });
   };
 
@@ -109,8 +111,7 @@ class App extends React.Component {
     }
   };
 
-  onSpaceChange = () => {
-  };
+  onSpaceChange = () => {};
 
   fetchData = () => {
     const { isAuthenticated, getProfile } = this.props;
@@ -129,17 +130,12 @@ class App extends React.Component {
     }
 
     const hasPermissions = ({ permission }) => hasPermission(permission);
-    const profileName = profile ? (profile.get('name') || profile.get('nickname')) : '';
+    const profileName = profile ? profile.get('name') || profile.get('nickname') : '';
 
     return (
       <Spin spinning={isProfileLoading}>
         <Layout style={{ minHeight: '100vh' }}>
-          <Sider
-            breakpoint="lg"
-            collapsible
-            collapsed={collapsed}
-            onCollapse={this.onCollapse}
-          >
+          <Sider breakpoint="lg" collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
             <StyledLogo collapsed={collapsed} />
 
             {profile && (
@@ -183,22 +179,24 @@ class App extends React.Component {
               <Container>
                 {error ? (
                   <ErrorPage error={error} errorInfo={errorInfo} />
-                ) : ([
-                  <Breadcrumb key="breadcrumb" style={{ margin: '16px 0' }}>
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>List</Breadcrumb.Item>
-                    <Breadcrumb.Item>App</Breadcrumb.Item>
-                  </Breadcrumb>,
-                  <Content key="content">
-                    <Switch>
-                      <Route exact path="/" component={HomePage} />
-                      <Route path="/content" component={ContentPage} />
-                      <Route path="/spaces" component={SpacesPage} />
-                      <Route path="/users" component={UsersPage} />
-                      <Route component={NotFoundPage} />
-                    </Switch>
-                  </Content>,
-                ])}
+                ) : (
+                  [
+                    <Breadcrumb key="breadcrumb" style={{ margin: '16px 0' }}>
+                      <Breadcrumb.Item>Home</Breadcrumb.Item>
+                      <Breadcrumb.Item>List</Breadcrumb.Item>
+                      <Breadcrumb.Item>App</Breadcrumb.Item>
+                    </Breadcrumb>,
+                    <Content key="content">
+                      <Switch>
+                        <Route exact path="/" component={HomePage} />
+                        <Route path="/content" component={ContentPage} />
+                        <Route path="/spaces" component={SpacesPage} />
+                        <Route path="/users" component={UsersPage} />
+                        <Route component={NotFoundPage} />
+                      </Switch>
+                    </Content>,
+                  ]
+                )}
               </Container>
               <Footer style={{ textAlign: 'center' }}>
                 Onionful (MIT) created by <a href="https://hsz.mobi">hsz</a>
@@ -243,8 +241,6 @@ const mapDispatchToProps = dispatch => ({
   pushState: path => dispatch(push(path)),
 });
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  withRouter,
-  withPermissions(),
-)(App);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withPermissions())(
+  App,
+);

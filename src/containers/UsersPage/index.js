@@ -6,35 +6,41 @@ import { Map } from 'immutable';
 import { fetchUsers } from 'reducers/users/actions';
 import { permissions, withPermissions } from 'utils';
 
-const columns = [{
-  dataIndex: 'picture',
-  render: value => <Avatar src={value} />,
-}, {
-  title: 'Name',
-  dataIndex: 'name',
-}, {
-  title: 'E-mail',
-  dataIndex: 'email',
-}, {
-  title: 'Created at',
-  dataIndex: 'created_at',
-  render: value => <span title={value}>{moment(value).fromNow()}</span>,
-  sorter: (a, b) => moment(a.created_at) - moment(b.created_at),
-}, {
-  title: 'Last login',
-  dataIndex: 'last_login',
-  render: value => <span title={value}>{moment(value).fromNow()}</span>,
-  sorter: (a, b) => moment(a.last_login) - moment(b.last_login),
-}, {
-  title: 'Logins count',
-  dataIndex: 'logins_count',
-}, {
-  title: 'Action',
-  key: 'action',
-  render: () => (
-    <div>actions</div>
-  ),
-}];
+const columns = [
+  {
+    dataIndex: 'picture',
+    render: value => <Avatar src={value} />,
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+  },
+  {
+    title: 'E-mail',
+    dataIndex: 'email',
+  },
+  {
+    title: 'Created at',
+    dataIndex: 'created_at',
+    render: value => <span title={value}>{moment(value).fromNow()}</span>,
+    sorter: (a, b) => moment(a.created_at) - moment(b.created_at),
+  },
+  {
+    title: 'Last login',
+    dataIndex: 'last_login',
+    render: value => <span title={value}>{moment(value).fromNow()}</span>,
+    sorter: (a, b) => moment(a.last_login) - moment(b.last_login),
+  },
+  {
+    title: 'Logins count',
+    dataIndex: 'logins_count',
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: () => <div>actions</div>,
+  },
+];
 
 const SearchReset = glamorous(Icon)({
   marginRight: '1rem',
@@ -62,17 +68,20 @@ class UsersPage extends Component {
   }
 
   handleTableChange = (pagination, filters, sorter) => {
-    this.setState({
-      pagination: {
-        limit: pagination.pageSize,
-        page: pagination.current - 1,
-        sort: sorter.field,
-        order: sorter.order,
+    this.setState(
+      {
+        pagination: {
+          limit: pagination.pageSize,
+          page: pagination.current - 1,
+          sort: sorter.field,
+          order: sorter.order,
+        },
       },
-    }, this.search);
+      this.search,
+    );
   };
 
-  handleSearch = (search) => {
+  handleSearch = search => {
     this.setState({ search }, this.search);
   };
 
@@ -95,9 +104,9 @@ class UsersPage extends Component {
     const { isLoading, data } = this.props;
     const { search, searchCurrent } = this.state;
 
-    const searchSuffix = searchCurrent
-      ? <SearchReset key="searchReset" type="close-circle" onClick={this.handleSearchReset} />
-      : null;
+    const searchSuffix = searchCurrent ? (
+      <SearchReset key="searchReset" type="close-circle" onClick={this.handleSearchReset} />
+    ) : null;
 
     return (
       <div>

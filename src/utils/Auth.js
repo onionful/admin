@@ -19,7 +19,7 @@ export default class Auth {
     localStorage.removeItem('expires_at');
   };
 
-  handleAuthentication = (cb) => {
+  handleAuthentication = cb => {
     this.auth0.parseHash((err, authResult) => {
       if (err) {
         cb(err);
@@ -37,8 +37,8 @@ export default class Auth {
     return new Date().getTime() < expiresAt;
   };
 
-  setSession = (authResult) => {
-    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
+  setSession = authResult => {
+    const expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
@@ -52,9 +52,10 @@ export default class Auth {
     return accessToken;
   };
 
-  getProfile = (cb) => {
-    this.auth0.client.userInfo(this.getAccessToken(), (err, profile) => (
-      err ? cb(err) : cb(null, profile)
-    ));
+  getProfile = cb => {
+    this.auth0.client.userInfo(
+      this.getAccessToken(),
+      (err, profile) => (err ? cb(err) : cb(null, profile)),
+    );
   };
 }

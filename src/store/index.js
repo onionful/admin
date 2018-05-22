@@ -9,11 +9,7 @@ import reducers from 'reducers';
 export const history = createBrowserHistory();
 
 const initialState = fromJS({});
-const middlewares = [
-  thunk,
-  routerMiddleware(history),
-  promiseMiddleware(),
-];
+const middlewares = [thunk, routerMiddleware(history), promiseMiddleware()];
 
 const enhancers = [];
 if (process.env.NODE_ENV === 'development') {
@@ -22,15 +18,8 @@ if (process.env.NODE_ENV === 'development') {
   }
 }
 
-const composedEnhancers = compose(
-  applyMiddleware(...middlewares),
-  ...enhancers,
-);
+const composedEnhancers = compose(applyMiddleware(...middlewares), ...enhancers);
 
-const store = createStore(
-  reducers,
-  initialState,
-  composedEnhancers,
-);
+const store = createStore(reducers, initialState, composedEnhancers);
 
 export default store;

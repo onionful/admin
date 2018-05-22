@@ -12,40 +12,50 @@ const initialState = fromJS({
   error: null,
 });
 
-export default typeToReducer({
-  [types.LOGIN_REQUEST]: state => state.merge({
-    isLoading: true,
-    error: null,
-  }),
-  [types.LOGIN_SUCCESS]: state => state.merge({
-    isLoading: false,
-    isAuthenticated: true,
-  }),
-  [types.LOGIN_FAILURE]: (state, { error }) => state.merge({
-    isLoading: false,
-    isAuthenticated: false,
-    error,
-  }),
+export default typeToReducer(
+  {
+    [types.LOGIN_REQUEST]: state =>
+      state.merge({
+        isLoading: true,
+        error: null,
+      }),
+    [types.LOGIN_SUCCESS]: state =>
+      state.merge({
+        isLoading: false,
+        isAuthenticated: true,
+      }),
+    [types.LOGIN_FAILURE]: (state, { error }) =>
+      state.merge({
+        isLoading: false,
+        isAuthenticated: false,
+        error,
+      }),
 
-  [types.LOGOUT_SUCCESS]: state => state.merge({
-    isAuthenticated: false,
-    profile: null,
-  }),
+    [types.LOGOUT_SUCCESS]: state =>
+      state.merge({
+        isAuthenticated: false,
+        profile: null,
+      }),
 
-  [types.PROFILE_REQUEST]: state => state.merge({
-    isLoading: true,
-    error: null,
-  }),
-  [types.PROFILE_SUCCESS]: (state, { profile }) => state.merge({
-    isLoading: false,
-    profile,
-  }),
-  [types.PROFILE_FAILURE]: (state, { error }) => state.merge({
-    isLoading: false,
-    profile: null,
-    error,
-  }),
-}, initialState);
+    [types.PROFILE_REQUEST]: state =>
+      state.merge({
+        isLoading: true,
+        error: null,
+      }),
+    [types.PROFILE_SUCCESS]: (state, { profile }) =>
+      state.merge({
+        isLoading: false,
+        profile,
+      }),
+    [types.PROFILE_FAILURE]: (state, { error }) =>
+      state.merge({
+        isLoading: false,
+        profile: null,
+        error,
+      }),
+  },
+  initialState,
+);
 
 export const isAllowed = (state, permission) => {
   const permissions = state.getIn(['auth', 'profile', 'permissions']);
