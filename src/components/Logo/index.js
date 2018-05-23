@@ -1,5 +1,5 @@
-import { React, PropTypes } from 'utils/create';
 import { colors } from 'utils';
+import { PropTypes, React } from 'utils/create';
 
 export const Logo = ({ className, fill }) => (
   <svg className={className} fill={fill} x="0px" y="0px" viewBox="-16.161 -16.177 100 100">

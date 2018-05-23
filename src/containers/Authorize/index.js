@@ -1,6 +1,6 @@
-import { React, Component, PropTypes, connect } from 'utils/create';
 import { noop } from 'lodash';
 import { handleAuthentication } from 'reducers/auth/actions';
+import { Component, connect, PropTypes, React } from 'utils/create';
 
 export class Authorize extends Component {
   componentDidMount() {

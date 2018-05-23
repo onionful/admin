@@ -1,7 +1,7 @@
-import { push } from 'react-router-redux';
-import { mapKeys } from 'lodash';
-import { Auth } from 'utils';
 import config from 'config';
+import { mapKeys } from 'lodash';
+import { push } from 'react-router-redux';
+import { Auth } from 'utils';
 import * as types from './types';
 
 const auth = new Auth();

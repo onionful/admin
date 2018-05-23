@@ -1,5 +1,5 @@
-import typeToReducer from 'type-to-reducer';
 import { fromJS } from 'immutable';
+import typeToReducer from 'type-to-reducer';
 import * as types from './types';
 
 const initialState = fromJS({

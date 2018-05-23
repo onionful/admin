@@ -1,8 +1,44 @@
-import { React, Component, PropTypes, compose, connect } from 'utils/create';
-import { Map } from 'immutable';
+import { Avatar, Table } from 'antd';
+import { List } from 'immutable';
 import { noop } from 'lodash';
-import { withPermissions } from 'utils';
+import moment from 'moment';
 import { fetchSpaces } from 'reducers/spaces/actions';
+import { withPermissions } from 'utils';
+import { Component, compose, connect, PropTypes, React } from 'utils/create';
+
+const columns = [
+  {
+    title: 'Identifier',
+    dataIndex: 'id',
+    sorter: true,
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+  },
+  {
+    title: 'Owner',
+    dataIndex: 'createdBy',
+    render: value => <Avatar src={value} />,
+  },
+  {
+    title: 'Created at',
+    dataIndex: 'createdAt',
+    render: value => <span title={value}>{moment(value).fromNow()}</span>,
+    sorter: (a, b) => moment(a.createdAt) - moment(b.createdAt),
+  },
+  {
+    title: 'Updated at',
+    dataIndex: 'updatedAt',
+    render: value => <span title={value}>{moment(value).fromNow()}</span>,
+    sorter: (a, b) => moment(a.updatedAt) - moment(b.updatedAt),
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    render: () => <div>actions</div>,
+  },
+];
 
 class SpacesPage extends Component {
   componentDidMount() {
@@ -18,6 +54,13 @@ class SpacesPage extends Component {
     return (
       <div>
         <h1>Spaces</h1>
+        <Table
+          columns={columns}
+          rowKey="id"
+          dataSource={data.toJS()}
+          loading={isLoading}
+          size="small"
+        />
       </div>
     );
   }
@@ -26,13 +69,13 @@ class SpacesPage extends Component {
 SpacesPage.propTypes = {
   handleFetchSpaces: PropTypes.func,
   isLoading: PropTypes.bool,
-  data: PropTypes.map,
+  data: PropTypes.list,
 };
 
 SpacesPage.defaultProps = {
   handleFetchSpaces: noop,
   isLoading: false,
-  data: Map(),
+  data: List(),
 };
 
 const mapStateToProps = state => ({

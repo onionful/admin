@@ -1,6 +1,6 @@
-import { React, PropTypes, glamorous } from 'utils/create';
 import { Logo } from 'components';
 import { colors } from 'utils';
+import { glamorous, PropTypes, React } from 'utils/create';
 
 const StyledLogo = glamorous(Logo)({
   width: '10rem',

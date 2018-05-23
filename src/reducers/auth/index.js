@@ -1,5 +1,5 @@
-import typeToReducer from 'type-to-reducer';
 import { fromJS } from 'immutable';
+import typeToReducer from 'type-to-reducer';
 import { Auth } from 'utils';
 import * as types from './types';
 

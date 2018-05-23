@@ -1,10 +1,10 @@
-import { fromJS } from 'immutable';
-import { createStore, applyMiddleware, compose } from 'redux';
 import { createBrowserHistory } from 'history';
+import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
+import reducers from 'reducers';
+import { applyMiddleware, compose, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
 import thunk from 'redux-thunk';
-import reducers from 'reducers';
 
 export const history = createBrowserHistory();
 

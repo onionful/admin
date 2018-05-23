@@ -1,13 +1,13 @@
-import { React, PropTypes, compose, connect, glamorous } from 'utils/create';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { push } from 'react-router-redux';
-import { Avatar, Breadcrumb, Icon, Layout, Menu, Tooltip, Select, Spin } from 'antd';
-import { ContentPage, ErrorPage, HomePage, NotFoundPage, SpacesPage, UsersPage } from 'containers';
+import { Avatar, Breadcrumb, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
 import { Logo } from 'components';
-import { handleLogout, handleGetProfile } from 'reducers/auth/actions';
+import { ContentPage, ErrorPage, HomePage, NotFoundPage, SpacesPage, UsersPage } from 'containers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { push } from 'react-router-redux';
+import { handleGetProfile, handleLogout } from 'reducers/auth/actions';
 import { colors, permissions, withPermissions } from 'utils';
+import { compose, connect, glamorous, PropTypes, React } from 'utils/create';
 
 const { Sider, Footer } = Layout;
 

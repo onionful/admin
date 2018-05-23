@@ -1,10 +1,10 @@
-import { React, Component, PropTypes, compose, connect, glamorous } from 'utils/create';
-import moment from 'moment';
-import { noop } from 'lodash';
 import { Avatar, Icon, Input, Table } from 'antd';
 import { Map } from 'immutable';
+import { noop } from 'lodash';
+import moment from 'moment';
 import { fetchUsers } from 'reducers/users/actions';
 import { permissions, withPermissions } from 'utils';
+import { Component, compose, connect, glamorous, PropTypes, React } from 'utils/create';
 
 const columns = [
   {
@@ -30,6 +30,14 @@ const columns = [
     dataIndex: 'last_login',
     render: value => <span title={value}>{moment(value).fromNow()}</span>,
     sorter: (a, b) => moment(a.last_login) - moment(b.last_login),
+  },
+  {
+    title: 'Service',
+    dataIndex: 'identities',
+    render: value =>
+      value.map(({ provider }) => (
+        <Icon key={provider} type={{ 'google-oauth2': 'google' }[provider] || provider} />
+      )),
   },
   {
     title: 'Logins count',
@@ -129,6 +137,7 @@ class UsersPage extends Component {
 
         <Table
           columns={columns}
+          rowKey={({ email, logins_count: count }) => `${email}_${count}`}
           dataSource={data.get('users').toJS()}
           loading={isLoading}
           pagination={{
@@ -136,7 +145,6 @@ class UsersPage extends Component {
             total: data.get('total'),
           }}
           onChange={this.handleTableChange}
-          rowKey="email"
           size="small"
         />
       </div>

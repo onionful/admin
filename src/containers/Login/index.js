@@ -1,10 +1,10 @@
-import { React, PropTypes, glamorous } from 'utils/create';
-import { Row, Col, Button, Icon } from 'antd';
+import { Button, Col, Icon, Row } from 'antd';
 import { Logo } from 'components';
+import { noop } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { noop } from 'lodash';
 import { handleLogin } from 'reducers/auth/actions';
+import { glamorous, PropTypes, React } from 'utils/create';
 
 const StyledRow = glamorous(Row)({
   height: '100vh',
