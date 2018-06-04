@@ -87,4 +87,10 @@ const mapDispatchToProps = dispatch => ({
   handleFetchSpaces: params => dispatch(fetchSpaces(params)),
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withPermissions())(SpacesPage);
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
+  withPermissions(),
+)(SpacesPage);

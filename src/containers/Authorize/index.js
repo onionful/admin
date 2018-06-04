@@ -34,4 +34,7 @@ const mapDispatchToProps = dispatch => ({
   authenticate: handleAuthentication(dispatch),
 });
 
-export default connect(null, mapDispatchToProps)(Authorize);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(Authorize);

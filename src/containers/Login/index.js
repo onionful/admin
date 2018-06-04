@@ -3,7 +3,7 @@ import { Logo } from 'components';
 import { noop } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { handleLogin } from 'reducers/auth/actions';
+import { login } from 'reducers/auth/actions';
 import { glamorous, PropTypes, React } from 'utils/create';
 
 const StyledRow = glamorous(Row)({
@@ -19,14 +19,14 @@ const StyledLogo = glamorous(Logo)({
   maxWidth: '10rem',
 });
 
-export const Login = ({ login, isAuthenticated }) =>
+export const Login = ({ handleLogin, isAuthenticated }) =>
   isAuthenticated ? (
     <Redirect to="/" />
   ) : (
     <StyledRow type="flex" align="middle" justify="center">
       <Col>
         <StyledLogo />
-        <Button ghost onClick={login}>
+        <Button ghost onClick={handleLogin}>
           Login
           <Icon type="login" />
         </Button>
@@ -36,12 +36,12 @@ export const Login = ({ login, isAuthenticated }) =>
 
 Login.propTypes = {
   isAuthenticated: PropTypes.bool,
-  login: PropTypes.func,
+  handleLogin: PropTypes.func,
 };
 
 Login.defaultProps = {
   isAuthenticated: false,
-  login: noop,
+  handleLogin: noop,
 };
 
 const mapStateToProps = state => ({
@@ -49,7 +49,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  login: handleLogin(dispatch),
+  handleLogin: login(dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Login);

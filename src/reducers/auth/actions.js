@@ -10,11 +10,6 @@ export const loginRequest = () => ({
   type: types.LOGIN_REQUEST,
 });
 
-export const handleLogin = dispatch => () => {
-  auth.login();
-  dispatch(loginRequest());
-};
-
 export const loginSuccess = () => ({
   type: types.LOGIN_SUCCESS,
 });
@@ -24,12 +19,17 @@ export const loginFailure = error => ({
   error,
 });
 
+export const login = dispatch => () => {
+  auth.login();
+  dispatch(loginRequest());
+};
+
 export const handleAuthentication = dispatch => hash => {
   if (/access_token|id_token|error/.test(hash)) {
     auth.handleAuthentication((err, data) => {
       if (err) {
         dispatch(loginFailure(`${err.error}: ${err.errorDescription}`));
-        dispatch(push('/login'));
+        dispatch(push('/handleLogin'));
       } else {
         dispatch(loginSuccess(data));
         dispatch(push('/'));
@@ -42,8 +42,8 @@ export const logoutSuccess = () => ({
   type: types.LOGOUT_SUCCESS,
 });
 
-export const handleLogout = dispatch => () => {
-  auth.logout();
+export const logout = dispatch => () => {
+  auth.handleLogout();
   dispatch(logoutSuccess());
 };
 
@@ -61,7 +61,7 @@ export const profileFailure = error => ({
   error,
 });
 
-export const handleGetProfile = dispatch => () => {
+export const getProfile = dispatch => () => {
   dispatch(profileRequest());
   auth.getProfile((err, data) => {
     if (err) {

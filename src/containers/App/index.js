@@ -5,9 +5,10 @@ import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
-import { handleGetProfile, handleLogout } from 'reducers/auth/actions';
+import { getProfile, logout } from 'reducers/auth/actions';
 import { colors, permissions, withPermissions } from 'utils';
 import { compose, connect, glamorous, PropTypes, React } from 'utils/create';
+import { fetchSpaces } from 'reducers/spaces/actions';
 
 const { Sider, Footer } = Layout;
 
@@ -61,7 +62,7 @@ const menuItems = [
       { key: 'spaces', title: 'Spaces', icon: 'book' },
       { key: 'users', title: 'Users', icon: 'user', permission: permissions.USERS_LIST },
       { key: 'settings', title: 'Settings', icon: 'setting' },
-      { key: 'logout', title: 'Logout', icon: 'logout' },
+      { key: 'handleLogout', title: 'Logout', icon: 'handleLogout' },
     ],
   },
 ];
@@ -98,14 +99,14 @@ class App extends React.Component {
   };
 
   onMenuClick = ({ key }) => {
-    const { pushState, logout } = this.props;
+    const { pushState, handleLogout } = this.props;
     if (!key) {
       return null; // because of https://github.com/ant-design/ant-design/issues/10368
     }
 
     switch (key) {
-      case 'logout':
-        return logout();
+      case 'handleLogout':
+        return handleLogout();
       default:
         return pushState(`/${key}`);
     }
@@ -114,10 +115,10 @@ class App extends React.Component {
   onSpaceChange = () => {};
 
   fetchData = () => {
-    const { isAuthenticated, getProfile } = this.props;
+    const { isAuthenticated, handleGetProfile } = this.props;
 
     if (isAuthenticated) {
-      getProfile();
+      handleGetProfile();
     }
   };
 
@@ -214,8 +215,8 @@ App.propTypes = {
   isAuthenticated: PropTypes.bool,
   isProfileLoading: PropTypes.bool,
   profile: PropTypes.map,
-  getProfile: PropTypes.func,
-  logout: PropTypes.func,
+  handleGetProfile: PropTypes.func,
+  handleLogout: PropTypes.func,
   pushState: PropTypes.func,
 };
 
@@ -224,8 +225,8 @@ App.defaultProps = {
   isAuthenticated: false,
   isProfileLoading: true,
   profile: Map(),
-  getProfile: noop,
-  logout: noop,
+  handleGetProfile: noop,
+  handleLogout: noop,
   pushState: noop,
 };
 
@@ -236,11 +237,17 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getProfile: handleGetProfile(dispatch),
-  logout: handleLogout(dispatch),
+  handleFetchSpaces: params => dispatch(fetchSpaces(params)),
+  handleGetProfile: getProfile(dispatch),
+  handleLogout: logout(dispatch),
   pushState: path => dispatch(push(path)),
 });
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withPermissions())(
-  App,
-);
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
+  withRouter,
+  withPermissions(),
+)(App);
