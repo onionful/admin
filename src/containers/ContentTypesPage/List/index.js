@@ -54,12 +54,7 @@ class ContentPageList extends Component {
             align: 'center',
             render: (text, record) => (
               <div>
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon="edit"
-                  onClick={() => this.onEditClick(record)}
-                />
+                <Button shape="circle" icon="edit" onClick={() => this.onEditClick(record)} />
               </div>
             ),
           },

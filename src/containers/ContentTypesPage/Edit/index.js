@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { Button, Table } from 'antd';
+import { Form, Input } from 'antd';
+import { Editor } from 'components';
 import { List } from 'immutable';
 import { push } from 'react-router-redux';
 import { compose, connect, Component, PropTypes, React } from 'utils/create';
@@ -17,9 +18,25 @@ class ContentPageEdit extends Component {
       match: {
         params: { slug },
       },
+      form: { getFieldDecorator },
     } = this.props;
 
-    return <div>{slug}</div>;
+    return (
+      <Form>
+        <Form.Item>
+          {getFieldDecorator('title', {
+            rules: [{ required: true, message: 'Please input your username!' }],
+          })(<Input type="text" size="large" placeholder="Title" />)}
+        </Form.Item>
+        <Form.Item>
+          {getFieldDecorator('slug', {
+            rules: [{ required: true, message: 'Please input your username!' }],
+          })(<Input type="text" placeholder="Slug" />)}
+        </Form.Item>
+
+        <Editor />
+      </Form>
+    );
   }
 }
 
@@ -45,4 +62,5 @@ export default compose(
     mapDispatchToProps,
   ),
   withPermissions(),
+  Form.create(),
 )(ContentPageEdit);

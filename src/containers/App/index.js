@@ -1,13 +1,20 @@
 import { Avatar, Breadcrumb, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
 import { Logo } from 'components';
-import { ContentPage, ErrorPage, HomePage, NotFoundPage, SpacesPage, UsersPage } from 'containers';
+import {
+  ContentTypesPage,
+  ErrorPage,
+  HomePage,
+  NotFoundPage,
+  SpacesPage,
+  UsersPage,
+} from 'containers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { push } from 'react-router-redux';
 import { getProfile, logout } from 'reducers/auth/actions';
 import { colors, permissions, withPermissions } from 'utils';
-import { compose, connect, glamorous, PropTypes, React } from 'utils/create';
+import { _, compose, connect, glamorous, PropTypes, React } from 'utils/create';
 import { fetchSpaces } from 'reducers/spaces/actions';
 
 const { Sider, Footer } = Layout;
@@ -45,27 +52,6 @@ const SpaceSelect = glamorous(Select)({
   width: '100%',
   padding: '1rem',
 });
-
-const menuItems = [
-  {
-    key: 'space',
-    title: 'Current space',
-    items: [
-      { key: 'content', title: 'Content', icon: 'form' },
-      { key: 'tags', title: 'Tags', icon: 'tags' },
-    ],
-  },
-  {
-    key: 'system',
-    title: 'System',
-    items: [
-      { key: 'spaces', title: 'Spaces', icon: 'book' },
-      { key: 'users', title: 'Users', icon: 'user', permission: permissions.USERS_LIST },
-      { key: 'settings', title: 'Settings', icon: 'setting' },
-      { key: 'handleLogout', title: 'Logout', icon: 'handleLogout' },
-    ],
-  },
-];
 
 class App extends React.Component {
   state = {
@@ -133,6 +119,39 @@ class App extends React.Component {
     const hasPermissions = ({ permission }) => hasPermission(permission);
     const profileName = profile ? profile.get('name') || profile.get('nickname') : '';
 
+    const menuItems = [
+      {
+        key: 'space',
+        title: 'Current space',
+        items: [
+          { key: 'content', title: 'Content', icon: 'form' },
+          { key: 'tags', title: 'Tags', icon: 'tags' },
+          {
+            key: 'contentTypes',
+            title: 'menu.contentTypes',
+            icon: 'file',
+            component: ContentTypesPage,
+          },
+        ],
+      },
+      {
+        key: 'system',
+        title: 'System',
+        items: [
+          { key: 'spaces', title: 'Spaces', icon: 'book', component: SpacesPage },
+          {
+            key: 'users',
+            title: 'Users',
+            icon: 'user',
+            component: UsersPage,
+            permission: permissions.USERS_LIST,
+          },
+          { key: 'settings', title: 'Settings', icon: 'setting' },
+          { key: 'handleLogout', title: 'Logout', icon: 'handleLogout' },
+        ],
+      },
+    ];
+
     return (
       <Spin spinning={isProfileLoading}>
         <Layout style={{ minHeight: '100vh' }}>
@@ -168,7 +187,7 @@ class App extends React.Component {
                   {items.filter(hasPermissions).map(({ key, title, icon }) => (
                     <Menu.Item key={key}>
                       <Icon type={icon} />
-                      <span>{title}</span>
+                      <span>{_(title)}</span>
                     </Menu.Item>
                   ))}
                 </Menu.ItemGroup>
@@ -190,9 +209,13 @@ class App extends React.Component {
                     <Content key="content">
                       <Switch>
                         <Route exact path="/" component={HomePage} />
-                        <Route path="/content" component={ContentPage} />
-                        <Route path="/spaces" component={SpacesPage} />
-                        <Route path="/users" component={UsersPage} />
+                        {menuItems.map(section =>
+                          section.items
+                            .filter(({ component }) => component)
+                            .map(({ key, component }) => (
+                              <Route path={`/${key}`} component={component} />
+                            )),
+                        )}
                         <Route component={NotFoundPage} />
                       </Switch>
                     </Content>,
