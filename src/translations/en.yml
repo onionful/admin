@@ -1,2 +1,10 @@
 menu:
+  space: Space
   contentTypes: Content types
+  system: System
+  spaces: Spaces
+  users: Users
+  settings: Settings
+  logout: Logout
+
+copyrights: Onionful (MIT) created by [hsz](https://hsz.mobi/)

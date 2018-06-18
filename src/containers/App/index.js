@@ -11,10 +11,10 @@ import {
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { getProfile, logout } from 'reducers/auth/actions';
 import { colors, permissions, withPermissions } from 'utils';
-import { _, compose, connect, glamorous, PropTypes, React } from 'utils/create';
+import { compose, connect, glamorous, t, tm, PropTypes, React } from 'utils/create';
 import { fetchSpaces } from 'reducers/spaces/actions';
 
 const { Sider, Footer } = Layout;
@@ -91,7 +91,7 @@ class App extends React.Component {
     }
 
     switch (key) {
-      case 'handleLogout':
+      case 'logout':
         return handleLogout();
       default:
         return pushState(`/${key}`);
@@ -122,13 +122,11 @@ class App extends React.Component {
     const menuItems = [
       {
         key: 'space',
-        title: 'Current space',
         items: [
-          { key: 'content', title: 'Content', icon: 'form' },
-          { key: 'tags', title: 'Tags', icon: 'tags' },
+          { key: 'content', icon: 'form' },
+          { key: 'tags', icon: 'tags' },
           {
             key: 'contentTypes',
-            title: 'menu.contentTypes',
             icon: 'file',
             component: ContentTypesPage,
           },
@@ -136,18 +134,16 @@ class App extends React.Component {
       },
       {
         key: 'system',
-        title: 'System',
         items: [
-          { key: 'spaces', title: 'Spaces', icon: 'book', component: SpacesPage },
+          { key: 'spaces', icon: 'book', component: SpacesPage },
           {
             key: 'users',
-            title: 'Users',
             icon: 'user',
             component: UsersPage,
             permission: permissions.USERS_LIST,
           },
-          { key: 'settings', title: 'Settings', icon: 'setting' },
-          { key: 'handleLogout', title: 'Logout', icon: 'handleLogout' },
+          { key: 'settings', icon: 'setting' },
+          { key: 'logout', icon: 'logout' },
         ],
       },
     ];
@@ -182,12 +178,12 @@ class App extends React.Component {
             </SpaceSelect>
 
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} onClick={this.onMenuClick}>
-              {menuItems.map(({ key: groupKey, title: groupTitle, items }) => (
-                <Menu.ItemGroup key={groupKey} title={groupTitle}>
-                  {items.filter(hasPermissions).map(({ key, title, icon }) => (
+              {menuItems.map(({ key: groupKey, items }) => (
+                <Menu.ItemGroup key={groupKey} title={t(`menu.${groupKey}`)}>
+                  {items.filter(hasPermissions).map(({ key, icon }) => (
                     <Menu.Item key={key}>
                       <Icon type={icon} />
-                      <span>{_(title)}</span>
+                      <span>{t(`menu.${key}`)}</span>
                     </Menu.Item>
                   ))}
                 </Menu.ItemGroup>
@@ -222,9 +218,7 @@ class App extends React.Component {
                   ]
                 )}
               </Container>
-              <Footer style={{ textAlign: 'center' }}>
-                Onionful (MIT) created by <a href="https://hsz.mobi">hsz</a>
-              </Footer>
+              <Footer style={{ textAlign: 'center' }}>{tm('copyrights')}</Footer>
             </Layout>
           )}
         </Layout>
