@@ -4,7 +4,7 @@ import { App, Authorize, Login } from 'containers';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter } from 'connected-react-router/immutable';
 import { IntlProvider } from 'react-intl';
 import store, { history } from 'store';
 import translations from 'translations';

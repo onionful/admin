@@ -1,9 +1,9 @@
 import { createBrowserHistory } from 'history';
 import { fromJS } from 'immutable';
-import { routerMiddleware } from 'react-router-redux';
-import reducers from 'reducers';
+import { connectRouter, routerMiddleware } from 'connected-react-router/immutable';
 import { applyMiddleware, compose, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
+import reducers from 'reducers';
 import thunk from 'redux-thunk';
 
 export const history = createBrowserHistory();
@@ -23,6 +23,6 @@ const composedEnhancers = compose(
   ...enhancers,
 );
 
-const store = createStore(reducers, initialState, composedEnhancers);
+const store = createStore(connectRouter(history)(reducers), initialState, composedEnhancers);
 
 export default store;
