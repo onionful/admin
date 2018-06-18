@@ -4,9 +4,9 @@ import { noop } from 'lodash';
 import { Route, Switch } from 'react-router-dom';
 import { fetchContent } from 'reducers/content/actions';
 import { withPermissions } from 'utils';
-import { Component, compose, connect, PropTypes, React } from 'utils/create';
-import ContentTypePageList from './List';
+import { Component, compose, connect, PropTypes, React, t } from 'utils/create';
 import ContentTypePageEdit from './Edit';
+import ContentTypePageList from './List';
 
 class ContentTypesPage extends Component {
   componentDidMount() {
@@ -17,11 +17,11 @@ class ContentTypesPage extends Component {
     return (
       <div>
         <SectionHeader
-          title="Content Types"
-          description="Create and update your own Content Types."
+          title={t('contentTypes.title')}
+          description={t('contentTypes.description')}
           action={
             <Button key="content-type-create" type="primary" icon="plus">
-              Add content type
+              {t('global.create')}
             </Button>
           }
         />

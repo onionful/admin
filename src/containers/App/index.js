@@ -1,5 +1,6 @@
-import { Avatar, Breadcrumb, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
+import { Avatar, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
 import { Logo } from 'components';
+import { push } from 'connected-react-router';
 import {
   ContentTypesPage,
   ErrorPage,
@@ -11,17 +12,16 @@ import {
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { push } from 'connected-react-router';
 import { getProfile, logout } from 'reducers/auth/actions';
-import { colors, permissions, withPermissions } from 'utils';
-import { compose, connect, glamorous, t, tm, PropTypes, React } from 'utils/create';
 import { fetchSpaces } from 'reducers/spaces/actions';
+import { colors, permissions, withPermissions } from 'utils';
+import { compose, connect, glamorous, PropTypes, React, t, tm } from 'utils/create';
 
 const { Sider, Footer } = Layout;
 
 const Container = glamorous(Layout.Content)({
   height: '100%',
-  padding: '0 50px',
+  padding: '20px',
 });
 
 const Content = glamorous.div({
@@ -127,7 +127,7 @@ class App extends React.Component {
           { key: 'tags', icon: 'tags' },
           {
             key: 'contentTypes',
-            icon: 'file',
+            icon: 'file-add',
             component: ContentTypesPage,
           },
         ],
@@ -196,29 +196,22 @@ class App extends React.Component {
                 {error ? (
                   <ErrorPage error={error} errorInfo={errorInfo} />
                 ) : (
-                  [
-                    <Breadcrumb key="breadcrumb" style={{ margin: '16px 0' }}>
-                      <Breadcrumb.Item>Home</Breadcrumb.Item>
-                      <Breadcrumb.Item>List</Breadcrumb.Item>
-                      <Breadcrumb.Item>App</Breadcrumb.Item>
-                    </Breadcrumb>,
-                    <Content key="content">
-                      <Switch>
-                        <Route exact path="/" component={HomePage} />
-                        {menuItems.map(section =>
-                          section.items
-                            .filter(({ component }) => component)
-                            .map(({ key, component }) => (
-                              <Route path={`/${key}`} component={component} />
-                            )),
-                        )}
-                        <Route component={NotFoundPage} />
-                      </Switch>
-                    </Content>,
-                  ]
+                  <Content key="content">
+                    <Switch>
+                      <Route exact path="/" component={HomePage} />
+                      {menuItems.map(section =>
+                        section.items
+                          .filter(({ component }) => component)
+                          .map(({ key, component }) => (
+                            <Route path={`/${key}`} component={component} />
+                          )),
+                      )}
+                      <Route component={NotFoundPage} />
+                    </Switch>
+                  </Content>
                 )}
               </Container>
-              <Footer style={{ textAlign: 'center' }}>{tm('copyrights')}</Footer>
+              <Footer style={{ textAlign: 'center' }}>{tm('global.copyrights')}</Footer>
             </Layout>
           )}
         </Layout>

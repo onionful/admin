@@ -20,8 +20,8 @@ export const SectionHeader = ({ title, description, action }) => (
 );
 
 SectionHeader.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  title: PropTypes.node.isRequired,
+  description: PropTypes.node.isRequired,
   action: PropTypes.node,
 };
 

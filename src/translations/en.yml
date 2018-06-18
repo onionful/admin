@@ -1,3 +1,7 @@
+contentTypes:
+  title: Content Types
+  description: Create and update your own Content Types.
+
 menu:
   space: Space
   contentTypes: Content types
@@ -7,4 +11,6 @@ menu:
   settings: Settings
   logout: Logout
 
-copyrights: Onionful (MIT) created by [hsz](https://hsz.mobi/)
+global:
+  copyrights: Onionful (MIT) created by [hsz](https://hsz.mobi/)
+  create: Create
