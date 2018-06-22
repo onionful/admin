@@ -48,8 +48,6 @@ class SpacesPage extends Component {
 
   render() {
     const { data, isLoading } = this.props;
-    console.log('data', data);
-    console.log('isLoading', isLoading);
 
     return (
       <div>

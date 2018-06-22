@@ -2,7 +2,7 @@ import { Avatar, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
 import { Logo } from 'components';
 import { push } from 'connected-react-router';
 import {
-  ContentTypesPage,
+  ContentTypePage,
   ErrorPage,
   HomePage,
   NotFoundPage,
@@ -11,11 +11,12 @@ import {
 } from 'containers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
+import { injectIntl, intlShape } from 'react-intl';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile, logout } from 'reducers/auth/actions';
 import { fetchSpaces } from 'reducers/spaces/actions';
 import { colors, permissions, withPermissions } from 'utils';
-import { compose, connect, glamorous, PropTypes, React, t, tm } from 'utils/create';
+import { compose, connect, glamorous, PropTypes, React, tm } from 'utils/create';
 
 const { Sider, Footer } = Layout;
 
@@ -86,9 +87,6 @@ class App extends React.Component {
 
   onMenuClick = ({ key }) => {
     const { pushState, handleLogout } = this.props;
-    if (!key) {
-      return null; // because of https://github.com/ant-design/ant-design/issues/10368
-    }
 
     switch (key) {
       case 'logout':
@@ -109,7 +107,13 @@ class App extends React.Component {
   };
 
   render() {
-    const { hasPermission, isAuthenticated, isProfileLoading, profile } = this.props;
+    const {
+      hasPermission,
+      isAuthenticated,
+      isProfileLoading,
+      profile,
+      intl: { formatMessage },
+    } = this.props;
     const { collapsed, error, errorInfo } = this.state;
 
     if (!isAuthenticated) {
@@ -121,29 +125,33 @@ class App extends React.Component {
 
     const menuItems = [
       {
+        id: 'menu.space',
         key: 'space',
         items: [
-          { key: 'content', icon: 'form' },
-          { key: 'tags', icon: 'tags' },
+          { id: 'menu.content', key: 'content', icon: 'form' },
+          { id: 'menu.tags', key: 'tags', icon: 'tags' },
           {
-            key: 'contentTypes',
+            id: 'menu.content-type',
+            key: 'content-type',
             icon: 'file-add',
-            component: ContentTypesPage,
+            component: ContentTypePage,
           },
         ],
       },
       {
+        id: 'menu.system',
         key: 'system',
         items: [
-          { key: 'spaces', icon: 'book', component: SpacesPage },
+          { id: 'menu.spaces', key: 'spaces', icon: 'book', component: SpacesPage },
           {
+            id: 'menu.users',
             key: 'users',
             icon: 'user',
             component: UsersPage,
             permission: permissions.USERS_LIST,
           },
-          { key: 'settings', icon: 'setting' },
-          { key: 'logout', icon: 'logout' },
+          { id: 'menu.settings', key: 'settings', icon: 'setting' },
+          { id: 'menu.logout', key: 'logout', icon: 'logout' },
         ],
       },
     ];
@@ -178,12 +186,12 @@ class App extends React.Component {
             </SpaceSelect>
 
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} onClick={this.onMenuClick}>
-              {menuItems.map(({ key: groupKey, items }) => (
-                <Menu.ItemGroup key={groupKey} title={t(`menu.${groupKey}`)}>
-                  {items.filter(hasPermissions).map(({ key, icon }) => (
-                    <Menu.Item key={key}>
-                      <Icon type={icon} />
-                      <span>{t(`menu.${key}`)}</span>
+              {menuItems.map(group => (
+                <Menu.ItemGroup key={group.key} title={formatMessage(group)}>
+                  {group.items.filter(hasPermissions).map(item => (
+                    <Menu.Item key={item.key}>
+                      <Icon type={item.icon} />
+                      <span>{formatMessage(item)}</span>
                     </Menu.Item>
                   ))}
                 </Menu.ItemGroup>
@@ -221,6 +229,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
+  intl: intlShape.isRequired,
   hasPermission: PropTypes.func,
   isAuthenticated: PropTypes.bool,
   isProfileLoading: PropTypes.bool,
@@ -258,6 +267,7 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps,
   ),
+  injectIntl,
   withRouter,
   withPermissions(),
 )(App);

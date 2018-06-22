@@ -1,6 +1,6 @@
 import config from 'config';
 import { mapKeys } from 'lodash';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 import { Auth } from 'utils';
 import * as types from './types';
 
