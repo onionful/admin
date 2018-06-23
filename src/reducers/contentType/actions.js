@@ -2,6 +2,11 @@ import { Map } from 'immutable';
 import { api } from 'utils';
 import * as types from './types';
 
+export const fetchContentType = params => ({
+  type: types.CONTENT_TYPE_ITEM,
+  payload: api.get('/content-type', { params }),
+});
+
 export const fetchContentTypes = params => ({
   type: types.CONTENT_TYPE_LIST,
   payload: api.get('/content-type', { params }),

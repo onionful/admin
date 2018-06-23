@@ -1,12 +1,9 @@
-import { Button, Col, Form, Icon, Input, Row } from 'antd';
-import { SectionHeader } from 'components';
-import { push } from 'connected-react-router';
+import { Col, Form, Icon, Input, Row } from 'antd';
+import { withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
-import { getContentType } from 'reducers/contentType/actions';
-import { withPermissions } from 'utils';
-import { Component, compose, connect, glamorous, PropTypes, React } from 'utils/create';
+import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
 
 class ContentTypePageForm extends Component {
   state = {
@@ -39,6 +36,7 @@ class ContentTypePageForm extends Component {
   render() {
     const { lockedId } = this.state;
     const {
+      children,
       id,
       item,
       form: { getFieldDecorator },
@@ -55,20 +53,7 @@ class ContentTypePageForm extends Component {
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
-        <SectionHeader
-          title={formatMessage({ id: 'contentType.title' })}
-          description={formatMessage({ id: 'contentType.description' })}
-          action={
-            <Button.Group>
-              <Button onClick={this.onCancelClick} icon="rollback">
-                {formatMessage({ id: 'global.cancel' })}
-              </Button>
-              <Button onClick={this.onUpdateClick} htmlType="submit" type="primary" icon="save">
-                {id ? formatMessage({ id: 'global.update' }) : formatMessage({ id: 'global.save' })}
-              </Button>
-            </Button.Group>
-          }
-        />
+        {children}
 
         <Row gutter={24}>
           <Col span={12}>
@@ -97,6 +82,7 @@ class ContentTypePageForm extends Component {
 
 ContentTypePageForm.propTypes = {
   intl: intlShape.isRequired,
+  children: PropTypes.node,
   onSubmit: PropTypes.func.isRequired,
   pushState: PropTypes.func,
   id: PropTypes.string,
@@ -107,26 +93,11 @@ ContentTypePageForm.propTypes = {
 };
 
 ContentTypePageForm.defaultProps = {
+  children: null,
   pushState: noop,
   id: null,
   item: Map(),
 };
-
-const mapStateToProps = (
-  state,
-  {
-    match: {
-      params: { id },
-    },
-  },
-) => ({
-  id,
-  item: getContentType(state, id),
-});
-
-const mapDispatchToProps = dispatch => ({
-  pushState: path => dispatch(push(path)),
-});
 
 const mapPropsToFields = ({ item = {} }) => ({
   name: Form.createFormField({
@@ -141,10 +112,6 @@ const mapPropsToFields = ({ item = {} }) => ({
 });
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
   injectIntl,
   withPermissions(),
   Form.create({ mapPropsToFields }),

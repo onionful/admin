@@ -1,9 +1,10 @@
 import { Avatar, Icon, Input, Table } from 'antd';
+import { withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import moment from 'moment';
 import { fetchUsers } from 'reducers/users/actions';
-import { permissions, withPermissions } from 'utils';
+import { permissions } from 'utils';
 import { Component, compose, connect, glamorous, PropTypes, React } from 'utils/create';
 
 const columns = [

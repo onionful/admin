@@ -1,11 +1,12 @@
+/* eslint-disable */
 import { Button, Table } from 'antd';
 import { SectionHeader } from 'components';
 import { push } from 'connected-react-router';
+import { withLoading, withPermissions } from 'helpers';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
-import { getContentTypes } from 'reducers/contentType/actions';
-import { withPermissions } from 'utils';
+import { fetchContentTypes, getContentTypes } from 'reducers/contentType/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class ContentTypePageList extends Component {
@@ -17,7 +18,6 @@ class ContentTypePageList extends Component {
   render() {
     const {
       data,
-      isLoading,
       intl: { formatMessage },
     } = this.props;
 
@@ -70,7 +70,6 @@ class ContentTypePageList extends Component {
           ]}
           rowKey="id"
           dataSource={data.toJS()}
-          loading={isLoading}
           size="small"
         />
       </div>
@@ -81,19 +80,16 @@ class ContentTypePageList extends Component {
 ContentTypePageList.propTypes = {
   intl: intlShape.isRequired,
   handlePush: PropTypes.func,
-  isLoading: PropTypes.bool,
   data: PropTypes.list,
 };
 
 ContentTypePageList.defaultProps = {
   handlePush: noop,
-  isLoading: false,
   data: List(),
 };
 
 const mapStateToProps = state => ({
   data: getContentTypes(state),
-  isLoading: state.getIn(['content', 'isLoading']),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -106,5 +102,6 @@ export default compose(
     mapDispatchToProps,
   ),
   injectIntl,
+  withLoading('contentType', fetchContentTypes),
   withPermissions(),
 )(ContentTypePageList);

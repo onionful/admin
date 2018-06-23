@@ -1,6 +1,6 @@
 import errors from 'http-errors';
 import { noop } from 'lodash';
-import { isAllowed } from 'reducers/auth';
+import { isAllowed } from 'reducers/auth/index';
 import { Component, connect, PropTypes, React } from 'utils/create';
 
 export default componentPermission => WrappedComponent =>

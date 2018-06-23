@@ -1,9 +1,9 @@
 import { Avatar, Table } from 'antd';
+import { withPermissions } from 'helpers';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import moment from 'moment';
 import { fetchSpaces } from 'reducers/spaces/actions';
-import { withPermissions } from 'utils';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 const columns = [

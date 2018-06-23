@@ -1,18 +1,12 @@
-import { Spin } from 'antd';
 import { push } from 'connected-react-router';
 import { noop } from 'lodash';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { fetchContentTypes } from 'reducers/contentType/actions';
-import { withPermissions } from 'utils';
+import { withPermissions } from 'helpers';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
-import ContentTypeForm from './Form';
-import ContentTypeList from './List';
+import ContentTypePageEdit from './Edit';
+import ContentTypePageList from './List';
 
 class ContentTypePage extends Component {
-  componentDidMount() {
-    this.props.handleFetchContentTypes();
-  }
-
   onCancelClick = () => {
     const { handlePush, path } = this.props;
     handlePush(path);
@@ -29,47 +23,33 @@ class ContentTypePage extends Component {
   };
 
   render() {
-    const { isLoading, path } = this.props;
+    const { path } = this.props;
 
-    return isLoading ? (
-      <Spin />
-    ) : (
+    return (
       <Switch>
-        <Route exact path={path} render={props => <ContentTypeList {...props} path={path} />} />
-        <Route
-          path={`${path}/create`}
-          render={props => <ContentTypeForm {...props} onSubmit={this.onCreateClick} />}
-        />
-        <Route
-          path={`${path}/edit/:id`}
-          render={props => <ContentTypeForm {...props} onSubmit={this.onUpdateClick} />}
-        />
+        <Route exact path={path} render={props => <ContentTypePageList {...props} path={path} />} />
+        <Route path={`${path}/create`} component={ContentTypePageEdit} />
+        <Route path={`${path}/edit/:id`} component={ContentTypePageEdit} />
       </Switch>
     );
   }
 }
 
 ContentTypePage.propTypes = {
-  handleFetchContentTypes: PropTypes.func,
   handlePush: PropTypes.func,
-  isLoading: PropTypes.bool,
   path: PropTypes.string,
 };
 
 ContentTypePage.defaultProps = {
-  handleFetchContentTypes: noop,
   handlePush: noop,
-  isLoading: true,
   path: '/',
 };
 
 const mapStateToProps = (state, { match: { path } }) => ({
-  isLoading: state.getIn(['contentType', 'isLoading']),
   path,
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleFetchContentTypes: params => dispatch(fetchContentTypes(params)),
   handlePush: path => dispatch(push(path)),
 });
 

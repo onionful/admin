@@ -10,6 +10,12 @@ const initialState = fromJS({
 
 export default typeToReducer(
   {
+    [types.CONTENT_TYPE_ITEM]: {
+      PENDING: state => state.merge({ isLoading: true, error: null }),
+      REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
+      FULFILLED: (state, { payload: { data } }) =>
+        state.merge({ isLoading: false, error: null, data }),
+    },
     [types.CONTENT_TYPE_LIST]: {
       PENDING: state => state.merge({ isLoading: true, error: null }),
       REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),

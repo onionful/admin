@@ -9,18 +9,20 @@ import {
   SpacesPage,
   UsersPage,
 } from 'containers';
+import { withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile, logout } from 'reducers/auth/actions';
 import { fetchSpaces } from 'reducers/spaces/actions';
-import { colors, permissions, withPermissions } from 'utils';
+import { colors, permissions } from 'utils';
 import { compose, connect, glamorous, PropTypes, React, tm } from 'utils/create';
 
 const { Sider, Footer } = Layout;
 
 const Container = glamorous(Layout.Content)({
+  position: 'relative',
   height: '100%',
   padding: '20px',
 });
@@ -28,7 +30,6 @@ const Container = glamorous(Layout.Content)({
 const Content = glamorous.div({
   background: '#fff',
   padding: 24,
-  minHeight: 280,
 });
 
 const StyledLogo = glamorous(Logo)(({ collapsed }) => ({
@@ -204,7 +205,7 @@ class App extends React.Component {
                 {error ? (
                   <ErrorPage error={error} errorInfo={errorInfo} />
                 ) : (
-                  <Content key="content">
+                  <Content>
                     <Switch>
                       <Route exact path="/" component={HomePage} />
                       {menuItems.map(section =>
