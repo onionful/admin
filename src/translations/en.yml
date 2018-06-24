@@ -1,6 +1,13 @@
 contentType:
-  title: Content Types
-  description: Create and update your own Content Types.
+  list:
+    title: Content Types
+    description: Create and update your own Content Types.
+  create:
+    title: Create new Content Type
+    description: Create new type of your content
+  edit:
+    title: Edit "{0}" Content Type
+    description: Edit existing content type
 
 menu:
   space: Space

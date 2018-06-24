@@ -15,13 +15,18 @@ const Container = glamorous.div({
   justifyContent: 'center',
 });
 
-export default (resource, fetch) => WrappedComponent =>
+export default ({ type, action }) => WrappedComponent =>
   connect(
     state => ({
-      isLoading: state.getIn([resource, 'isLoading']),
+      isLoading: state.getIn([type, 'isLoading']),
     }),
     dispatch => ({
-      handleFetch: () => dispatch(fetch()),
+      handleFetch: props => {
+        const result = action(props);
+        if (result) {
+          dispatch(result);
+        }
+      },
     }),
   )(
     class extends Component {
@@ -37,7 +42,7 @@ export default (resource, fetch) => WrappedComponent =>
 
       componentDidMount() {
         const { handleFetch } = this.props;
-        handleFetch();
+        handleFetch(this.props);
       }
 
       render() {
@@ -50,6 +55,7 @@ export default (resource, fetch) => WrappedComponent =>
             </Container>
           );
         }
+
         return <WrappedComponent {...this.props} />;
       }
     },

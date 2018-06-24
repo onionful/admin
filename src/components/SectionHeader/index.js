@@ -1,15 +1,21 @@
 import { Col, Row } from 'antd';
-import { PropTypes, React, glamorous } from 'utils/create';
+import { colors } from 'utils';
+import { glamorous, PropTypes, React } from 'utils/create';
 
 const Header = glamorous.h1({
   margin: 0,
+});
+
+const Description = glamorous.p({
+  fontStyle: 'italic',
+  color: colors.gray,
 });
 
 export const SectionHeader = ({ title, description, action }) => (
   <Row type="flex" align="middle">
     <Col span={action ? 12 : 24}>
       <Header>{title}</Header>
-      <p>{description}</p>
+      <Description>{description}</Description>
     </Col>
     {action && (
       <Col span={12} align="right">

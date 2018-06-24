@@ -3,6 +3,7 @@ import { withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
+import slugify from 'slugify';
 import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
 
 class ContentTypePageForm extends Component {
@@ -10,22 +11,26 @@ class ContentTypePageForm extends Component {
     lockedId: true,
   };
 
-  handleEditClick = ({ slug }) => {
-    const { pushState } = this.props;
-    pushState(`/content/${slug}`);
-  };
-
   handleLockIdClick = () => {
     const { lockedId } = this.state;
     this.setState({ lockedId: !lockedId });
   };
 
-  handleNameChange = () => {};
+  handleNameChange = () => {
+    const { lockedId } = this.state;
+    const {
+      form: { getFieldValue, setFieldsValue },
+    } = this.props;
+
+    if (lockedId) {
+      setTimeout(() => setFieldsValue({ id: slugify(getFieldValue('name'), { lower: true }) }), 0);
+    }
+  };
 
   handleSubmit = e => {
+    e.preventDefault();
     const { onSubmit } = this.props;
 
-    e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         onSubmit(values);
@@ -47,6 +52,16 @@ class ContentTypePageForm extends Component {
       throw new Error(formatMessage({ id: 'errors.contentTypeNotFound' }));
     }
 
+    const meta = {
+      name: formatMessage({ id: 'global.name' }),
+      id: formatMessage({ id: 'global.id' }),
+      description: formatMessage({ id: 'global.description' }),
+      errors: {
+        name: 'Please input your username!',
+        id: 'Please input your username!',
+      },
+    };
+
     const LockId = glamorous(props => (
       <Icon {...props} type={lockedId ? 'lock' : 'unlock'} onClick={this.handleLockIdClick} />
     ))({ cursor: 'pointer' });
@@ -57,22 +72,22 @@ class ContentTypePageForm extends Component {
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label={formatMessage({ id: 'global.name' })}>
+            <Form.Item label={meta.name}>
               {getFieldDecorator('name', {
-                rules: [{ required: true, message: 'Please input your username!' }],
+                rules: [{ required: true, message: meta.errors.name }],
               })(<Input type="text" onChange={this.handleNameChange} />)}
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label={formatMessage({ id: 'global.id' })}>
+            <Form.Item label={meta.id}>
               {getFieldDecorator('id', {
                 disabled: true,
-                rules: [{ required: true, message: 'Please input your username!' }],
+                rules: [{ required: true, message: meta.errors.id }],
               })(<Input type="text" addonAfter={<LockId />} disabled={lockedId} />)}
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={formatMessage({ id: 'global.description' })}>
+        <Form.Item label={meta.description}>
           {getFieldDecorator('description')(<Input.TextArea autosize />)}
         </Form.Item>
       </Form>

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Button, Table } from 'antd';
 import { SectionHeader } from 'components';
 import { push } from 'connected-react-router';
@@ -10,9 +9,22 @@ import { fetchContentTypes, getContentTypes } from 'reducers/contentType/actions
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class ContentTypePageList extends Component {
+  onCreateClick = () => {
+    const {
+      handlePush,
+      match: { path },
+    } = this.props;
+
+    handlePush(`${path}/create`);
+  };
+
   onEditClick = ({ id }) => {
-    const { handlePush } = this.props;
-    handlePush(`/content-type/edit/${id}`);
+    const {
+      handlePush,
+      match: { path },
+    } = this.props;
+
+    handlePush(`${path}/edit/${id}`);
   };
 
   render() {
@@ -44,8 +56,8 @@ class ContentTypePageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={formatMessage({ id: 'contentType.title' })}
-          description={formatMessage({ id: 'contentType.description' })}
+          title={formatMessage({ id: 'contentType.list.title' })}
+          description={formatMessage({ id: 'contentType.list.description' })}
           action={
             <Button onClick={this.onCreateClick} type="primary" icon="plus">
               {formatMessage({ id: 'global.create' })}
@@ -54,6 +66,9 @@ class ContentTypePageList extends Component {
         />
 
         <Table
+          rowKey="id"
+          dataSource={data.toJS()}
+          size="small"
           columns={[
             ...columns,
             {
@@ -68,9 +83,6 @@ class ContentTypePageList extends Component {
               ),
             },
           ]}
-          rowKey="id"
-          dataSource={data.toJS()}
-          size="small"
         />
       </div>
     );
@@ -79,6 +91,7 @@ class ContentTypePageList extends Component {
 
 ContentTypePageList.propTypes = {
   intl: intlShape.isRequired,
+  match: PropTypes.match.isRequired,
   handlePush: PropTypes.func,
   data: PropTypes.list,
 };
@@ -102,6 +115,9 @@ export default compose(
     mapDispatchToProps,
   ),
   injectIntl,
-  withLoading('contentType', fetchContentTypes),
+  withLoading({
+    type: 'contentType',
+    action: () => fetchContentTypes(),
+  }),
   withPermissions(),
 )(ContentTypePageList);

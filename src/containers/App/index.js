@@ -129,8 +129,6 @@ class App extends React.Component {
         id: 'menu.space',
         key: 'space',
         items: [
-          { id: 'menu.content', key: 'content', icon: 'form' },
-          { id: 'menu.tags', key: 'tags', icon: 'tags' },
           {
             id: 'menu.content-type',
             key: 'content-type',

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import RPropTypes from 'prop-types';
+import RRPropTypes from 'react-router-prop-types';
 import IPropTypes from 'react-immutable-proptypes';
 import { FormattedMessage } from 'react-intl';
 import { FormattedMarkdown } from 'components';
@@ -20,4 +21,5 @@ export const tm = (id, values = {}) => (
 export const PropTypes = {
   ...IPropTypes,
   ...RPropTypes,
+  ...RRPropTypes,
 };
