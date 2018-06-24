@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Button } from 'antd';
 import { SectionHeader } from 'components';
 import { push } from 'connected-react-router';
@@ -6,7 +5,7 @@ import { withLoading, withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
-import { fetchContentType, getContentType } from 'reducers/contentType/actions';
+import { createContentType, fetchContentType, getContentType } from 'reducers/contentType/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 import Form from '../Form';
 
@@ -18,10 +17,14 @@ class ContentTypePageEdit extends Component {
   };
 
   handleSubmit = values => {
-    const { pushState, path } = this.props;
+    const { isNew, pushState, path, handleCreateContentType } = this.props;
 
-    console.log('values', values);
-    pushState(path);
+    if (isNew) {
+      handleCreateContentType(values).then(response => {
+        console.log('response', response);
+        pushState(path);
+      });
+    }
   };
 
   render() {
@@ -47,7 +50,7 @@ class ContentTypePageEdit extends Component {
           title: formatMessage({ id: 'contentType.edit.title' }),
           description: formatMessage({ id: 'contentType.edit.description' }),
           save: formatMessage({ id: 'global.update' }),
-        cancel: formatMessage({ id: 'global.cancel' }),
+          cancel: formatMessage({ id: 'global.cancel' }),
         };
 
     return (
@@ -73,14 +76,15 @@ class ContentTypePageEdit extends Component {
 
 ContentTypePageEdit.propTypes = {
   intl: intlShape.isRequired,
-  match: PropTypes.match.isRequired,
   path: PropTypes.string.isRequired,
+  handleCreateContentType: PropTypes.func,
   pushState: PropTypes.func,
   isNew: PropTypes.bool,
   item: PropTypes.map,
 };
 
 ContentTypePageEdit.defaultProps = {
+  handleCreateContentType: noop,
   pushState: noop,
   isNew: true,
   item: Map(),
@@ -100,6 +104,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = dispatch => ({
   pushState: path => dispatch(push(path)),
+  handleCreateContentType: data => dispatch(createContentType(data)),
 });
 
 export default compose(

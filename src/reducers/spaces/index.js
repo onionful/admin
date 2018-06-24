@@ -3,6 +3,7 @@ import typeToReducer from 'type-to-reducer';
 import * as types from './types';
 
 const initialState = fromJS({
+  current: null,
   isLoading: false,
   error: null,
   data: [],
@@ -16,6 +17,7 @@ export default typeToReducer(
       FULFILLED: (state, { payload: { data } }) =>
         state.merge({ isLoading: false, error: null, data }),
     },
+    [types.SET_SPACE]: (state, payload) => state.set('current', payload),
   },
   initialState,
 );

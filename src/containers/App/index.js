@@ -10,12 +10,12 @@ import {
   UsersPage,
 } from 'containers';
 import { withPermissions } from 'helpers';
-import { Map } from 'immutable';
+import { List, Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile, logout } from 'reducers/auth/actions';
-import { fetchSpaces } from 'reducers/spaces/actions';
+import { fetchSpaces, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, permissions } from 'utils';
 import { compose, connect, glamorous, PropTypes, React, tm } from 'utils/create';
 
@@ -97,13 +97,18 @@ class App extends React.Component {
     }
   };
 
-  onSpaceChange = () => {};
+  onSpaceChange = space => {
+    const { handleSetSpace } = this.props;
+
+    handleSetSpace(space);
+  };
 
   fetchData = () => {
-    const { isAuthenticated, handleGetProfile } = this.props;
+    const { isAuthenticated, handleGetProfile, handleFetchSpaces } = this.props;
 
     if (isAuthenticated) {
       handleGetProfile();
+      handleFetchSpaces();
     }
   };
 
@@ -113,6 +118,7 @@ class App extends React.Component {
       isAuthenticated,
       isProfileLoading,
       profile,
+      spaces,
       intl: { formatMessage },
     } = this.props;
     const { collapsed, error, errorInfo } = this.state;
@@ -126,8 +132,8 @@ class App extends React.Component {
 
     const menuItems = [
       {
-        id: 'menu.space',
-        key: 'space',
+        id: 'menu.content',
+        key: 'content',
         items: [
           {
             id: 'menu.content-type',
@@ -179,9 +185,11 @@ class App extends React.Component {
                 option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
             >
-              <Select.Option value="jack">Jack</Select.Option>
-              <Select.Option value="lucy">Lucy</Select.Option>
-              <Select.Option value="tom">Tom</Select.Option>
+              {spaces.map(space => (
+                <Select.Option key={space.get('id')} value={space.get('id')}>
+                  {space.get('name')}
+                </Select.Option>
+              ))}
             </SpaceSelect>
 
             <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} onClick={this.onMenuClick}>
@@ -233,8 +241,11 @@ App.propTypes = {
   isAuthenticated: PropTypes.bool,
   isProfileLoading: PropTypes.bool,
   profile: PropTypes.map,
+  spaces: PropTypes.list,
   handleGetProfile: PropTypes.func,
+  handleFetchSpaces: PropTypes.func,
   handleLogout: PropTypes.func,
+  handleSetSpace: PropTypes.func,
   pushState: PropTypes.func,
 };
 
@@ -243,8 +254,11 @@ App.defaultProps = {
   isAuthenticated: false,
   isProfileLoading: true,
   profile: Map(),
+  spaces: List(),
   handleGetProfile: noop,
+  handleFetchSpaces: noop,
   handleLogout: noop,
+  handleSetSpace: noop,
   pushState: noop,
 };
 
@@ -252,12 +266,14 @@ const mapStateToProps = state => ({
   isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
   isProfileLoading: state.getIn(['auth', 'isLoading']),
   profile: state.getIn(['auth', 'profile']),
+  spaces: getSpaces(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   handleFetchSpaces: params => dispatch(fetchSpaces(params)),
   handleGetProfile: getProfile(dispatch),
   handleLogout: logout(dispatch),
+  handleSetSpace: space => dispatch(setSpace(space)),
   pushState: path => dispatch(push(path)),
 });
 

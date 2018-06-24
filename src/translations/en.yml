@@ -10,7 +10,7 @@ contentType:
     description: Edit existing content type
 
 menu:
-  space: Space
+  content: Content
   content-type: Content types
   system: System
   spaces: Spaces
