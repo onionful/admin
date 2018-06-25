@@ -20,8 +20,7 @@ class ContentTypePageEdit extends Component {
     const { isNew, pushState, path, handleCreateContentType } = this.props;
 
     if (isNew) {
-      handleCreateContentType(values).then(response => {
-        console.log('response', response);
+      handleCreateContentType(values).then(() => {
         pushState(path);
       });
     }
