@@ -1,14 +1,17 @@
+import { connectRouter, routerMiddleware } from 'connected-react-router/immutable';
 import { createBrowserHistory } from 'history';
 import { fromJS } from 'immutable';
-import { connectRouter, routerMiddleware } from 'connected-react-router/immutable';
+import reducers from 'reducers';
 import { applyMiddleware, compose, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
-import reducers from 'reducers';
+import createSagaMiddleware from 'redux-saga';
+import sagas from 'sagas';
 
 export const history = createBrowserHistory();
 
 const initialState = fromJS({});
-const middlewares = [routerMiddleware(history), promiseMiddleware()];
+const sagaMiddleware = createSagaMiddleware();
+const middlewares = [routerMiddleware(history), promiseMiddleware(), sagaMiddleware];
 
 const enhancers = [];
 if (process.env.NODE_ENV === 'development') {
@@ -23,5 +26,6 @@ const composedEnhancers = compose(
 );
 
 const store = createStore(connectRouter(history)(reducers), initialState, composedEnhancers);
+sagaMiddleware.run(sagas);
 
 export default store;
