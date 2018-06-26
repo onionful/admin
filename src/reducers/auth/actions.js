@@ -1,6 +1,6 @@
 import config from 'config';
-import { mapKeys } from 'lodash';
 import { push } from 'connected-react-router';
+import { mapKeys } from 'lodash';
 import { Auth } from 'utils';
 import * as types from './types';
 
@@ -61,17 +61,21 @@ export const profileFailure = error => ({
   error,
 });
 
-export const getProfile = dispatch => () => {
-  dispatch(profileRequest());
-  auth.getProfile((err, data) => {
-    if (err) {
-      dispatch(profileFailure(`${err.error}: ${err.errorDescription}`));
-    } else {
-      const {
-        auth0: { claimDomain },
-      } = config;
-      const parsed = mapKeys(data, (value, key) => key.replace(claimDomain, ''));
-      dispatch(profileSuccess(parsed));
-    }
+export const getProfile = dispatch => () =>
+  new Promise((resolve, reject) => {
+    dispatch(profileRequest());
+    auth.getProfile((err, data) => {
+      if (err) {
+        const error = `${err.error}: ${err.errorDescription}`;
+        dispatch(profileFailure(error));
+        reject(error);
+      } else {
+        const {
+          auth0: { claimDomain },
+        } = config;
+        const parsed = mapKeys(data, (value, key) => key.replace(claimDomain, ''));
+        dispatch(profileSuccess(parsed));
+        resolve(parsed);
+      }
+    });
   });
-};

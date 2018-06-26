@@ -17,7 +17,7 @@ export default typeToReducer(
       FULFILLED: (state, { payload: { data } }) =>
         state.merge({ isLoading: false, error: null, data }),
     },
-    [types.SET_SPACE]: (state, payload) => state.set('current', payload),
+    [types.SET_SPACE]: (state, { payload }) => state.set('current', payload),
   },
   initialState,
 );

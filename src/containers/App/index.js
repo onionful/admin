@@ -1,5 +1,5 @@
 import { Avatar, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
-import { Logo } from 'components';
+import { Logo, SpacesModal } from 'components';
 import { push } from 'connected-react-router';
 import {
   ContentTypePage,
@@ -9,13 +9,12 @@ import {
   SpacesPage,
   UsersPage,
 } from 'containers';
-import { withPermissions } from 'helpers';
 import { List, Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile, logout } from 'reducers/auth/actions';
-import { fetchSpaces, getSpaces, setSpace } from 'reducers/spaces/actions';
+import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, permissions } from 'utils';
 import { compose, connect, glamorous, PropTypes, React, tm } from 'utils/create';
 
@@ -38,7 +37,7 @@ const StyledLogo = glamorous(Logo)(({ collapsed }) => ({
 
 const UserInfo = glamorous.div({
   cursor: 'pointer',
-  backgroundColor: colors.triggerBackground,
+  backgroundColor: colors.background,
   padding: '1rem 0',
   marginBottom: '1rem',
   textAlign: 'center',
@@ -104,11 +103,10 @@ class App extends React.Component {
   };
 
   fetchData = () => {
-    const { isAuthenticated, handleGetProfile, handleFetchSpaces } = this.props;
+    const { isAuthenticated, handleGetProfile } = this.props;
 
     if (isAuthenticated) {
       handleGetProfile();
-      handleFetchSpaces();
     }
   };
 
@@ -118,6 +116,7 @@ class App extends React.Component {
       isAuthenticated,
       isProfileLoading,
       profile,
+      space,
       spaces,
       intl: { formatMessage },
     } = this.props;
@@ -176,59 +175,71 @@ class App extends React.Component {
               </Tooltip>
             )}
 
-            <SpaceSelect
-              showSearch
-              placeholder="Select space"
-              optionFilterProp="children"
-              onChange={this.onSpaceChange}
-              filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-            >
-              {spaces.map(space => (
-                <Select.Option key={space.get('id')} value={space.get('id')}>
-                  {space.get('name')}
-                </Select.Option>
-              ))}
-            </SpaceSelect>
+            <Spin spinning={spaces.isEmpty()}>
+              <SpaceSelect
+                showSearch
+                placeholder="Select space"
+                optionFilterProp="children"
+                onChange={this.onSpaceChange}
+                value={space}
+                filterOption={(input, option) =>
+                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {spaces.map(item => (
+                  <Select.Option key={item.get('id')} value={item.get('id')}>
+                    {item.get('name')}
+                  </Select.Option>
+                ))}
+              </SpaceSelect>
 
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} onClick={this.onMenuClick}>
-              {menuItems.map(group => (
-                <Menu.ItemGroup key={group.key} title={formatMessage(group)}>
-                  {group.items.filter(hasPermissions).map(item => (
-                    <Menu.Item key={item.key}>
-                      <Icon type={item.icon} />
-                      <span>{formatMessage(item)}</span>
-                    </Menu.Item>
-                  ))}
-                </Menu.ItemGroup>
-              ))}
-            </Menu>
+              <Menu
+                theme="dark"
+                mode="inline"
+                defaultSelectedKeys={['4']}
+                onClick={this.onMenuClick}
+              >
+                {menuItems.map(group => (
+                  <Menu.ItemGroup key={group.key} title={formatMessage(group)}>
+                    {group.items.filter(hasPermissions).map(item => (
+                      <Menu.Item key={item.key}>
+                        <Icon type={item.icon} />
+                        <span>{formatMessage(item)}</span>
+                      </Menu.Item>
+                    ))}
+                  </Menu.ItemGroup>
+                ))}
+              </Menu>
+            </Spin>
           </Sider>
-          {!isProfileLoading && (
-            <Layout>
-              <Container>
-                {error ? (
-                  <ErrorPage error={error} errorInfo={errorInfo} />
-                ) : (
-                  <Content>
-                    <Switch>
-                      <Route exact path="/" component={HomePage} />
-                      {menuItems.map(section =>
-                        section.items
-                          .filter(({ component }) => component)
-                          .map(({ key, component }) => (
-                            <Route path={`/${key}`} component={component} />
-                          )),
-                      )}
-                      <Route component={NotFoundPage} />
-                    </Switch>
-                  </Content>
-                )}
-              </Container>
-              <Footer style={{ textAlign: 'center' }}>{tm('global.copyrights')}</Footer>
-            </Layout>
-          )}
+
+          {!space && <SpacesModal />}
+
+          {!isProfileLoading &&
+            space && (
+              <Layout>
+                <Container>
+                  {error ? (
+                    <ErrorPage error={error} errorInfo={errorInfo} />
+                  ) : (
+                    <Content>
+                      <Switch>
+                        <Route exact path="/" component={HomePage} />
+                        {menuItems.map(section =>
+                          section.items
+                            .filter(({ component }) => component)
+                            .map(({ key, component }) => (
+                              <Route path={`/${key}`} component={component} />
+                            )),
+                        )}
+                        <Route component={NotFoundPage} />
+                      </Switch>
+                    </Content>
+                  )}
+                </Container>
+                <Footer style={{ textAlign: 'center' }}>{tm('global.copyrights')}</Footer>
+              </Layout>
+            )}
         </Layout>
       </Spin>
     );
@@ -241,9 +252,9 @@ App.propTypes = {
   isAuthenticated: PropTypes.bool,
   isProfileLoading: PropTypes.bool,
   profile: PropTypes.map,
+  space: PropTypes.string,
   spaces: PropTypes.list,
   handleGetProfile: PropTypes.func,
-  handleFetchSpaces: PropTypes.func,
   handleLogout: PropTypes.func,
   handleSetSpace: PropTypes.func,
   pushState: PropTypes.func,
@@ -254,9 +265,9 @@ App.defaultProps = {
   isAuthenticated: false,
   isProfileLoading: true,
   profile: Map(),
+  space: null,
   spaces: List(),
   handleGetProfile: noop,
-  handleFetchSpaces: noop,
   handleLogout: noop,
   handleSetSpace: noop,
   pushState: noop,
@@ -266,11 +277,11 @@ const mapStateToProps = state => ({
   isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
   isProfileLoading: state.getIn(['auth', 'isLoading']),
   profile: state.getIn(['auth', 'profile']),
+  space: getCurrentSpace(state),
   spaces: getSpaces(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleFetchSpaces: params => dispatch(fetchSpaces(params)),
   handleGetProfile: getProfile(dispatch),
   handleLogout: logout(dispatch),
   handleSetSpace: space => dispatch(setSpace(space)),
@@ -284,5 +295,4 @@ export default compose(
   ),
   injectIntl,
   withRouter,
-  withPermissions(),
 )(App);
