@@ -46,7 +46,8 @@
     "redux-promise-middleware": "^5.1.1",
     "redux-saga": "^0.16.0",
     "slugify": "^1.3.0",
-    "type-to-reducer": "^1.1.0"
+    "type-to-reducer": "^1.1.0",
+    "redux-thunk": "latest"
   },
   "devDependencies": {
     "babel-plugin-import": "^1.8.0",

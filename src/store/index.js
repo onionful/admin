@@ -5,13 +5,14 @@ import reducers from 'reducers';
 import { applyMiddleware, compose, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
 import createSagaMiddleware from 'redux-saga';
+import thunk from 'redux-thunk';
 import sagas from 'sagas';
 
 export const history = createBrowserHistory();
 
 const initialState = fromJS({});
 const sagaMiddleware = createSagaMiddleware();
-const middlewares = [routerMiddleware(history), promiseMiddleware(), sagaMiddleware];
+const middlewares = [thunk, routerMiddleware(history), promiseMiddleware(), sagaMiddleware];
 
 const enhancers = [];
 if (process.env.NODE_ENV === 'development') {
