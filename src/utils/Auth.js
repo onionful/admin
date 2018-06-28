@@ -51,11 +51,4 @@ export default class Auth {
     }
     return accessToken;
   };
-
-  getProfile = cb => {
-    this.auth0.client.userInfo(
-      this.getAccessToken(),
-      (err, profile) => (err ? cb(err) : cb(null, profile)),
-    );
-  };
 }

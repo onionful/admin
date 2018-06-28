@@ -37,27 +37,25 @@ export default typeToReducer(
         profile: null,
       }),
 
-    [types.PROFILE_REQUEST]: state =>
-      state.merge({
-        isLoading: true,
-        error: null,
-      }),
-    [types.PROFILE_SUCCESS]: (state, { profile }) =>
-      state.merge({
-        isLoading: false,
-        profile,
-      }),
-    [types.PROFILE_FAILURE]: (state, { error }) =>
-      state.merge({
-        isLoading: false,
-        profile: null,
-        error,
-      }),
+    [types.PROFILE_GET]: {
+      PENDING: state => state.merge({ isLoading: true, error: null }),
+      REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
+      FULFILLED: (state, { payload: { data } }) =>
+        state.merge({ isLoading: false, error: null }).set('profile', fromJS(data)),
+    },
+    [types.PROFILE_UPDATE]: {
+      PENDING: state => state.merge({ isLoading: true, error: null }),
+      REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
+      FULFILLED: (state, { payload }) =>
+        state.merge({ isLoading: false, error: null }).set('profile', fromJS(payload)),
+    },
   },
   initialState,
 );
 
+export const getProfile = state => state.getIn(['auth', 'profile']);
+
 export const isAllowed = (state, permission) => {
-  const permissions = state.getIn(['auth', 'profile', 'permissions']);
+  const permissions = getProfile(state).get('permissions');
   return !permission || (permissions && permissions.contains(permission));
 };

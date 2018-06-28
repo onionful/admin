@@ -13,7 +13,8 @@ import { List, Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { getProfile, logout } from 'reducers/auth/actions';
+import { getProfile } from 'reducers/auth';
+import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, permissions } from 'utils';
 import { compose, connect, glamorous, PropTypes, React, tm } from 'utils/create';
@@ -213,7 +214,7 @@ class App extends React.Component {
             </Spin>
           </Sider>
 
-          {!space && <SpacesModal />}
+          {!isProfileLoading && !space && <SpacesModal />}
 
           {!isProfileLoading &&
             space && (
@@ -276,13 +277,13 @@ App.defaultProps = {
 const mapStateToProps = state => ({
   isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
   isProfileLoading: state.getIn(['auth', 'isLoading']),
-  profile: state.getIn(['auth', 'profile']),
+  profile: getProfile(state),
   space: getCurrentSpace(state),
   spaces: getSpaces(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleGetProfile: getProfile(dispatch),
+  handleGetProfile: () => dispatch(fetchProfile()),
   handleLogout: logout(dispatch),
   handleSetSpace: space => dispatch(setSpace(space)),
   pushState: path => dispatch(push(path)),

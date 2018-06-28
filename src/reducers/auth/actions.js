@@ -1,27 +1,26 @@
-import config from 'config';
 import { push } from 'connected-react-router';
-import { mapKeys } from 'lodash';
-import { Auth } from 'utils';
+import { getProfile } from 'reducers/auth/index';
+import { api, Auth } from 'utils';
 import * as types from './types';
 
 const auth = new Auth();
 
-export const loginRequest = () => ({
+const loginRequest = () => ({
   type: types.LOGIN_REQUEST,
 });
 
-export const loginSuccess = () => ({
+const loginSuccess = () => ({
   type: types.LOGIN_SUCCESS,
 });
 
-export const loginFailure = error => ({
+const loginFailure = error => ({
   type: types.LOGIN_FAILURE,
   error,
 });
 
 export const login = dispatch => () => {
-  auth.login();
   dispatch(loginRequest());
+  auth.login();
 };
 
 export const handleAuthentication = dispatch => hash => {
@@ -38,7 +37,7 @@ export const handleAuthentication = dispatch => hash => {
   }
 };
 
-export const logoutSuccess = () => ({
+const logoutSuccess = () => ({
   type: types.LOGOUT_SUCCESS,
 });
 
@@ -47,35 +46,22 @@ export const logout = dispatch => () => {
   dispatch(logoutSuccess());
 };
 
-export const profileRequest = () => ({
-  type: types.PROFILE_REQUEST,
+export const fetchProfile = () => ({
+  type: types.PROFILE_GET,
+  payload: api.get('/profile'),
 });
 
-export const profileSuccess = profile => ({
-  type: types.PROFILE_SUCCESS,
-  profile,
-});
+export const updateProfile = metadata => (dispatch, getState) => {
+  const profile = getProfile(getState());
+  const current = profile.get('user_metadata');
+  const updated = current.merge(metadata);
 
-export const profileFailure = error => ({
-  type: types.PROFILE_FAILURE,
-  error,
-});
+  const payload = current.equals(updated)
+    ? Promise.resolve(profile.toJS())
+    : api.put('/profile', updated.toJS()).then(({ data }) => data);
 
-export const getProfile = dispatch => () =>
-  new Promise((resolve, reject) => {
-    dispatch(profileRequest());
-    auth.getProfile((err, data) => {
-      if (err) {
-        const error = `${err.error}: ${err.errorDescription}`;
-        dispatch(profileFailure(error));
-        reject(error);
-      } else {
-        const {
-          auth0: { claimDomain },
-        } = config;
-        const parsed = mapKeys(data, (value, key) => key.replace(claimDomain, ''));
-        dispatch(profileSuccess(parsed));
-        resolve(parsed);
-      }
-    });
+  return dispatch({
+    type: types.PROFILE_UPDATE,
+    payload,
   });
+};

@@ -33,7 +33,12 @@ const Item = glamorous(List.Item)({
 class SpacesModal extends Component {
   componentDidMount() {
     const { handleFetchSpaces } = this.props;
-    handleFetchSpaces();
+    handleFetchSpaces().then(() => {
+      const { handleSetSpace, spaces } = this.props;
+      if (spaces.size === 1) {
+        handleSetSpace(spaces.first().get('id'));
+      }
+    });
   }
 
   onItemClick = value => {

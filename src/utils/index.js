@@ -6,17 +6,13 @@ export { default as create } from './create';
 export { default as colors } from './colors';
 export { default as permissions } from './permissions';
 
-const apiHandler = space =>
+const apiHandler = Space =>
   axios.create({
     baseURL: config.api.endpoint,
     headers: {
       Authorization: `Bearer ${localStorage.getItem('id_token')}`,
+      Space,
     },
-    transformRequest: [
-      (data, headers) => {
-        headers.Space = space;
-      },
-    ],
   });
 
 export const spaceApi = callback => (dispatch, getState) =>

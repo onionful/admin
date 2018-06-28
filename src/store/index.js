@@ -27,6 +27,6 @@ const composedEnhancers = compose(
 );
 
 const store = createStore(connectRouter(history)(reducers), initialState, composedEnhancers);
-sagaMiddleware.run(sagas);
+sagaMiddleware.run(sagas, store.getState);
 
 export default store;
