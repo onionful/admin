@@ -5,10 +5,10 @@ import { withLoading, withPermissions } from 'helpers';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
-import { fetchContentTypes, getContentTypes } from 'reducers/contentType/actions';
+import { fetchContentTypes, getContentTypes } from 'reducers/contentTypes/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
-class ContentTypePageList extends Component {
+class ContentTypesPageList extends Component {
   onCreateClick = () => {
     const {
       handlePush,
@@ -56,8 +56,8 @@ class ContentTypePageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={formatMessage({ id: 'contentType.list.title' })}
-          description={formatMessage({ id: 'contentType.list.description' })}
+          title={formatMessage({ id: 'contentTypes.list.title' })}
+          description={formatMessage({ id: 'contentTypes.list.description' })}
           action={
             <Button onClick={this.onCreateClick} type="primary" icon="plus">
               {formatMessage({ id: 'global.create' })}
@@ -89,14 +89,14 @@ class ContentTypePageList extends Component {
   }
 }
 
-ContentTypePageList.propTypes = {
+ContentTypesPageList.propTypes = {
   intl: intlShape.isRequired,
   match: PropTypes.match.isRequired,
   handlePush: PropTypes.func,
   data: PropTypes.list,
 };
 
-ContentTypePageList.defaultProps = {
+ContentTypesPageList.defaultProps = {
   handlePush: noop,
   data: List(),
 };
@@ -116,8 +116,8 @@ export default compose(
   ),
   injectIntl,
   withLoading({
-    type: 'contentType',
+    type: 'contentTypes',
     action: () => fetchContentTypes(),
   }),
   withPermissions(),
-)(ContentTypePageList);
+)(ContentTypesPageList);

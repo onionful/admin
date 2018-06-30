@@ -6,7 +6,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import slugify from 'slugify';
 import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
 
-class ContentTypePageForm extends Component {
+class ContentTypesPageForm extends Component {
   state = {
     lockedId: true,
   };
@@ -95,7 +95,7 @@ class ContentTypePageForm extends Component {
   }
 }
 
-ContentTypePageForm.propTypes = {
+ContentTypesPageForm.propTypes = {
   intl: intlShape.isRequired,
   children: PropTypes.node,
   onSubmit: PropTypes.func.isRequired,
@@ -107,7 +107,7 @@ ContentTypePageForm.propTypes = {
   }).isRequired,
 };
 
-ContentTypePageForm.defaultProps = {
+ContentTypesPageForm.defaultProps = {
   children: null,
   pushState: noop,
   id: null,
@@ -130,4 +130,4 @@ export default compose(
   injectIntl,
   withPermissions(),
   Form.create({ mapPropsToFields }),
-)(ContentTypePageForm);
+)(ContentTypesPageForm);

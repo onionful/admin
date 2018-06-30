@@ -5,11 +5,11 @@ import { withLoading, withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
-import { createContentType, fetchContentType, getContentType } from 'reducers/contentType/actions';
+import { createContentType, fetchContentType, getContentType } from 'reducers/contentTypes/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 import Form from '../Form';
 
-class ContentTypePageEdit extends Component {
+class ContentTypesPageEdit extends Component {
   handleCancelClick = () => {
     const { pushState, path } = this.props;
 
@@ -40,14 +40,14 @@ class ContentTypePageEdit extends Component {
 
     const meta = isNew
       ? {
-          title: formatMessage({ id: 'contentType.create.title' }),
-          description: formatMessage({ id: 'contentType.create.description' }),
+          title: formatMessage({ id: 'contentTypes.create.title' }),
+          description: formatMessage({ id: 'contentTypes.create.description' }),
           save: formatMessage({ id: 'global.save' }),
           cancel: formatMessage({ id: 'global.cancel' }),
         }
       : {
-          title: formatMessage({ id: 'contentType.edit.title' }),
-          description: formatMessage({ id: 'contentType.edit.description' }),
+          title: formatMessage({ id: 'contentTypes.edit.title' }),
+          description: formatMessage({ id: 'contentTypes.edit.description' }),
           save: formatMessage({ id: 'global.update' }),
           cancel: formatMessage({ id: 'global.cancel' }),
         };
@@ -73,7 +73,7 @@ class ContentTypePageEdit extends Component {
   }
 }
 
-ContentTypePageEdit.propTypes = {
+ContentTypesPageEdit.propTypes = {
   intl: intlShape.isRequired,
   path: PropTypes.string.isRequired,
   handleCreateContentType: PropTypes.func,
@@ -82,7 +82,7 @@ ContentTypePageEdit.propTypes = {
   item: PropTypes.map,
 };
 
-ContentTypePageEdit.defaultProps = {
+ContentTypesPageEdit.defaultProps = {
   handleCreateContentType: noop,
   pushState: noop,
   isNew: true,
@@ -113,8 +113,8 @@ export default compose(
   ),
   injectIntl,
   withLoading({
-    type: 'contentType',
+    type: 'contentTypes',
     action: ({ id }) => id && fetchContentType(id),
   }),
   withPermissions(),
-)(ContentTypePageEdit);
+)(ContentTypesPageEdit);

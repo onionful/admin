@@ -2,7 +2,7 @@ import { Avatar, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import { push } from 'connected-react-router';
 import {
-  ContentTypePage,
+  ContentTypesPage,
   ErrorPage,
   HomePage,
   NotFoundPage,
@@ -136,10 +136,11 @@ class App extends React.Component {
         key: 'content',
         items: [
           {
-            id: 'menu.content-type',
-            key: 'content-type',
+            id: 'menu.content-types',
+            key: 'content-types',
             icon: 'file-add',
-            component: ContentTypePage,
+            component: ContentTypesPage,
+            permission: permissions.USERS_LIST,
           },
         ],
       },

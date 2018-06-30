@@ -1,4 +1,4 @@
-contentType:
+contentTypes:
   list:
     title: Content Types
     description: Create and update your own Content Types.
@@ -11,7 +11,7 @@ contentType:
 
 menu:
   content: Content
-  content-type: Content types
+  content-types: Content types
   system: System
   spaces: Spaces
   users: Users
