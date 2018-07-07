@@ -9,7 +9,7 @@
     "eject": "react-app-rewired eject"
   },
   "dependencies": {
-    "antd": "^3.6.4",
+    "antd": "^3.6.5",
     "auth0-js": "^9.6.1",
     "axios": "^0.18.0",
     "connected-react-router": "^4.3.0",
@@ -18,7 +18,7 @@
     "draft-js-export-markdown": "^1.2.0",
     "draft-js-import-markdown": "^1.2.1",
     "draft-js-plugins-editor": "^2.1.1",
-    "flat": "^4.0.0",
+    "flat": "^4.1.0",
     "glamor": "^2.20.40",
     "glamorous": "^4.13.1",
     "history": "latest",

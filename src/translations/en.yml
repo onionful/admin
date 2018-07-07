@@ -6,8 +6,17 @@ contentTypes:
     title: Create new Content Type
     description: Create new type of your content
   edit:
-    title: Edit "{0}" Content Type
+    title: Edit "{name}" Content Type
     description: Edit existing content type
+  addField: Add new field
+  types:
+    string: Titles, names, paragraphs, list of names
+    number: Everything that is a number
+    text: Description, text paragraphs, articles
+    media: Images, videos, PDFs
+    date: Event date, opening hours
+    email: User's e-mail
+    bool: Yes/no, true/false, 1/0
 
 menu:
   content: Content
@@ -29,6 +38,8 @@ global:
   save: Save
   title: Title
   update: Update
+  removeQuestion: Are you sure?
 
 errors:
   contentTypeNotFound: Content type not found
+  required: Field is required

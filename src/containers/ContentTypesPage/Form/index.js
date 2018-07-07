@@ -1,14 +1,29 @@
-import { Col, Form, Icon, Input, Row } from 'antd';
+import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row, Table } from 'antd';
+import { ContentTypeIcon } from 'components';
 import { withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
 import slugify from 'slugify';
 import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
+import FieldsModal from './FieldsModal';
+
+const FieldName = glamorous.strong({
+  display: 'block',
+});
 
 class ContentTypesPageForm extends Component {
   state = {
     lockedId: true,
+  };
+
+  handleFieldDelete = (e, field) => {
+    console.log('e', e);
+    console.log('field', field);
+  };
+
+  handleFieldsModalShow = () => {
+    this.fieldsModal.show();
   };
 
   handleLockIdClick = () => {
@@ -52,15 +67,16 @@ class ContentTypesPageForm extends Component {
       throw new Error(formatMessage({ id: 'errors.contentTypeNotFound' }));
     }
 
-    const meta = {
-      name: formatMessage({ id: 'global.name' }),
-      id: formatMessage({ id: 'global.id' }),
-      description: formatMessage({ id: 'global.description' }),
-      errors: {
-        name: 'Please input your username!',
-        id: 'Please input your username!',
-      },
-    };
+    const fields = [
+      { id: 'title', name: 'title', type: 'string' },
+      { id: 'identifier', name: 'identifier', type: 'string', unique: true },
+      { id: 'content', name: 'content', type: 'text' },
+      { id: 'images', name: 'images', type: 'media', multiple: true },
+      { id: 'someNumber', name: 'some number', type: 'number' },
+      { id: 'someDate', name: 'some date', type: 'date' },
+      { id: 'someEmail', name: 'some email', type: 'email' },
+      { id: 'someBool', name: 'some bool', type: 'bool' },
+    ];
 
     const LockId = glamorous(props => (
       <Icon {...props} type={lockedId ? 'lock' : 'unlock'} onClick={this.handleLockIdClick} />
@@ -72,24 +88,77 @@ class ContentTypesPageForm extends Component {
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label={meta.name}>
+            <Form.Item label={formatMessage({ id: 'global.name' })}>
               {getFieldDecorator('name', {
-                rules: [{ required: true, message: meta.errors.name }],
+                rules: [{ required: true, message: formatMessage({ id: 'errors.required' }) }],
               })(<Input type="text" onChange={this.handleNameChange} />)}
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label={meta.id}>
+            <Form.Item label={formatMessage({ id: 'global.id' })}>
               {getFieldDecorator('id', {
                 disabled: true,
-                rules: [{ required: true, message: meta.errors.id }],
+                rules: [{ required: true, message: formatMessage({ id: 'errors.required' }) }],
               })(<Input type="text" addonAfter={<LockId />} disabled={lockedId} />)}
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={meta.description}>
+        <Form.Item label={formatMessage({ id: 'global.description' })}>
           {getFieldDecorator('description')(<Input.TextArea autosize />)}
         </Form.Item>
+
+        <Divider orientation="right">
+          <Button onClick={this.handleFieldsModalShow}>
+            <Icon type="plus" />
+            {formatMessage({ id: 'contentTypes.addField' })}
+          </Button>
+        </Divider>
+
+        <FieldsModal
+          onRef={modal => {
+            this.fieldsModal = modal;
+          }}
+        />
+
+        <Table
+          dataSource={fields}
+          rowKey="id"
+          columns={[
+            {
+              dataIndex: 'type',
+              render: type => <ContentTypeIcon type={type} />,
+              width: 80,
+              align: 'center',
+            },
+            {
+              key: 'name',
+              render: field => (
+                <div>
+                  <FieldName>{field.name}</FieldName>
+                  <small>{field.id}</small>
+                </div>
+              ),
+            },
+            {
+              key: 'actions',
+              width: 100,
+              align: 'center',
+              render: field => (
+                <Button.Group>
+                  <Button icon="edit" />
+                  <Popconfirm
+                    title={formatMessage({ id: 'global.removeQuestion' })}
+                    onConfirm={e => this.handleFieldDelete(e, field)}
+                  >
+                    <Button icon="delete" type="danger" />
+                  </Popconfirm>
+                </Button.Group>
+              ),
+            },
+          ]}
+          showHeader={false}
+          pagination={false}
+        />
       </Form>
     );
   }

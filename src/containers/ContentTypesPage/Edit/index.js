@@ -46,7 +46,7 @@ class ContentTypesPageEdit extends Component {
           cancel: formatMessage({ id: 'global.cancel' }),
         }
       : {
-          title: formatMessage({ id: 'contentTypes.edit.title' }),
+          title: formatMessage({ id: 'contentTypes.edit.title' }, { name: item.get('name') }),
           description: formatMessage({ id: 'contentTypes.edit.description' }),
           save: formatMessage({ id: 'global.update' }),
           cancel: formatMessage({ id: 'global.cancel' }),

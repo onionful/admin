@@ -1,3 +1,5 @@
+export { default as types } from './types';
+
 export default {
   auth0: {
     clientId: process.env.REACT_APP_AUTH0_CLIENT_ID,

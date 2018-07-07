@@ -127,7 +127,7 @@ class App extends React.Component {
       return <Redirect to="/login" />;
     }
 
-    const hasPermissions = ({ permission }) => hasPermission(permission);
+    const hasPermissions = ({ permission }) => hasPermission(permission) || true;
     const profileName = profile ? profile.get('name') || profile.get('nickname') : '';
 
     const menuItems = [
