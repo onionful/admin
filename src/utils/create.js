@@ -22,4 +22,7 @@ export const PropTypes = {
   ...IPropTypes,
   ...RPropTypes,
   ...RRPropTypes,
+  form: RPropTypes.shape({
+    validateFields: RPropTypes.func,
+  }),
 };

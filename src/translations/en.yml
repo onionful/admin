@@ -8,7 +8,7 @@ contentTypes:
   edit:
     title: Edit "{name}" Content Type
     description: Edit existing content type
-  addField: Add new field
+  addField: Add new {type} field
   types:
     string: Titles, names, paragraphs, list of names
     number: Everything that is a number
@@ -17,6 +17,15 @@ contentTypes:
     date: Event date, opening hours
     email: User's e-mail
     bool: Yes/no, true/false, 1/0
+  attributes:
+    name: Name
+    default: Default value
+    required: Required
+    unique: Unique
+    range: Range
+    editor: Show content editor
+    numberFormat: Number format
+    multiple: Multiple images
 
 menu:
   content: Content
@@ -28,6 +37,7 @@ menu:
   logout: Logout
 
 global:
+  back: Back
   copyrights: Onionful (MIT) created by [hsz](https://hsz.mobi/)
   cancel: Cancel
   create: Create

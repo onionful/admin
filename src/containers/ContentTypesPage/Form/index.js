@@ -22,8 +22,8 @@ class ContentTypesPageForm extends Component {
     console.log('field', field);
   };
 
-  handleFieldsModalShow = () => {
-    this.fieldsModal.show();
+  handleFieldsModalShow = field => {
+    this.fieldsModal.show(field);
   };
 
   handleLockIdClick = () => {
@@ -44,9 +44,13 @@ class ContentTypesPageForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { onSubmit } = this.props;
 
-    this.props.form.validateFields((err, values) => {
+    const {
+      onSubmit,
+      form: { validateFields },
+    } = this.props;
+
+    validateFields((err, values) => {
       if (!err) {
         onSubmit(values);
       }
@@ -108,9 +112,9 @@ class ContentTypesPageForm extends Component {
         </Form.Item>
 
         <Divider orientation="right">
-          <Button onClick={this.handleFieldsModalShow}>
+          <Button onClick={() => this.handleFieldsModalShow()}>
             <Icon type="plus" />
-            {formatMessage({ id: 'contentTypes.addField' })}
+            {formatMessage({ id: 'contentTypes.addField' }, { type: null })}
           </Button>
         </Divider>
 
@@ -121,6 +125,8 @@ class ContentTypesPageForm extends Component {
         />
 
         <Table
+          showHeader={false}
+          pagination={false}
           dataSource={fields}
           rowKey="id"
           columns={[
@@ -145,7 +151,7 @@ class ContentTypesPageForm extends Component {
               align: 'center',
               render: field => (
                 <Button.Group>
-                  <Button icon="edit" />
+                  <Button icon="edit" onClick={() => this.handleFieldsModalShow(field)} />
                   <Popconfirm
                     title={formatMessage({ id: 'global.removeQuestion' })}
                     onConfirm={e => this.handleFieldDelete(e, field)}
@@ -156,8 +162,6 @@ class ContentTypesPageForm extends Component {
               ),
             },
           ]}
-          showHeader={false}
-          pagination={false}
         />
       </Form>
     );
@@ -165,22 +169,20 @@ class ContentTypesPageForm extends Component {
 }
 
 ContentTypesPageForm.propTypes = {
+  form: PropTypes.form.isRequired,
   intl: intlShape.isRequired,
-  children: PropTypes.node,
   onSubmit: PropTypes.func.isRequired,
-  pushState: PropTypes.func,
+  children: PropTypes.node,
   id: PropTypes.string,
   item: PropTypes.map,
-  form: PropTypes.shape({
-    validateFields: PropTypes.func,
-  }).isRequired,
+  pushState: PropTypes.func,
 };
 
 ContentTypesPageForm.defaultProps = {
   children: null,
-  pushState: noop,
   id: null,
   item: Map(),
+  pushState: noop,
 };
 
 const mapPropsToFields = ({ item = {} }) => ({

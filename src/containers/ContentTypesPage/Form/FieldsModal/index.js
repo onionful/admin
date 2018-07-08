@@ -1,9 +1,10 @@
 import { Button, Modal } from 'antd';
 import { ContentTypeIcon } from 'components';
 import { types } from 'config';
-import { entries, noop, upperFirst } from 'lodash';
+import { entries, isEmpty, noop, upperFirst } from 'lodash';
 import { injectIntl, intlShape } from 'react-intl';
 import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
+import Attributes from '../Attributes';
 
 const StyledButton = glamorous(Button)({
   display: 'flex',
@@ -11,6 +12,10 @@ const StyledButton = glamorous(Button)({
   padding: '.5rem',
   height: 'auto',
   width: '100%',
+});
+
+const BackButton = glamorous(Button)({
+  float: 'left',
 });
 
 const Description = glamorous.div({
@@ -22,14 +27,19 @@ const Description = glamorous.div({
 
 class FieldsModal extends Component {
   state = {
+    field: {},
+    type: undefined,
     visible: false,
-    type: null,
   };
 
   componentDidMount() {
     const { onRef } = this.props;
     onRef(this);
   }
+
+  handleBack = () => {
+    this.setState({ type: undefined });
+  };
 
   handleCancel = () => {
     this.setState({ visible: false });
@@ -43,23 +53,30 @@ class FieldsModal extends Component {
     this.setState({ type });
   };
 
-  show = () => {
-    this.setState({ visible: true });
+  show = (field = {}) => {
+    this.setState({ field, type: field.type, visible: true });
   };
 
   render() {
-    const { visible, type } = this.state;
+    const { field, type, visible } = this.state;
     const {
       intl: { formatMessage },
     } = this.props;
 
+    const showBackButton = type && isEmpty(field);
+
     return (
       <Modal
-        title={formatMessage({ id: 'contentTypes.addField' })}
+        title={formatMessage({ id: 'contentTypes.addField' }, { type })}
         visible={visible}
         onCancel={this.handleCancel}
         footer={[
-          <Button key="back" onClick={this.handleCancel}>
+          showBackButton && (
+            <BackButton key="back" type="dashed" onClick={this.handleBack}>
+              {formatMessage({ id: 'global.back' })}
+            </BackButton>
+          ),
+          <Button key="cancel" onClick={this.handleCancel}>
             {formatMessage({ id: 'global.cancel' })}
           </Button>,
           <Button key="submit" disabled={!type} type="primary" onClick={this.handleSubmit}>
@@ -77,6 +94,8 @@ class FieldsModal extends Component {
               </Description>
             </StyledButton>
           ))}
+
+        {type && <Attributes type={type} />}
       </Modal>
     );
   }
