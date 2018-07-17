@@ -4,9 +4,8 @@ import { push } from 'connected-react-router';
 import { withLoading, withPermissions } from 'helpers';
 import { List } from 'immutable';
 import { noop } from 'lodash';
-import { injectIntl, intlShape } from 'react-intl';
 import { fetchContentTypes, getContentTypes } from 'reducers/contentTypes/actions';
-import { Component, compose, connect, PropTypes, React } from 'utils/create';
+import { Component, compose, connect, injectIntl, PropTypes, React } from 'utils/create';
 
 class ContentTypesPageList extends Component {
   onCreateClick = () => {
@@ -90,7 +89,7 @@ class ContentTypesPageList extends Component {
 }
 
 ContentTypesPageList.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.intl.isRequired,
   match: PropTypes.match.isRequired,
   handlePush: PropTypes.func,
   data: PropTypes.list,

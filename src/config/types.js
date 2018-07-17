@@ -1,10 +1,11 @@
-const attributes = ['name', 'default', 'required', 'unique'];
+const attributes = ['name', 'defaultValue', 'required', 'unique'];
 
 export default {
   string: {
     icon: 'font',
     color: '#ffb500',
-    attributes: [...attributes, 'range'],
+    //attributes: [...attributes, 'range'],
+    attributes: ['name', 'defaultValue'],
   },
   text: {
     icon: 'align-left',

@@ -19,3 +19,7 @@ export const spaceApi = callback => (dispatch, getState) =>
   dispatch(callback(apiHandler(getState().getIn(['spaces', 'current']))));
 
 export const api = apiHandler();
+
+export const Throw = message => () => {
+  throw new Error(message);
+};

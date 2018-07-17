@@ -19,7 +19,7 @@ contentTypes:
     bool: Yes/no, true/false, 1/0
   attributes:
     name: Name
-    default: Default value
+    defaultValue: Default value
     required: Required
     unique: Unique
     range: Range

@@ -11,13 +11,12 @@ import {
 } from 'containers';
 import { List, Map } from 'immutable';
 import { noop } from 'lodash';
-import { injectIntl, intlShape } from 'react-intl';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, permissions } from 'utils';
-import { compose, connect, glamorous, PropTypes, React, tm } from 'utils/create';
+import { compose, connect, glamorous, injectIntl, PropTypes, React, tm } from 'utils/create';
 
 const { Sider, Footer } = Layout;
 
@@ -107,7 +106,12 @@ class App extends React.Component {
     const { isAuthenticated, handleGetProfile } = this.props;
 
     if (isAuthenticated) {
-      handleGetProfile();
+      handleGetProfile().catch(error =>
+        this.setState({
+          error,
+          errorInfo: { componentStack: JSON.stringify(error.response.data, null, 2) },
+        }),
+      );
     }
   };
 
@@ -215,10 +219,10 @@ class App extends React.Component {
             </Spin>
           </Sider>
 
-          {!isProfileLoading && !space && <SpacesModal />}
+          {!isProfileLoading && !space && !error && <SpacesModal />}
 
           {!isProfileLoading &&
-            space && (
+            (space || error) && (
               <Layout>
                 <Container>
                   {error ? (
@@ -249,7 +253,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.intl.isRequired,
   hasPermission: PropTypes.func,
   isAuthenticated: PropTypes.bool,
   isProfileLoading: PropTypes.bool,

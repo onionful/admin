@@ -1,38 +1,43 @@
-import { Form, Input } from 'antd';
+import { Form } from 'antd';
 import { types } from 'config';
-import { Component, compose, PropTypes, React } from 'utils/create';
+import { Throw } from 'utils';
+import { compose, injectIntl, PropTypes, React } from 'utils/create';
+import defaultValue from './DefaultValue';
+import name from './Name';
 
-class Attributes extends Component {
-  componentDidMount() {
-    console.log('x');
-  }
+const components = {
+  name,
+  defaultValue,
+};
 
-  render() {
-    const {
-      form: { getFieldDecorator },
-      type,
-    } = this.props;
-    const { attributes } = types[type];
+const getAttribute = type => components[type] || Throw(`Unknown attribute: ${type}`);
 
-    console.log('attributes', attributes);
-
+const Attributes = ({
+  form: { getFieldDecorator, setFieldsValue },
+  intl: { formatMessage },
+  type,
+}) =>
+  (types[type] || Throw(`Unknown type: ${type}`)).attributes.map(attr => {
+    const Attribute = getAttribute(attr);
     return (
-      <Form>
-        {attributes.map(attr => (
-          <Form.Item>
-            {getFieldDecorator(attr, {
-              rules: [{ required: true, message: 'Please input your username!' }],
-            })(<Input placeholder="Username" />)}
-          </Form.Item>
-        ))}
-      </Form>
+      <Form.Item key={attr} label={formatMessage({ id: `contentTypes.attributes.${attr}` })}>
+        <Attribute
+          type={attr}
+          setValues={setFieldsValue}
+          fieldDecorator={(fieldId, props = {}) =>
+            getFieldDecorator(fieldId, {
+              rules: [{ required: true, message: 'Please input your username!', ...props }],
+            })
+          }
+        />
+      </Form.Item>
     );
-  }
-}
+  });
 
 Attributes.propTypes = {
   form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
+  intl: PropTypes.intl.isRequired,
 };
 
-export default compose(Form.create())(Attributes);
+export default compose(injectIntl)(Attributes);

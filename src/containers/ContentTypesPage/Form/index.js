@@ -1,12 +1,12 @@
+/* eslint-disable */
 import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row, Table } from 'antd';
-import { ContentTypeIcon } from 'components';
+import { ContentTypeIcon, Lock } from 'components';
 import { withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { injectIntl, intlShape } from 'react-intl';
 import slugify from 'slugify';
-import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
-import FieldsModal from './FieldsModal';
+import { Component, compose, glamorous, injectIntl, PropTypes, React } from 'utils/create';
+import FieldModal from './FieldModal';
 
 const FieldName = glamorous.strong({
   display: 'block',
@@ -19,6 +19,10 @@ class ContentTypesPageForm extends Component {
 
   handleFieldDelete = (e, field) => {
     console.log('e', e);
+    console.log('field', field);
+  };
+
+  handleFieldSubmit = field => {
     console.log('field', field);
   };
 
@@ -71,20 +75,16 @@ class ContentTypesPageForm extends Component {
       throw new Error(formatMessage({ id: 'errors.contentTypeNotFound' }));
     }
 
-    const fields = [
-      { id: 'title', name: 'title', type: 'string' },
-      { id: 'identifier', name: 'identifier', type: 'string', unique: true },
-      { id: 'content', name: 'content', type: 'text' },
-      { id: 'images', name: 'images', type: 'media', multiple: true },
-      { id: 'someNumber', name: 'some number', type: 'number' },
-      { id: 'someDate', name: 'some date', type: 'date' },
-      { id: 'someEmail', name: 'some email', type: 'email' },
-      { id: 'someBool', name: 'some bool', type: 'bool' },
-    ];
-
-    const LockId = glamorous(props => (
-      <Icon {...props} type={lockedId ? 'lock' : 'unlock'} onClick={this.handleLockIdClick} />
-    ))({ cursor: 'pointer' });
+    //const fields = [
+    //  { id: 'title', name: 'title', type: 'string' },
+    //  { id: 'identifier', name: 'identifier', type: 'string', unique: true },
+    //  { id: 'content', name: 'content', type: 'text' },
+    //  { id: 'images', name: 'images', type: 'media', multiple: true },
+    //  { id: 'someNumber', name: 'some number', type: 'number' },
+    //  { id: 'someDate', name: 'some date', type: 'date' },
+    //  { id: 'someEmail', name: 'some email', type: 'email' },
+    //  { id: 'someBool', name: 'some bool', type: 'bool' },
+    //];
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
@@ -103,7 +103,13 @@ class ContentTypesPageForm extends Component {
               {getFieldDecorator('id', {
                 disabled: true,
                 rules: [{ required: true, message: formatMessage({ id: 'errors.required' }) }],
-              })(<Input type="text" addonAfter={<LockId />} disabled={lockedId} />)}
+              })(
+                <Input
+                  type="text"
+                  addonAfter={<Lock locked={lockedId} onLock={this.handleLockIdClick} />}
+                  disabled={lockedId}
+                />,
+              )}
             </Form.Item>
           </Col>
         </Row>
@@ -118,8 +124,9 @@ class ContentTypesPageForm extends Component {
           </Button>
         </Divider>
 
-        <FieldsModal
-          onRef={modal => {
+        <FieldModal
+          onSubmit={this.handleFieldSubmit}
+          wrappedComponentRef={modal => {
             this.fieldsModal = modal;
           }}
         />
@@ -127,7 +134,7 @@ class ContentTypesPageForm extends Component {
         <Table
           showHeader={false}
           pagination={false}
-          dataSource={fields}
+          dataSource={item.get('fields')}
           rowKey="id"
           columns={[
             {
@@ -170,7 +177,7 @@ class ContentTypesPageForm extends Component {
 
 ContentTypesPageForm.propTypes = {
   form: PropTypes.form.isRequired,
-  intl: intlShape.isRequired,
+  intl: PropTypes.intl.isRequired,
   onSubmit: PropTypes.func.isRequired,
   children: PropTypes.node,
   id: PropTypes.string,

@@ -4,9 +4,8 @@ import { push } from 'connected-react-router';
 import { withLoading, withPermissions } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { injectIntl, intlShape } from 'react-intl';
 import { createContentType, fetchContentType, getContentType } from 'reducers/contentTypes/actions';
-import { Component, compose, connect, PropTypes, React } from 'utils/create';
+import { Component, compose, connect, injectIntl, PropTypes, React } from 'utils/create';
 import Form from '../Form';
 
 class ContentTypesPageEdit extends Component {
@@ -74,7 +73,7 @@ class ContentTypesPageEdit extends Component {
 }
 
 ContentTypesPageEdit.propTypes = {
-  intl: intlShape.isRequired,
+  intl: PropTypes.intl.isRequired,
   path: PropTypes.string.isRequired,
   handleCreateContentType: PropTypes.func,
   pushState: PropTypes.func,

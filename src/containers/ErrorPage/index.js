@@ -21,7 +21,7 @@ const Stench = glamorous.div({
 
 const Stack = glamorous.pre({
   maxHeight: '10rem',
-  overflowY: 'scroll',
+  overflowY: 'auto',
   opacity: 0.5,
 });
 
@@ -45,7 +45,7 @@ ErrorPage.propTypes = {
   error: PropTypes.instanceOf(Error).isRequired,
   errorInfo: PropTypes.shape({
     componentStack: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
 };
 
 export default ErrorPage;

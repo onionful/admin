@@ -1,5 +1,4 @@
 import { React, PropTypes } from 'utils/create';
-import { intlShape } from 'react-intl';
 import Markdown from 'react-markdown';
 
 const FormattedMarkdown = ({ id, defaultMessage, values }, { intl: { formatMessage } }) => (
@@ -7,7 +6,7 @@ const FormattedMarkdown = ({ id, defaultMessage, values }, { intl: { formatMessa
 );
 
 FormattedMarkdown.contextTypes = {
-  intl: intlShape,
+  intl: PropTypes.intl,
 };
 
 FormattedMarkdown.propTypes = {

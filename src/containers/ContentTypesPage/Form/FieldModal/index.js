@@ -1,9 +1,8 @@
-import { Button, Modal } from 'antd';
+import { Button, Form, Modal } from 'antd';
 import { ContentTypeIcon } from 'components';
 import { types } from 'config';
 import { entries, isEmpty, noop, upperFirst } from 'lodash';
-import { injectIntl, intlShape } from 'react-intl';
-import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
+import { Component, compose, glamorous, injectIntl, PropTypes, React } from 'utils/create';
 import Attributes from '../Attributes';
 
 const StyledButton = glamorous(Button)({
@@ -25,17 +24,12 @@ const Description = glamorous.div({
   padding: '0 1rem',
 });
 
-class FieldsModal extends Component {
+class FieldModal extends Component {
   state = {
     field: {},
     type: undefined,
     visible: false,
   };
-
-  componentDidMount() {
-    const { onRef } = this.props;
-    onRef(this);
-  }
 
   handleBack = () => {
     this.setState({ type: undefined });
@@ -46,7 +40,17 @@ class FieldsModal extends Component {
   };
 
   handleSubmit = () => {
-    this.setState({ visible: false });
+    const {
+      onSubmit,
+      form: { validateFields },
+    } = this.props;
+    const { type } = this.state;
+
+    validateFields((err, values) => {
+      if (!err) {
+        this.setState({ visible: false }, () => onSubmit({ ...values, type }));
+      }
+    });
   };
 
   handleTypeSelected = type => {
@@ -60,6 +64,7 @@ class FieldsModal extends Component {
   render() {
     const { field, type, visible } = this.state;
     const {
+      form,
       intl: { formatMessage },
     } = this.props;
 
@@ -84,30 +89,36 @@ class FieldsModal extends Component {
           </Button>,
         ]}
       >
-        {!type &&
-          entries(types).map(([fieldType]) => (
-            <StyledButton key={fieldType} onClick={() => this.handleTypeSelected(fieldType)}>
-              <ContentTypeIcon type={fieldType} />
-              <Description>
-                <strong>{upperFirst(fieldType)}</strong>
-                <small>{formatMessage({ id: `contentTypes.types.${fieldType}` })}</small>
-              </Description>
-            </StyledButton>
-          ))}
+        <Form hideRequiredMark>
+          {!type &&
+            entries(types).map(([fieldType]) => (
+              <StyledButton key={fieldType} onClick={() => this.handleTypeSelected(fieldType)}>
+                <ContentTypeIcon type={fieldType} />
+                <Description>
+                  <strong>{upperFirst(fieldType)}</strong>
+                  <small>{formatMessage({ id: `contentTypes.types.${fieldType}` })}</small>
+                </Description>
+              </StyledButton>
+            ))}
 
-        {type && <Attributes type={type} />}
+          {type && <Attributes type={type} form={form} />}
+        </Form>
       </Modal>
     );
   }
 }
 
-FieldsModal.propTypes = {
-  intl: intlShape.isRequired,
-  onRef: PropTypes.func,
+FieldModal.propTypes = {
+  form: PropTypes.form.isRequired,
+  intl: PropTypes.intl.isRequired,
+  onSubmit: PropTypes.func,
 };
 
-FieldsModal.defaultProps = {
-  onRef: noop,
+FieldModal.defaultProps = {
+  onSubmit: noop,
 };
 
-export default compose(injectIntl)(FieldsModal);
+export default compose(
+  injectIntl,
+  Form.create(),
+)(FieldModal);
