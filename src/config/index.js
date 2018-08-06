@@ -10,4 +10,5 @@ export default {
   api: {
     endpoint: process.env.REACT_APP_API_ENDPOINT,
   },
+  defaultLocale: process.env.REACT_APP_DEFAULT_LOCALE,
 };

@@ -1,16 +1,18 @@
+import config from 'config';
+import { ConnectedRouter } from 'connected-react-router/immutable';
+import { App, Authorize, Login } from 'containers';
 import 'normalize.css';
 import React from 'react';
-import { App, Authorize, Login } from 'containers';
 import { render } from 'react-dom';
+import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router/immutable';
-import { IntlProvider } from 'react-intl';
 import store, { history } from 'store';
 import translations from 'translations';
 import registerServiceWorker from './registerServiceWorker';
 
-const locale = 'en';
+const { defaultLocale } = config;
+const locale = defaultLocale; // DEFAULT_LOCALE
 
 render(
   <Provider store={store}>

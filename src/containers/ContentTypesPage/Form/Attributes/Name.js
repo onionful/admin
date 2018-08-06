@@ -1,15 +1,9 @@
-import { Col, Input } from 'antd';
+import { Col, Form, Input, Row } from 'antd';
 import { Lock } from 'components';
 import { camelCase } from 'lodash';
-import { Component, PropTypes, React } from 'utils/create';
+import { Component, compose, injectIntl, PropTypes, React } from 'utils/create';
 
-export default class extends Component {
-  static propTypes = {
-    fieldDecorator: PropTypes.func.isRequired,
-    setValues: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired,
-  };
-
+class Name extends Component {
   state = {
     locked: true,
   };
@@ -30,22 +24,49 @@ export default class extends Component {
   };
 
   render() {
-    const { fieldDecorator, type } = this.props;
+    const {
+      fieldDecorator,
+      type,
+      errors,
+      intl: { formatMessage },
+    } = this.props;
     const { locked } = this.state;
 
     return (
-      <Input.Group>
+      <Row gutter={16}>
         <Col span={12}>
-          {fieldDecorator('id')(
-            <Input
-              addonBefore="ID"
-              disabled={locked}
-              addonAfter={<Lock locked={locked} onLock={this.handleLock} />}
-            />,
-          )}
+          <Form.Item
+            validateStatus={errors.id ? 'error' : 'success'}
+            label={formatMessage({ id: `contentTypes.attributes.id` })}
+          >
+            {fieldDecorator('id')(
+              <Input
+                addonBefore="ID"
+                disabled={locked}
+                addonAfter={<Lock locked={locked} onLock={this.handleLock} />}
+              />,
+            )}
+          </Form.Item>
         </Col>
-        <Col span={12}>{fieldDecorator(type)(<Input onChange={this.handleValueChange} />)}</Col>
-      </Input.Group>
+        <Col span={12}>
+          <Form.Item
+            validateStatus={errors[type] ? 'error' : 'success'}
+            label={formatMessage({ id: `contentTypes.attributes.${type}` })}
+          >
+            {fieldDecorator(type)(<Input onChange={this.handleValueChange} />)}
+          </Form.Item>
+        </Col>
+      </Row>
     );
   }
 }
+
+Name.propTypes = {
+  intl: PropTypes.intl.isRequired,
+  fieldDecorator: PropTypes.func.isRequired,
+  setValues: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired, // eslint-disable-line
+  type: PropTypes.string.isRequired,
+};
+
+export default compose(injectIntl)(Name);

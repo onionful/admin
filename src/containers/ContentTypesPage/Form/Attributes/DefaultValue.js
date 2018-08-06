@@ -1,14 +1,19 @@
-import { Input } from 'antd';
-import { Component, PropTypes, React } from 'utils/create';
+import { Form, Input } from 'antd';
+import { compose, injectIntl, PropTypes, React } from 'utils/create';
 
-export default class extends Component {
-  static propTypes = {
-    fieldDecorator: PropTypes.func.isRequired,
-    type: PropTypes.string.isRequired,
-  };
+const DefaultValue = ({ errors, fieldDecorator, intl: { formatMessage }, type }) => (
+  <Form.Item
+    validateStatus={errors[type] ? 'error' : 'success'}
+    label={formatMessage({ id: `contentTypes.attributes.defaultValue` })}
+  >
+    {fieldDecorator(type)(<Input />)}
+  </Form.Item>
+);
 
-  render() {
-    const { fieldDecorator, type } = this.props;
-    return fieldDecorator(type)(<Input />);
-  }
-}
+DefaultValue.propTypes = {
+  intl: PropTypes.intl.isRequired,
+  fieldDecorator: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired, // eslint-disable-line
+  type: PropTypes.string.isRequired,
+};
+export default compose(injectIntl)(DefaultValue);

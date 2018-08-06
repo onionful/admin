@@ -18,6 +18,7 @@ contentTypes:
     email: User's e-mail
     bool: Yes/no, true/false, 1/0
   attributes:
+    id: Identifier
     name: Name
     defaultValue: Default value
     required: Required

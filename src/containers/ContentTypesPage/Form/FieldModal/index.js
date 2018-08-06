@@ -28,6 +28,7 @@ class FieldModal extends Component {
   state = {
     field: {},
     type: undefined,
+    errors: null,
     visible: false,
   };
 
@@ -46,9 +47,11 @@ class FieldModal extends Component {
     } = this.props;
     const { type } = this.state;
 
-    validateFields((err, values) => {
-      if (!err) {
-        this.setState({ visible: false }, () => onSubmit({ ...values, type }));
+    validateFields((errors, values) => {
+      if (errors) {
+        this.setState({ errors });
+      } else {
+        this.setState({ errors, visible: false }, () => onSubmit({ ...values, type }));
       }
     });
   };
@@ -62,7 +65,7 @@ class FieldModal extends Component {
   };
 
   render() {
-    const { field, type, visible } = this.state;
+    const { field, type, errors, visible } = this.state;
     const {
       form,
       intl: { formatMessage },
@@ -101,7 +104,7 @@ class FieldModal extends Component {
               </StyledButton>
             ))}
 
-          {type && <Attributes type={type} form={form} />}
+          {type && <Attributes type={type} form={form} errors={errors} />}
         </Form>
       </Modal>
     );
