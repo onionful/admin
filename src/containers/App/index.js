@@ -9,6 +9,7 @@ import {
   SpacesPage,
   UsersPage,
 } from 'containers';
+import { withTranslate } from 'helpers';
 import { List, Map } from 'immutable';
 import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
@@ -16,7 +17,7 @@ import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, permissions } from 'utils';
-import { compose, connect, glamorous, injectIntl, PropTypes, React, tm } from 'utils/create';
+import { compose, connect, glamorous, PropTypes, React } from 'utils/create';
 
 const { Sider, Footer } = Layout;
 
@@ -117,13 +118,13 @@ class App extends React.Component {
 
   render() {
     const {
+      _,
       hasPermission,
       isAuthenticated,
       isProfileLoading,
       profile,
       space,
       spaces,
-      intl: { formatMessage },
     } = this.props;
     const { collapsed, error, errorInfo } = this.state;
 
@@ -136,11 +137,9 @@ class App extends React.Component {
 
     const menuItems = [
       {
-        id: 'menu.content',
         key: 'content',
         items: [
           {
-            id: 'menu.content-types',
             key: 'content-types',
             icon: 'file-add',
             component: ContentTypesPage,
@@ -149,19 +148,17 @@ class App extends React.Component {
         ],
       },
       {
-        id: 'menu.system',
         key: 'system',
         items: [
-          { id: 'menu.spaces', key: 'spaces', icon: 'book', component: SpacesPage },
+          { key: 'spaces', icon: 'book', component: SpacesPage },
           {
-            id: 'menu.users',
             key: 'users',
             icon: 'user',
             component: UsersPage,
             permission: permissions.USERS_LIST,
           },
-          { id: 'menu.settings', key: 'settings', icon: 'setting' },
-          { id: 'menu.logout', key: 'logout', icon: 'logout' },
+          { key: 'settings', icon: 'setting' },
+          { key: 'logout', icon: 'logout' },
         ],
       },
     ];
@@ -206,11 +203,11 @@ class App extends React.Component {
                 onClick={this.onMenuClick}
               >
                 {menuItems.map(group => (
-                  <Menu.ItemGroup key={group.key} title={formatMessage(group)}>
+                  <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
                     {group.items.filter(hasPermissions).map(item => (
                       <Menu.Item key={item.key}>
                         <Icon type={item.icon} />
-                        <span>{formatMessage(item)}</span>
+                        <span>{_(`menu.${item.key}`)}</span>
                       </Menu.Item>
                     ))}
                   </Menu.ItemGroup>
@@ -243,7 +240,7 @@ class App extends React.Component {
                     </Content>
                   )}
                 </Container>
-                <Footer style={{ textAlign: 'center' }}>{tm('global.copyrights')}</Footer>
+                <Footer style={{ textAlign: 'center' }}>{_('global.copyrights')}</Footer>
               </Layout>
             )}
         </Layout>
@@ -253,7 +250,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  intl: PropTypes.intl.isRequired,
+  _: PropTypes.func.isRequired,
   hasPermission: PropTypes.func,
   isAuthenticated: PropTypes.bool,
   isProfileLoading: PropTypes.bool,
@@ -299,6 +296,6 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  injectIntl,
   withRouter,
+  withTranslate,
 )(App);

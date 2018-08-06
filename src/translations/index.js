@@ -1,5 +1,15 @@
+import config from 'config';
 import flat from 'flat';
+import { renderToStaticMarkup } from 'react-dom/server';
 import en from './en.yml';
 import pl from './pl.yml';
 
-export default { en: flat(en), pl: flat(pl) };
+const { defaultLanguage } = config;
+
+export default {
+  languages: [
+    { name: 'English', code: 'en', data: flat(en) },
+    { name: 'Polish', code: 'pl', data: flat(pl) },
+  ],
+  options: { renderToStaticMarkup, defaultLanguage },
+};

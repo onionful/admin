@@ -1,7 +1,8 @@
 import { Col, Form, Input, Row } from 'antd';
 import { Lock } from 'components';
+import { withTranslate } from 'helpers';
 import { camelCase } from 'lodash';
-import { Component, compose, injectIntl, PropTypes, React } from 'utils/create';
+import { Component, compose, PropTypes, React } from 'utils/create';
 
 class Name extends Component {
   state = {
@@ -24,12 +25,7 @@ class Name extends Component {
   };
 
   render() {
-    const {
-      fieldDecorator,
-      type,
-      errors,
-      intl: { formatMessage },
-    } = this.props;
+    const { _, fieldDecorator, type, errors } = this.props;
     const { locked } = this.state;
 
     return (
@@ -37,7 +33,7 @@ class Name extends Component {
         <Col span={12}>
           <Form.Item
             validateStatus={errors.id ? 'error' : 'success'}
-            label={formatMessage({ id: `contentTypes.attributes.id` })}
+            label={_('contentTypes.attributes.id')}
           >
             {fieldDecorator('id')(
               <Input
@@ -51,7 +47,7 @@ class Name extends Component {
         <Col span={12}>
           <Form.Item
             validateStatus={errors[type] ? 'error' : 'success'}
-            label={formatMessage({ id: `contentTypes.attributes.${type}` })}
+            label={_(`contentTypes.attributes.${type}`)}
           >
             {fieldDecorator(type)(<Input onChange={this.handleValueChange} />)}
           </Form.Item>
@@ -62,11 +58,11 @@ class Name extends Component {
 }
 
 Name.propTypes = {
-  intl: PropTypes.intl.isRequired,
+  _: PropTypes.func.isRequired,
   fieldDecorator: PropTypes.func.isRequired,
   setValues: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired, // eslint-disable-line
   type: PropTypes.string.isRequired,
 };
 
-export default compose(injectIntl)(Name);
+export default compose(withTranslate)(Name);

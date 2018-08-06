@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row, Table } from 'antd';
 import { ContentTypeIcon, Lock } from 'components';
-import { withPermissions } from 'helpers';
+import { withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import slugify from 'slugify';
-import { Component, compose, glamorous, injectIntl, PropTypes, React } from 'utils/create';
+import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
 import FieldModal from './FieldModal';
 
 const FieldName = glamorous.strong({
@@ -64,15 +64,15 @@ class ContentTypesPageForm extends Component {
   render() {
     const { lockedId } = this.state;
     const {
+      _,
       children,
       id,
       item,
       form: { getFieldDecorator },
-      intl: { formatMessage },
     } = this.props;
 
     if (id && item.isEmpty()) {
-      throw new Error(formatMessage({ id: 'errors.contentTypeNotFound' }));
+      throw new Error(_('errors.contentTypeNotFound'));
     }
 
     //const fields = [
@@ -92,17 +92,17 @@ class ContentTypesPageForm extends Component {
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label={formatMessage({ id: 'global.name' })}>
+            <Form.Item label={_('global.name')}>
               {getFieldDecorator('name', {
-                rules: [{ required: true, message: formatMessage({ id: 'errors.required' }) }],
+                rules: [{ required: true, message: _('errors.required') }],
               })(<Input type="text" onChange={this.handleNameChange} />)}
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label={formatMessage({ id: 'global.id' })}>
+            <Form.Item label={_('global.id')}>
               {getFieldDecorator('id', {
                 disabled: true,
-                rules: [{ required: true, message: formatMessage({ id: 'errors.required' }) }],
+                rules: [{ required: true, message: _('errors.required') }],
               })(
                 <Input
                   type="text"
@@ -113,14 +113,14 @@ class ContentTypesPageForm extends Component {
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={formatMessage({ id: 'global.description' })}>
+        <Form.Item label={_('global.description')}>
           {getFieldDecorator('description')(<Input.TextArea autosize />)}
         </Form.Item>
 
         <Divider orientation="right">
           <Button onClick={() => this.handleFieldsModalShow()}>
             <Icon type="plus" />
-            {formatMessage({ id: 'contentTypes.addField' }, { type: null })}
+            {_('contentTypes.addField', { type: null })}
           </Button>
         </Divider>
 
@@ -160,7 +160,7 @@ class ContentTypesPageForm extends Component {
                 <Button.Group>
                   <Button icon="edit" onClick={() => this.handleFieldsModalShow(field)} />
                   <Popconfirm
-                    title={formatMessage({ id: 'global.removeQuestion' })}
+                    title={_('global.removeQuestion')}
                     onConfirm={e => this.handleFieldDelete(e, field)}
                   >
                     <Button icon="delete" type="danger" />
@@ -176,8 +176,8 @@ class ContentTypesPageForm extends Component {
 }
 
 ContentTypesPageForm.propTypes = {
+  _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
-  intl: PropTypes.intl.isRequired,
   onSubmit: PropTypes.func.isRequired,
   children: PropTypes.node,
   id: PropTypes.string,
@@ -205,7 +205,7 @@ const mapPropsToFields = ({ item = {} }) => ({
 });
 
 export default compose(
-  injectIntl,
   withPermissions(),
+  withTranslate,
   Form.create({ mapPropsToFields }),
 )(ContentTypesPageForm);

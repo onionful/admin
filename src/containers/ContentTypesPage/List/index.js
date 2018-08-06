@@ -1,11 +1,11 @@
 import { Button, Table } from 'antd';
 import { SectionHeader } from 'components';
 import { push } from 'connected-react-router';
-import { withLoading, withPermissions } from 'helpers';
+import { withLoading, withPermissions, withTranslate } from 'helpers';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { fetchContentTypes, getContentTypes } from 'reducers/contentTypes/actions';
-import { Component, compose, connect, injectIntl, PropTypes, React } from 'utils/create';
+import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class ContentTypesPageList extends Component {
   onCreateClick = () => {
@@ -27,26 +27,23 @@ class ContentTypesPageList extends Component {
   };
 
   render() {
-    const {
-      data,
-      intl: { formatMessage },
-    } = this.props;
+    const { _, data } = this.props;
 
     const columns = [
       {
-        title: formatMessage({ id: 'global.id' }),
+        title: _('global.id'),
         dataIndex: 'id',
       },
       {
-        title: formatMessage({ id: 'global.name' }),
+        title: _('global.name'),
         dataIndex: 'name',
       },
       {
-        title: formatMessage({ id: 'global.description' }),
+        title: _('global.description'),
         dataIndex: 'description',
       },
       {
-        title: formatMessage({ id: 'global.fields' }),
+        title: _('global.fields'),
         dataIndex: 'fields',
         render: value => value.length,
       },
@@ -55,11 +52,11 @@ class ContentTypesPageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={formatMessage({ id: 'contentTypes.list.title' })}
-          description={formatMessage({ id: 'contentTypes.list.description' })}
+          title={_('contentTypes.list.title')}
+          description={_('contentTypes.list.description')}
           action={
             <Button onClick={this.onCreateClick} type="primary" icon="plus">
-              {formatMessage({ id: 'global.create' })}
+              {_('global.create')}
             </Button>
           }
         />
@@ -89,7 +86,7 @@ class ContentTypesPageList extends Component {
 }
 
 ContentTypesPageList.propTypes = {
-  intl: PropTypes.intl.isRequired,
+  _: PropTypes.func.isRequired,
   match: PropTypes.match.isRequired,
   handlePush: PropTypes.func,
   data: PropTypes.list,
@@ -113,10 +110,10 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  injectIntl,
   withLoading({
     type: 'contentTypes',
     action: () => fetchContentTypes(),
   }),
   withPermissions(),
+  withTranslate,
 )(ContentTypesPageList);

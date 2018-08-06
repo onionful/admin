@@ -1,6 +1,6 @@
 import { types } from 'config';
 import { Throw } from 'utils';
-import { compose, injectIntl, PropTypes, React } from 'utils/create';
+import { PropTypes, React } from 'utils/create';
 import * as components from './components';
 
 const getAttribute = type => components[type] || Throw(`Unknown attribute: ${type}`);
@@ -28,4 +28,4 @@ Attributes.propTypes = {
   type: PropTypes.string.isRequired,
 };
 
-export default compose(injectIntl)(Attributes);
+export default Attributes;

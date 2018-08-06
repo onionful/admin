@@ -1,18 +1,17 @@
 import { Checkbox, Form } from 'antd';
-import { compose, injectIntl, PropTypes, React } from 'utils/create';
+import { withTranslate } from 'helpers';
+import { compose, PropTypes, React } from 'utils/create';
 
-const Required = ({ errors, fieldDecorator, intl: { formatMessage }, type }) => (
+const Required = ({ _, errors, fieldDecorator, type }) => (
   <Form.Item validateStatus={errors[type] ? 'error' : 'success'}>
-    {fieldDecorator(type)(
-      <Checkbox>{formatMessage({ id: `contentTypes.attributes.required` })}</Checkbox>,
-    )}
+    {fieldDecorator(type)(<Checkbox>{_('contentTypes.attributes.required')}</Checkbox>)}
   </Form.Item>
 );
 
 Required.propTypes = {
-  intl: PropTypes.intl.isRequired,
+  _: PropTypes.func.isRequired,
   fieldDecorator: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired, // eslint-disable-line
   type: PropTypes.string.isRequired,
 };
-export default compose(injectIntl)(Required);
+export default compose(withTranslate)(Required);

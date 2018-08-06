@@ -1,8 +1,9 @@
 import { Button, Form, Modal } from 'antd';
 import { ContentTypeIcon } from 'components';
 import { types } from 'config';
+import { withTranslate } from 'helpers';
 import { entries, isEmpty, noop, upperFirst } from 'lodash';
-import { Component, compose, glamorous, injectIntl, PropTypes, React } from 'utils/create';
+import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
 import Attributes from '../Attributes';
 
 const StyledButton = glamorous(Button)({
@@ -66,29 +67,26 @@ class FieldModal extends Component {
 
   render() {
     const { field, type, errors, visible } = this.state;
-    const {
-      form,
-      intl: { formatMessage },
-    } = this.props;
+    const { _, form } = this.props;
 
     const showBackButton = type && isEmpty(field);
 
     return (
       <Modal
-        title={formatMessage({ id: 'contentTypes.addField' }, { type })}
+        title={_('contentTypes.addField', { type })}
         visible={visible}
         onCancel={this.handleCancel}
         footer={[
           showBackButton && (
             <BackButton key="back" type="dashed" onClick={this.handleBack}>
-              {formatMessage({ id: 'global.back' })}
+              {_('global.back')}
             </BackButton>
           ),
           <Button key="cancel" onClick={this.handleCancel}>
-            {formatMessage({ id: 'global.cancel' })}
+            {_('global.cancel')}
           </Button>,
           <Button key="submit" disabled={!type} type="primary" onClick={this.handleSubmit}>
-            {formatMessage({ id: 'global.save' })}
+            {_('global.save')}
           </Button>,
         ]}
       >
@@ -99,7 +97,7 @@ class FieldModal extends Component {
                 <ContentTypeIcon type={fieldType} />
                 <Description>
                   <strong>{upperFirst(fieldType)}</strong>
-                  <small>{formatMessage({ id: `contentTypes.types.${fieldType}` })}</small>
+                  <small>{_(`contentTypes.types.${fieldType}`)}</small>
                 </Description>
               </StyledButton>
             ))}
@@ -112,8 +110,8 @@ class FieldModal extends Component {
 }
 
 FieldModal.propTypes = {
+  _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
-  intl: PropTypes.intl.isRequired,
   onSubmit: PropTypes.func,
 };
 
@@ -122,6 +120,6 @@ FieldModal.defaultProps = {
 };
 
 export default compose(
-  injectIntl,
   Form.create(),
+  withTranslate,
 )(FieldModal);

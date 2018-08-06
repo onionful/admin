@@ -1,19 +1,20 @@
 import { Form, Input } from 'antd';
-import { compose, injectIntl, PropTypes, React } from 'utils/create';
+import { withTranslate } from 'helpers';
+import { compose, PropTypes, React } from 'utils/create';
 
-const DefaultValue = ({ errors, fieldDecorator, intl: { formatMessage }, type }) => (
+const DefaultValue = ({ _, errors, fieldDecorator, type }) => (
   <Form.Item
     validateStatus={errors[type] ? 'error' : 'success'}
-    label={formatMessage({ id: `contentTypes.attributes.defaultValue` })}
+    label={_('contentTypes.attributes.defaultValue')}
   >
     {fieldDecorator(type)(<Input />)}
   </Form.Item>
 );
 
 DefaultValue.propTypes = {
-  intl: PropTypes.intl.isRequired,
+  _: PropTypes.func.isRequired,
   fieldDecorator: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired, // eslint-disable-line
   type: PropTypes.string.isRequired,
 };
-export default compose(injectIntl)(DefaultValue);
+export default compose(withTranslate)(DefaultValue);

@@ -1,22 +1,19 @@
-import config from 'config';
 import { ConnectedRouter } from 'connected-react-router/immutable';
 import { App, Authorize, Login } from 'containers';
-import 'normalize.css';
+import 'glamor/reset';
 import React from 'react';
 import { render } from 'react-dom';
-import { IntlProvider } from 'react-intl';
+import { LocalizeProvider } from 'react-localize-redux';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-import store, { history } from 'store';
-import translations from 'translations';
+import createStore, { history } from 'store';
 import registerServiceWorker from './registerServiceWorker';
 
-const { defaultLocale } = config;
-const locale = defaultLocale; // DEFAULT_LOCALE
+const store = createStore();
 
 render(
   <Provider store={store}>
-    <IntlProvider locale={locale} messages={translations[locale]}>
+    <LocalizeProvider>
       <ConnectedRouter history={history}>
         <Switch>
           <Route exact path="/login" component={Login} />
@@ -24,7 +21,7 @@ render(
           <Route path="/" component={App} />
         </Switch>
       </ConnectedRouter>
-    </IntlProvider>
+    </LocalizeProvider>
   </Provider>,
   document.getElementById('root'),
 );
