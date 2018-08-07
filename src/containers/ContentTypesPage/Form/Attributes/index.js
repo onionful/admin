@@ -16,7 +16,7 @@ const Attributes = ({ form: { getFieldDecorator, setFieldsValue }, errors, type 
         setValues={setFieldsValue}
         fieldDecorator={(fieldId, props = {}) =>
           getFieldDecorator(fieldId, {
-            rules: [{ required: true, message: 'Please input your username!', ...props }],
+            rules: [{ message: 'Please input your username!', ...props }],
           })
         }
       />

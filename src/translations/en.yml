@@ -6,9 +6,9 @@ contentTypes:
     title: Create new Content Type
     description: Create new type of your content
   edit:
-    title: Edit "{name}" Content Type
+    title: Edit "${name}" Content Type
     description: Edit existing content type
-  addField: Add new {type} field
+  addField: Add new field
   types:
     string: Titles, names, paragraphs, list of names
     number: Everything that is a number

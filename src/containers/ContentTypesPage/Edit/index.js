@@ -4,7 +4,12 @@ import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { createContentType, fetchContentType, getContentType } from 'reducers/contentTypes/actions';
+import {
+  createContentType,
+  fetchContentType,
+  getContentType,
+  updateContentType,
+} from 'reducers/contentTypes/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 import Form from '../Form';
 
@@ -16,20 +21,24 @@ class ContentTypesPageEdit extends Component {
   };
 
   handleSubmit = values => {
-    const { isNew, pushState, path, handleCreateContentType } = this.props;
+    const {
+      isNew,
+      item,
+      pushState,
+      path,
+      handleCreateContentType,
+      handleUpdateContentType,
+    } = this.props;
 
-    if (isNew) {
-      handleCreateContentType(values).then(() => {
-        pushState(path);
-      });
-    }
+    (isNew ? handleCreateContentType : handleUpdateContentType(item.get('id')))(values).then(() => {
+      pushState(path);
+    });
   };
 
   render() {
     const { _, isNew, item } = this.props;
 
     if (!isNew && item.isEmpty()) {
-      return <div>asd</div>;
       //throw new Error(_('errors.contentTypeNotFound'));
     }
 
@@ -72,6 +81,7 @@ ContentTypesPageEdit.propTypes = {
   _: PropTypes.func.isRequired,
   path: PropTypes.string.isRequired,
   handleCreateContentType: PropTypes.func,
+  handleUpdateContentType: PropTypes.func,
   pushState: PropTypes.func,
   isNew: PropTypes.bool,
   item: PropTypes.map,
@@ -79,6 +89,7 @@ ContentTypesPageEdit.propTypes = {
 
 ContentTypesPageEdit.defaultProps = {
   handleCreateContentType: noop,
+  handleUpdateContentType: noop,
   pushState: noop,
   isNew: true,
   item: Map(),
@@ -99,6 +110,7 @@ const mapStateToProps = (
 const mapDispatchToProps = dispatch => ({
   pushState: path => dispatch(push(path)),
   handleCreateContentType: data => dispatch(createContentType(data)),
+  handleUpdateContentType: id => data => dispatch(updateContentType(id, data)),
 });
 
 export default compose(

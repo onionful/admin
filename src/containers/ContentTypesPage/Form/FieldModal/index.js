@@ -120,6 +120,6 @@ FieldModal.defaultProps = {
 };
 
 export default compose(
-  Form.create(),
   withTranslate,
+  Form.create(),
 )(FieldModal);

@@ -1,9 +1,6 @@
-/* eslint-disable */
 import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row, Table } from 'antd';
 import { ContentTypeIcon, Lock } from 'components';
 import { withPermissions, withTranslate } from 'helpers';
-import { Map } from 'immutable';
-import { noop } from 'lodash';
 import slugify from 'slugify';
 import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
 import FieldModal from './FieldModal';
@@ -13,8 +10,25 @@ const FieldName = glamorous.strong({
 });
 
 class ContentTypesPageForm extends Component {
+  static getDerivedStateFromProps(props, state) {
+    const { item } = props;
+    console.log({ ...state, fields: item.has('fields') ? item.get('fields').toJS() : [] });
+    console.log('state', state);
+    console.log('item', item);
+    return { ...state, fields: item.has('fields') ? item.get('fields').toJS() : [] };
+  }
+
   state = {
     lockedId: true,
+    fields: [],
+  };
+
+  setIdValue = name => {
+    const {
+      form: { getFieldValue, setFieldsValue },
+    } = this.props;
+
+    setTimeout(() => setFieldsValue({ id: slugify(getFieldValue(name), { lower: true }) }), 0);
   };
 
   handleFieldDelete = (e, field) => {
@@ -23,7 +37,8 @@ class ContentTypesPageForm extends Component {
   };
 
   handleFieldSubmit = field => {
-    console.log('field', field);
+    const { fields } = this.state;
+    this.setState({ fields: [...fields, field] });
   };
 
   handleFieldsModalShow = field => {
@@ -37,13 +52,14 @@ class ContentTypesPageForm extends Component {
 
   handleNameChange = () => {
     const { lockedId } = this.state;
-    const {
-      form: { getFieldValue, setFieldsValue },
-    } = this.props;
 
     if (lockedId) {
-      setTimeout(() => setFieldsValue({ id: slugify(getFieldValue('name'), { lower: true }) }), 0);
+      this.setIdValue('name');
     }
+  };
+
+  handleIdChange = () => {
+    this.setIdValue('id');
   };
 
   handleSubmit = e => {
@@ -53,16 +69,17 @@ class ContentTypesPageForm extends Component {
       onSubmit,
       form: { validateFields },
     } = this.props;
+    const { fields } = this.state;
 
     validateFields((err, values) => {
       if (!err) {
-        onSubmit(values);
+        onSubmit({ ...values, fields });
       }
     });
   };
 
   render() {
-    const { lockedId } = this.state;
+    const { fields, lockedId } = this.state;
     const {
       _,
       children,
@@ -75,29 +92,11 @@ class ContentTypesPageForm extends Component {
       throw new Error(_('errors.contentTypeNotFound'));
     }
 
-    //const fields = [
-    //  { id: 'title', name: 'title', type: 'string' },
-    //  { id: 'identifier', name: 'identifier', type: 'string', unique: true },
-    //  { id: 'content', name: 'content', type: 'text' },
-    //  { id: 'images', name: 'images', type: 'media', multiple: true },
-    //  { id: 'someNumber', name: 'some number', type: 'number' },
-    //  { id: 'someDate', name: 'some date', type: 'date' },
-    //  { id: 'someEmail', name: 'some email', type: 'email' },
-    //  { id: 'someBool', name: 'some bool', type: 'bool' },
-    //];
-
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         {children}
 
         <Row gutter={24}>
-          <Col span={12}>
-            <Form.Item label={_('global.name')}>
-              {getFieldDecorator('name', {
-                rules: [{ required: true, message: _('errors.required') }],
-              })(<Input type="text" onChange={this.handleNameChange} />)}
-            </Form.Item>
-          </Col>
           <Col span={12}>
             <Form.Item label={_('global.id')}>
               {getFieldDecorator('id', {
@@ -108,8 +107,16 @@ class ContentTypesPageForm extends Component {
                   type="text"
                   addonAfter={<Lock locked={lockedId} onLock={this.handleLockIdClick} />}
                   disabled={lockedId}
+                  onChange={this.handleIdChange}
                 />,
               )}
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label={_('global.name')}>
+              {getFieldDecorator('name', {
+                rules: [{ required: true, message: _('errors.required') }],
+              })(<Input type="text" onChange={this.handleNameChange} />)}
             </Form.Item>
           </Col>
         </Row>
@@ -120,7 +127,7 @@ class ContentTypesPageForm extends Component {
         <Divider orientation="right">
           <Button onClick={() => this.handleFieldsModalShow()}>
             <Icon type="plus" />
-            {_('contentTypes.addField', { type: null })}
+            {_('contentTypes.addField')}
           </Button>
         </Divider>
 
@@ -134,14 +141,14 @@ class ContentTypesPageForm extends Component {
         <Table
           showHeader={false}
           pagination={false}
-          dataSource={item.get('fields')}
+          dataSource={fields}
           rowKey="id"
           columns={[
             {
-              dataIndex: 'type',
-              render: type => <ContentTypeIcon type={type} />,
-              width: 80,
               align: 'center',
+              dataIndex: 'type',
+              width: 80,
+              render: type => <ContentTypeIcon type={type} />,
             },
             {
               key: 'name',
@@ -153,9 +160,9 @@ class ContentTypesPageForm extends Component {
               ),
             },
             {
+              align: 'center',
               key: 'actions',
               width: 100,
-              align: 'center',
               render: field => (
                 <Button.Group>
                   <Button icon="edit" onClick={() => this.handleFieldsModalShow(field)} />
@@ -179,17 +186,14 @@ ContentTypesPageForm.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  item: PropTypes.map.isRequired,
   children: PropTypes.node,
   id: PropTypes.string,
-  item: PropTypes.map,
-  pushState: PropTypes.func,
 };
 
 ContentTypesPageForm.defaultProps = {
   children: null,
   id: null,
-  item: Map(),
-  pushState: noop,
 };
 
 const mapPropsToFields = ({ item = {} }) => ({
