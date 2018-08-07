@@ -11,19 +11,19 @@ export const fetchContentType = id =>
 export const fetchContentTypes = params =>
   spaceApi(api => ({
     type: types.CONTENT_TYPE_LIST,
-    payload: api.get('/content-types', { params }),
+    payload: api.get('/content-types', params),
   }));
 
-export const createContentType = params =>
+export const createContentType = data =>
   spaceApi(api => ({
     type: types.CONTENT_TYPE_CREATE,
-    payload: api.post('/content-types', { params }),
+    payload: api.post('/content-types', data),
   }));
 
-export const updateContentType = params =>
+export const updateContentType = (id, data) =>
   spaceApi(api => ({
     type: types.CONTENT_TYPE_CREATE,
-    payload: api.put('/content-types', { params }),
+    payload: api.put(`/content-types/${id}`, data),
   }));
 
 export const getContentTypes = state => state.getIn(['contentTypes', 'data']);
