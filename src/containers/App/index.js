@@ -110,7 +110,7 @@ class App extends React.Component {
       handleGetProfile().catch(error =>
         this.setState({
           error,
-          errorInfo: { componentStack: JSON.stringify(error.response.data, null, 2) },
+          errorInfo: { componentStack: JSON.stringify((error.response || {}).data, null, 2) },
         }),
       );
     }
