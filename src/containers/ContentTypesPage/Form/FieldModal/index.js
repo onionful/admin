@@ -2,7 +2,7 @@ import { Button, Form, Modal } from 'antd';
 import { ContentTypeIcon } from 'components';
 import { types } from 'config';
 import { withTranslate } from 'helpers';
-import { entries, isEmpty, noop, upperFirst } from 'lodash';
+import { entries, isEmpty, forEach, upperFirst } from 'lodash';
 import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
 import Attributes from '../Attributes';
 
@@ -42,13 +42,10 @@ class FieldModal extends Component {
   };
 
   handleSubmit = () => {
-    const {
-      onSubmit,
-      form: { validateFields },
-    } = this.props;
+    const { onSubmit, form } = this.props;
     const { type } = this.state;
 
-    validateFields((errors, values) => {
+    form.validateFields((errors, values) => {
       if (errors) {
         this.setState({ errors });
       } else {
@@ -62,7 +59,10 @@ class FieldModal extends Component {
   };
 
   show = (field = {}) => {
+    const { form } = this.props;
+
     this.setState({ field, type: field.type, visible: true });
+    forEach(field, (initialValue, key) => form.getFieldDecorator(key, { initialValue }));
   };
 
   render() {
@@ -112,11 +112,7 @@ class FieldModal extends Component {
 FieldModal.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
-  onSubmit: PropTypes.func,
-};
-
-FieldModal.defaultProps = {
-  onSubmit: noop,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default compose(

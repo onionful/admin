@@ -5,7 +5,7 @@ import * as components from './components';
 
 const getAttribute = type => components[type] || Throw(`Unknown attribute: ${type}`);
 
-const Attributes = ({ form: { getFieldDecorator, setFieldsValue }, errors, type }) =>
+const Attributes = ({ form, errors, type }) =>
   (types[type] || Throw(`Unknown type: ${type}`)).attributes.map(attr => {
     const Attribute = getAttribute(attr);
     return (
@@ -13,9 +13,9 @@ const Attributes = ({ form: { getFieldDecorator, setFieldsValue }, errors, type 
         key={attr}
         type={attr}
         errors={errors || {}}
-        setValues={setFieldsValue}
+        setValues={form.setFieldsValue}
         fieldDecorator={(fieldId, props = {}) =>
-          getFieldDecorator(fieldId, {
+          form.getFieldDecorator(fieldId, {
             rules: [{ message: 'Please input your username!', ...props }],
           })
         }

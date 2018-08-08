@@ -10,39 +10,41 @@ const FieldName = glamorous.strong({
 });
 
 class ContentTypesPageForm extends Component {
-  static getDerivedStateFromProps(props, state) {
-    const { item } = props;
-    console.log({ ...state, fields: item.has('fields') ? item.get('fields').toJS() : [] });
-    console.log('state', state);
-    console.log('item', item);
-    return { ...state, fields: item.has('fields') ? item.get('fields').toJS() : [] };
-  }
-
   state = {
     lockedId: true,
-    fields: [],
+    fieldIndex: -1,
   };
 
   setIdValue = name => {
-    const {
-      form: { getFieldValue, setFieldsValue },
-    } = this.props;
+    const { form } = this.props;
 
-    setTimeout(() => setFieldsValue({ id: slugify(getFieldValue(name), { lower: true }) }), 0);
+    setTimeout(
+      () => form.setFieldsValue({ id: slugify(form.getFieldValue(name), { lower: true }) }),
+      0,
+    );
   };
 
-  handleFieldDelete = (e, field) => {
-    console.log('e', e);
-    console.log('field', field);
+  handleFieldDelete = (e, index) => {
+    const { form } = this.props;
+    const fields = form.getFieldValue('fields');
+
+    fields.splice(index, 1);
+
+    form.setFieldsValue({ fields });
   };
 
   handleFieldSubmit = field => {
-    const { fields } = this.state;
-    this.setState({ fields: [...fields, field] });
+    const { form } = this.props;
+    const { fieldIndex } = this.state;
+    const fields = form.getFieldValue('fields');
+
+    fields.splice(fieldIndex >= 0 ? fieldIndex : fields.length, 1, field);
+
+    form.setFieldsValue({ fields });
   };
 
-  handleFieldsModalShow = field => {
-    this.fieldsModal.show(field);
+  handleModalShow = (field, index = -1) => {
+    this.setState({ fieldIndex: index }, () => this.fieldsModal.show(field));
   };
 
   handleLockIdClick = () => {
@@ -65,32 +67,25 @@ class ContentTypesPageForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const {
-      onSubmit,
-      form: { validateFields },
-    } = this.props;
-    const { fields } = this.state;
+    const { onSubmit, form } = this.props;
 
-    validateFields((err, values) => {
+    form.validateFields((err, values) => {
       if (!err) {
-        onSubmit({ ...values, fields });
+        onSubmit(values);
       }
     });
   };
 
   render() {
-    const { fields, lockedId } = this.state;
-    const {
-      _,
-      children,
-      id,
-      item,
-      form: { getFieldDecorator },
-    } = this.props;
+    const { lockedId } = this.state;
+    const { _, children, id, item, form } = this.props;
 
     if (id && item.isEmpty()) {
       throw new Error(_('errors.contentTypeNotFound'));
     }
+
+    const initialValue = item.has('fields') ? item.get('fields').toJS() : [];
+    form.getFieldDecorator('fields', { initialValue });
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
@@ -99,7 +94,7 @@ class ContentTypesPageForm extends Component {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item label={_('global.id')}>
-              {getFieldDecorator('id', {
+              {form.getFieldDecorator('id', {
                 disabled: true,
                 rules: [{ required: true, message: _('errors.required') }],
               })(
@@ -114,18 +109,18 @@ class ContentTypesPageForm extends Component {
           </Col>
           <Col span={12}>
             <Form.Item label={_('global.name')}>
-              {getFieldDecorator('name', {
+              {form.getFieldDecorator('name', {
                 rules: [{ required: true, message: _('errors.required') }],
               })(<Input type="text" onChange={this.handleNameChange} />)}
             </Form.Item>
           </Col>
         </Row>
         <Form.Item label={_('global.description')}>
-          {getFieldDecorator('description')(<Input.TextArea autosize />)}
+          {form.getFieldDecorator('description')(<Input.TextArea autosize />)}
         </Form.Item>
 
         <Divider orientation="right">
-          <Button onClick={() => this.handleFieldsModalShow()}>
+          <Button onClick={() => this.handleModalShow()}>
             <Icon type="plus" />
             {_('contentTypes.addField')}
           </Button>
@@ -141,7 +136,7 @@ class ContentTypesPageForm extends Component {
         <Table
           showHeader={false}
           pagination={false}
-          dataSource={fields}
+          dataSource={form.getFieldValue('fields')}
           rowKey="id"
           columns={[
             {
@@ -163,12 +158,12 @@ class ContentTypesPageForm extends Component {
               align: 'center',
               key: 'actions',
               width: 100,
-              render: field => (
+              render: (field, record, index) => (
                 <Button.Group>
-                  <Button icon="edit" onClick={() => this.handleFieldsModalShow(field)} />
+                  <Button icon="edit" onClick={() => this.handleModalShow(field, index)} />
                   <Popconfirm
                     title={_('global.removeQuestion')}
-                    onConfirm={e => this.handleFieldDelete(e, field)}
+                    onConfirm={e => this.handleFieldDelete(e, index)}
                   >
                     <Button icon="delete" type="danger" />
                   </Popconfirm>
