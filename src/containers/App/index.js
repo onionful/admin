@@ -15,6 +15,7 @@ import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
+import { getContentTypes } from 'reducers/contentTypes/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, permissions } from 'utils';
 import { compose, connect, glamorous, PropTypes, React } from 'utils/create';
@@ -125,6 +126,7 @@ class App extends React.Component {
       profile,
       space,
       spaces,
+      contentTypes,
     } = this.props;
     const { collapsed, error, errorInfo } = this.state;
 
@@ -139,6 +141,12 @@ class App extends React.Component {
       {
         key: 'content',
         items: [
+          ...contentTypes.toJS().map(({ id, name }) => ({
+            name,
+            key: id,
+            icon: 'file',
+            component: null,
+          })),
           {
             key: 'content-types',
             icon: 'file-add',
@@ -207,7 +215,7 @@ class App extends React.Component {
                     {group.items.filter(hasPermissions).map(item => (
                       <Menu.Item key={item.key}>
                         <Icon type={item.icon} />
-                        <span>{_(`menu.${item.key}`)}</span>
+                        <span>{item.name || _(`menu.${item.key}`)}</span>
                       </Menu.Item>
                     ))}
                   </Menu.ItemGroup>
@@ -257,6 +265,7 @@ App.propTypes = {
   profile: PropTypes.map,
   space: PropTypes.string,
   spaces: PropTypes.list,
+  contentTypes: PropTypes.list,
   handleGetProfile: PropTypes.func,
   handleLogout: PropTypes.func,
   handleSetSpace: PropTypes.func,
@@ -270,6 +279,7 @@ App.defaultProps = {
   profile: Map(),
   space: null,
   spaces: List(),
+  contentTypes: List(),
   handleGetProfile: noop,
   handleLogout: noop,
   handleSetSpace: noop,
@@ -282,6 +292,7 @@ const mapStateToProps = state => ({
   profile: getProfile(state),
   space: getCurrentSpace(state),
   spaces: getSpaces(state),
+  contentTypes: getContentTypes(state),
 });
 
 const mapDispatchToProps = dispatch => ({
