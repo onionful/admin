@@ -2,15 +2,17 @@ import { Checkbox, Form } from 'antd';
 import { withTranslate } from 'helpers';
 import { compose, PropTypes, React } from 'utils/create';
 
-const Unique = ({ _, fieldDecorator, type }) => (
+const Editor = ({ _, fieldDecorator, type }) => (
   <Form.Item>
-    {fieldDecorator(type)(<Checkbox>{_('contentTypes.attributes.unique')}</Checkbox>)}
+    {fieldDecorator(type, [{ required: false }])(
+      <Checkbox defaultChecked>{_('contentTypes.attributes.editor')}</Checkbox>,
+    )}
   </Form.Item>
 );
 
-Unique.propTypes = {
+Editor.propTypes = {
   _: PropTypes.func.isRequired,
   fieldDecorator: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
 };
-export default compose(withTranslate)(Unique);
+export default compose(withTranslate)(Editor);

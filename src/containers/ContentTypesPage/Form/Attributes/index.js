@@ -14,11 +14,7 @@ const Attributes = ({ form, errors, type }) =>
         type={attr}
         errors={errors || {}}
         setValues={form.setFieldsValue}
-        fieldDecorator={(fieldId, props = {}) =>
-          form.getFieldDecorator(fieldId, {
-            rules: [{ message: 'Please input your username!', ...props }],
-          })
-        }
+        fieldDecorator={(fieldId, rules = []) => form.getFieldDecorator(fieldId, { rules })}
       />
     );
   });
