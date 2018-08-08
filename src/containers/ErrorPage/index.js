@@ -44,7 +44,7 @@ const ErrorPage = glamorous(({ className, error, errorInfo: { componentStack } }
 ErrorPage.propTypes = {
   error: PropTypes.instanceOf(Error).isRequired,
   errorInfo: PropTypes.shape({
-    componentStack: PropTypes.string.isRequired,
+    componentStack: PropTypes.string,
   }),
 };
 
