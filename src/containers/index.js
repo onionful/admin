@@ -1,5 +1,5 @@
-export { default as App } from './App';
 export { default as Authorize } from './Authorize';
+export { default as ContentPage } from './ContentPage';
 export { default as ContentTypesPage } from './ContentTypesPage';
 export { default as ErrorPage } from './ErrorPage';
 export { default as HomePage } from './HomePage';

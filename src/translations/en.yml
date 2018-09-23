@@ -27,6 +27,17 @@ contentTypes:
     editor: Show content editor
     numberFormat: Number format
     multiple: Multiple images
+content:
+  list:
+    title: Content
+    description: Create and update your own Content Types.
+#  create:
+#    title: Create new Content Type
+#    description: Create new type of your content
+#  edit:
+#    title: Edit "${name}" Content Type
+#    description: Edit existing content type
+#  addField: Add new field
 
 menu:
   content: Content

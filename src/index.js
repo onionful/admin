@@ -1,5 +1,6 @@
 import { ConnectedRouter } from 'connected-react-router/immutable';
-import { App, Authorize, Login } from 'containers';
+import { Authorize, Login } from 'containers';
+import App from 'containers/App';
 import 'glamor/reset';
 import React from 'react';
 import { render } from 'react-dom';

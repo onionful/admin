@@ -1,10 +1,10 @@
 import { Button, Form, Modal } from 'antd';
-import { ContentTypeIcon } from 'components';
-import { types } from 'config';
-import { withTranslate } from 'helpers';
+import { ContentTypeIcon } from 'components/index';
+import { types } from 'config/index';
+import { withTranslate } from 'helpers/index';
 import { entries, isEmpty, forEach, upperFirst } from 'lodash';
 import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
-import Attributes from '../Attributes';
+import Attributes from './Attributes';
 
 const StyledButton = glamorous(Button)({
   display: 'flex',
@@ -25,7 +25,7 @@ const Description = glamorous.div({
   padding: '0 1rem',
 });
 
-class FieldModal extends Component {
+class Index extends Component {
   state = {
     field: {},
     type: undefined,
@@ -109,7 +109,7 @@ class FieldModal extends Component {
   }
 }
 
-FieldModal.propTypes = {
+Index.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -118,4 +118,4 @@ FieldModal.propTypes = {
 export default compose(
   withTranslate,
   Form.create(),
-)(FieldModal);
+)(Index);

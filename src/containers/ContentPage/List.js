@@ -1,13 +1,13 @@
 import { Button, Table } from 'antd';
-import { SectionHeader } from 'components';
+import { SectionHeader } from 'components/index';
 import { push } from 'connected-react-router';
-import { withLoading, withPermissions, withTranslate } from 'helpers';
+import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { fetchContentTypes, getContentTypes } from 'reducers/contentTypes/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
-class ContentTypesPageList extends Component {
+class ContentPageList extends Component {
   onCreateClick = () => {
     const {
       handlePush,
@@ -27,7 +27,9 @@ class ContentTypesPageList extends Component {
   };
 
   render() {
-    const { _, data } = this.props;
+    const { _, contentType, data } = this.props;
+
+    console.log('LIST contentType', contentType);
 
     const columns = [
       {
@@ -52,8 +54,8 @@ class ContentTypesPageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={_('contentTypes.list.title')}
-          description={_('contentTypes.list.description')}
+          title={_('content.list.title')}
+          description={_('content.list.description')}
           action={
             <Button onClick={this.onCreateClick} type="primary" icon="plus">
               {_('global.create')}
@@ -85,14 +87,15 @@ class ContentTypesPageList extends Component {
   }
 }
 
-ContentTypesPageList.propTypes = {
+ContentPageList.propTypes = {
   _: PropTypes.func.isRequired,
   match: PropTypes.match.isRequired,
+  contentType: PropTypes.map.isRequired,
   handlePush: PropTypes.func,
   data: PropTypes.list,
 };
 
-ContentTypesPageList.defaultProps = {
+ContentPageList.defaultProps = {
   handlePush: noop,
   data: List(),
 };
@@ -111,9 +114,9 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'contentTypes',
+    type: 'content',
     action: () => fetchContentTypes(),
   }),
   withPermissions(),
   withTranslate,
-)(ContentTypesPageList);
+)(ContentPageList);

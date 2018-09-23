@@ -19,7 +19,7 @@ const StyledLogo = glamorous(Logo)({
   maxWidth: '10rem',
 });
 
-export const Login = ({ handleLogin, isAuthenticated }) =>
+const Login = ({ handleLogin, isAuthenticated }) =>
   isAuthenticated ? (
     <Redirect to="/" />
   ) : (

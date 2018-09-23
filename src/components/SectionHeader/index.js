@@ -11,7 +11,7 @@ const Description = glamorous.p({
   color: colors.gray,
 });
 
-export const SectionHeader = ({ title, description, action }) => (
+const SectionHeader = ({ title, description, action }) => (
   <Row type="flex" align="middle">
     <Col span={action ? 12 : 24}>
       <Header>{title}</Header>

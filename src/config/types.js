@@ -4,7 +4,7 @@ export default {
   string: {
     icon: 'font',
     color: '#ffb500',
-    attributes: [...attributes /*, 'range' */],
+    attributes: [...attributes /* , 'range' */],
   },
   text: {
     icon: 'align-left',

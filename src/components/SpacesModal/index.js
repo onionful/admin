@@ -1,5 +1,5 @@
 import { List, Modal } from 'antd';
-import { Logo } from 'components';
+import Logo from 'components/Logo';
 import { List as IList } from 'immutable';
 import { noop } from 'lodash';
 import { fetchSpaces, setSpace } from 'reducers/spaces/actions';

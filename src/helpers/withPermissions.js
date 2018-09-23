@@ -17,7 +17,8 @@ export default componentPermission => WrappedComponent =>
       };
 
       componentWillMount() {
-        if (!this.props.hasPermission(componentPermission)) {
+        const { hasPermission } = this.props;
+        if (!hasPermission(componentPermission)) {
           throw new errors.Forbidden(componentPermission);
         }
       }

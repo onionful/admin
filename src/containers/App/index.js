@@ -2,6 +2,7 @@ import { Avatar, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import { push } from 'connected-react-router';
 import {
+  ContentPage,
   ContentTypesPage,
   ErrorPage,
   HomePage,
@@ -73,7 +74,9 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.isAuthenticated !== prevProps.isAuthenticated) {
+    const { isAuthenticated } = this.props;
+
+    if (isAuthenticated !== prevProps.isAuthenticated) {
       this.fetchData();
     }
   }
@@ -141,11 +144,11 @@ class App extends React.Component {
       {
         key: 'content',
         items: [
-          ...contentTypes.toJS().map(({ id, name }) => ({
-            name,
-            key: id,
+          ...contentTypes.toJS().map(contentType => ({
+            name: contentType.name,
+            key: `content/${contentType.id}`,
             icon: 'file',
-            component: null,
+            render: props => <ContentPage {...props} contentType={contentType} />,
           })),
           {
             key: 'content-types',
@@ -239,8 +242,8 @@ class App extends React.Component {
                         {menuItems.map(section =>
                           section.items
                             .filter(({ component }) => component)
-                            .map(({ key, component }) => (
-                              <Route path={`/${key}`} component={component} />
+                            .map(({ key, render, component }) => (
+                              <Route path={`/${key}`} render={render} component={component} />
                             )),
                         )}
                         <Route component={NotFoundPage} />

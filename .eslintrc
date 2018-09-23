@@ -1,6 +1,7 @@
 {
-  "extends": ["airbnb", "plugin:prettier/recommended"],
+  "extends": ["airbnb", "prettier", "prettier/react", "prettier/standard"],
   "parser": "babel-eslint",
+  "plugins": ["prettier"],
   "env": {
     "browser": true,
     "es6": true
@@ -10,17 +11,8 @@
   },
   "rules": {
     "import/prefer-default-export": 0,
-    "jsx-a11y/anchor-is-valid": [
-      "error",
-      {
-        "components": ["Link"],
-        "specialLink": ["to", "hrefLeft", "hrefRight"],
-        "aspects": ["noHref", "invalidHref", "preferButton"]
-      }
-    ],
-    "react/jsx-filename-extension": [2, { "extensions": [".js"] }],
-    "react/no-typos": 0,
-    "spaced-comment": 0
+    "jsx-a11y/href-no-hash": 0,
+    "react/jsx-filename-extension": [2, { "extensions": [".js"] }]
   },
   "settings": {
     "import/resolver": {
