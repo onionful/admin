@@ -1,9 +1,9 @@
 import { Icon } from 'react-fa';
 import { colors } from 'utils/index';
-import { glamorous, PropTypes, React } from 'utils/create';
+import { styled, PropTypes, React } from 'utils/create';
 import { types } from 'config';
 
-const Wrapper = glamorous.span(({ type }) => ({
+const Wrapper = styled.span(({ type }) => ({
   backgroundColor: types[type].color,
   borderRadius: '3px',
   padding: '.5rem',

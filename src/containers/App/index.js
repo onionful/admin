@@ -19,26 +19,26 @@ import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCollections } from 'reducers/collections/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, permissions } from 'utils';
-import { compose, connect, glamorous, PropTypes, React } from 'utils/create';
+import { compose, connect, styled, PropTypes, React } from 'utils/create';
 
 const { Sider, Footer } = Layout;
 
-const Container = glamorous(Layout.Content)({
+const Container = styled(Layout.Content)({
   position: 'relative',
   height: '100%',
   padding: '20px',
 });
 
-const Content = glamorous.div({
+const Content = styled.div({
   background: '#fff',
   padding: 24,
 });
 
-const StyledLogo = glamorous(Logo)(({ collapsed }) => ({
+const StyledLogo = styled(Logo)(({ collapsed }) => ({
   margin: !collapsed ? '3rem' : '1rem',
 }));
 
-const UserInfo = glamorous.div({
+const UserInfo = styled.div({
   cursor: 'pointer',
   backgroundColor: colors.background,
   padding: '1rem 0',
@@ -52,7 +52,7 @@ const UserInfo = glamorous.div({
   },
 });
 
-const SpaceSelect = glamorous(Select)({
+const SpaceSelect = styled(Select)({
   width: '100%',
   padding: '1rem',
 });

@@ -5,7 +5,7 @@ import { noop } from 'lodash';
 import moment from 'moment';
 import { fetchUsers } from 'reducers/users/actions';
 import { permissions } from 'utils';
-import { Component, compose, connect, glamorous, PropTypes, React } from 'utils/create';
+import { Component, compose, connect, styled, PropTypes, React } from 'utils/create';
 
 const columns = [
   {
@@ -51,16 +51,16 @@ const columns = [
   },
 ];
 
-const SearchReset = glamorous(Icon)({
+const SearchReset = styled(Icon)({
   marginRight: '1rem',
   cursor: 'pointer',
 });
 
-const Search = glamorous(Input.Search)({
+const Search = styled(Input.Search)({
   marginBottom: '1rem',
 });
 
-const SearchQuery = glamorous.div({
+const SearchQuery = styled.div({
   marginBottom: '1rem',
 });
 

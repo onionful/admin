@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import IPropTypes from 'react-immutable-proptypes';
 import RRPropTypes from 'react-router-prop-types';
 
-export { default as glamorous } from 'glamorous';
+export { default as styled } from 'react-emotion';
 export { compose } from 'redux';
 export { connect } from 'react-redux';
 export { React, Component };

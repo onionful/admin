@@ -1,7 +1,7 @@
 import { Icon } from 'antd';
-import { glamorous, PropTypes, React } from 'utils/create';
+import { styled, PropTypes, React } from 'utils/create';
 
-const Lock = glamorous(({ locked, onLock, ...props }) => (
+const Lock = styled(({ locked, onLock, ...props }) => (
   <Icon {...props} type={locked ? 'lock' : 'unlock'} onClick={onLock} />
 ))({ cursor: 'pointer' });
 

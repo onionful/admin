@@ -9,6 +9,7 @@ module.exports = compose(
     rewireESLint(config, env, options =>
       Object.assign(options, { eslintPath: require.resolve('eslint') }),
     ),
+  config => injectBabelPlugin(['emotion', { sourceMap: true, autoLabel: true }], config),
   config => injectBabelPlugin(['import', { libraryName: 'antd', style: true }], config),
   rewireLess.withLoaderOptions({
     javascriptEnabled: true,

@@ -1,12 +1,12 @@
 import { Logo } from 'components';
 import { colors } from 'utils';
-import { glamorous, PropTypes, React } from 'utils/create';
+import { styled, PropTypes, React } from 'utils/create';
 
-const StyledLogo = glamorous(Logo)({
+const StyledLogo = styled(Logo)({
   width: '10rem',
 });
 
-const Stench = glamorous.div({
+const Stench = styled.div({
   color: colors.rottenOnion,
   fontSize: '2rem',
   marginBottom: '-2rem',
@@ -19,13 +19,13 @@ const Stench = glamorous.div({
   },
 });
 
-const Stack = glamorous.pre({
+const Stack = styled.pre({
   maxHeight: '10rem',
   overflowY: 'auto',
   opacity: 0.5,
 });
 
-const ErrorPage = glamorous(({ className, error, errorInfo: { componentStack } }) => (
+const ErrorPage = styled(({ className, error, errorInfo: { componentStack } }) => (
   <div className={className}>
     <Stench />
     <StyledLogo fill={colors.rottenOnion} />

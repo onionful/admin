@@ -4,15 +4,15 @@ import { noop } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { login } from 'reducers/auth/actions';
-import { glamorous, PropTypes, React } from 'utils/create';
+import { styled, PropTypes, React } from 'utils/create';
 
-const StyledRow = glamorous(Row)({
+const StyledRow = styled(Row)({
   height: '100vh',
   textAlign: 'center',
   backgroundColor: '#001529',
 });
 
-const StyledLogo = glamorous(Logo)({
+const StyledLogo = styled(Logo)({
   display: 'block',
   margin: '0 auto 3rem',
   width: '100%',

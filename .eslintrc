@@ -1,7 +1,7 @@
 {
   "extends": ["airbnb", "prettier", "prettier/react", "prettier/standard"],
   "parser": "babel-eslint",
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "emotion"],
   "env": {
     "browser": true,
     "es6": true
@@ -10,6 +10,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "emotion/syntax-preference": [2, "object"],
     "import/prefer-default-export": 0,
     "jsx-a11y/href-no-hash": 0,
     "react/jsx-filename-extension": [2, { "extensions": [".js"] }]

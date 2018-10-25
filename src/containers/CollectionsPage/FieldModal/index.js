@@ -3,10 +3,10 @@ import { FieldTypeIcon } from 'components';
 import { types } from 'config/index';
 import { withTranslate } from 'helpers/index';
 import { entries, isEmpty, forEach, upperFirst } from 'lodash';
-import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
+import { Component, compose, styled, PropTypes, React } from 'utils/create';
 import Attributes from './Attributes';
 
-const StyledButton = glamorous(Button)({
+const StyledButton = styled(Button)({
   display: 'flex',
   margin: '.5rem 0',
   padding: '.5rem',
@@ -14,11 +14,11 @@ const StyledButton = glamorous(Button)({
   width: '100%',
 });
 
-const BackButton = glamorous(Button)({
+const BackButton = styled(Button)({
   float: 'left',
 });
 
-const Description = glamorous.div({
+const Description = styled.div({
   display: 'flex',
   flexDirection: 'column',
   textAlign: 'left',

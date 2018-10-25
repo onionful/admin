@@ -1,9 +1,9 @@
 import { Spin } from 'antd';
 import { noop } from 'lodash';
 import { colors } from 'utils';
-import { Component, connect, glamorous, PropTypes, React } from 'utils/create';
+import { Component, connect, styled, PropTypes, React } from 'utils/create';
 
-const Container = glamorous.div({
+const Container = styled.div({
   position: 'absolute',
   top: 0,
   left: 0,

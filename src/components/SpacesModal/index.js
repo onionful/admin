@@ -4,21 +4,21 @@ import { List as IList } from 'immutable';
 import { noop } from 'lodash';
 import { fetchSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors } from 'utils';
-import { Component, connect, glamorous, PropTypes, React } from 'utils/create';
+import { Component, connect, styled, PropTypes, React } from 'utils/create';
 
-const StyledLogo = glamorous(Logo)({
+const StyledLogo = styled(Logo)({
   display: 'block',
   margin: '0 auto',
   width: '10rem',
 });
 
-const Header = glamorous.h1({
+const Header = styled.h1({
   textAlign: 'center',
   margin: '2rem',
   color: colors.white,
 });
 
-const Item = glamorous(List.Item)({
+const Item = styled(List.Item)({
   cursor: 'pointer',
   transition: 'all 0.3s ease',
   color: colors.white,

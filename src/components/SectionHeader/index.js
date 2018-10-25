@@ -1,12 +1,12 @@
 import { Col, Row } from 'antd';
 import { colors } from 'utils';
-import { glamorous, PropTypes, React } from 'utils/create';
+import { styled, PropTypes, React } from 'utils/create';
 
-const Header = glamorous.h1({
+const Header = styled.h1({
   margin: 0,
 });
 
-const Description = glamorous.p({
+const Description = styled.p({
   fontStyle: 'italic',
   color: colors.gray,
 });

@@ -41,7 +41,8 @@ content:
 
 menu:
   content: Content
-  collections: Collections
+  collection: Collections
+  collections: Manage collections
   system: System
   spaces: Spaces
   users: Users

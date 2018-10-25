@@ -2,9 +2,9 @@ import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row, Table } from 
 import { FieldTypeIcon, Lock } from 'components';
 import { withPermissions, withTranslate } from 'helpers';
 import slugify from 'slugify';
-import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
+import { Component, compose, styled, PropTypes, React } from 'utils/create';
 
-const FieldName = glamorous.strong({
+const FieldName = styled.strong({
   display: 'block',
 });
 
