@@ -1,5 +1,5 @@
 import { Button, Form, Modal } from 'antd';
-import { ContentTypeIcon } from 'components/index';
+import { FieldTypeIcon } from 'components';
 import { types } from 'config/index';
 import { withTranslate } from 'helpers/index';
 import { entries, isEmpty, forEach, upperFirst } from 'lodash';
@@ -73,7 +73,7 @@ class Index extends Component {
 
     return (
       <Modal
-        title={_('contentTypes.addField', { type })}
+        title={_('collections.addField', { type })}
         visible={visible}
         onCancel={this.handleCancel}
         footer={[
@@ -94,10 +94,10 @@ class Index extends Component {
           {!type &&
             entries(types).map(([fieldType]) => (
               <StyledButton key={fieldType} onClick={() => this.handleTypeSelected(fieldType)}>
-                <ContentTypeIcon type={fieldType} />
+                <FieldTypeIcon type={fieldType} />
                 <Description>
                   <strong>{upperFirst(fieldType)}</strong>
-                  <small>{_(`contentTypes.types.${fieldType}`)}</small>
+                  <small>{_(`collections.types.${fieldType}`)}</small>
                 </Description>
               </StyledButton>
             ))}

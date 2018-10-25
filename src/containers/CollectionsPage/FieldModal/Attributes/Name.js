@@ -33,7 +33,7 @@ class Name extends Component {
         <Col span={12}>
           <Form.Item
             validateStatus={errors.id ? 'error' : 'success'}
-            label={_('contentTypes.attributes.id')}
+            label={_('collections.attributes.id')}
           >
             {fieldDecorator('id', [{ required: true }])(
               <Input
@@ -47,7 +47,7 @@ class Name extends Component {
         <Col span={12}>
           <Form.Item
             validateStatus={errors[type] ? 'error' : 'success'}
-            label={_(`contentTypes.attributes.${type}`)}
+            label={_(`collections.attributes.${type}`)}
           >
             {fieldDecorator(type, [{ required: true }])(
               <Input onChange={this.handleValueChange} />,

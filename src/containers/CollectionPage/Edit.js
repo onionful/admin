@@ -5,15 +5,15 @@ import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import {
-  createContentType,
-  fetchContentType,
-  getContentType,
-  updateContentType,
-} from 'reducers/contentTypes/actions';
+  createCollection,
+  fetchCollection,
+  getCollection,
+  updateCollection,
+} from 'reducers/collections/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 import Form from './Form';
 
-class ContentTypesPageEdit extends Component {
+class CollectionPageEdit extends Component {
   handleCancelClick = () => {
     const { pushState, path } = this.props;
 
@@ -26,11 +26,11 @@ class ContentTypesPageEdit extends Component {
       item,
       pushState,
       path,
-      handleCreateContentType,
-      handleUpdateContentType,
+      handleCreateCollection,
+      handleUpdateCollection,
     } = this.props;
 
-    (isNew ? handleCreateContentType : handleUpdateContentType(item.get('id')))(values).then(() => {
+    (isNew ? handleCreateCollection : handleUpdateCollection(item.get('id')))(values).then(() => {
       pushState(path);
     });
   };
@@ -39,19 +39,19 @@ class ContentTypesPageEdit extends Component {
     const { _, isNew, item } = this.props;
 
     if (!isNew && item.isEmpty()) {
-      // throw new Error(_('errors.contentTypeNotFound'));
+      // throw new Error(_('errors.collectionNotFound'));
     }
 
     const meta = isNew
       ? {
-          title: _('contentTypes.create.title'),
-          description: _('contentTypes.create.description'),
+          title: _('collections.create.title'),
+          description: _('collections.create.description'),
           save: _('global.save'),
           cancel: _('global.cancel'),
         }
       : {
-          title: _('contentTypes.edit.title', { name: item.get('name') }),
-          description: _('contentTypes.edit.description'),
+          title: _('collections.edit.title', { name: item.get('name') }),
+          description: _('collections.edit.description'),
           save: _('global.update'),
           cancel: _('global.cancel'),
         };
@@ -77,19 +77,19 @@ class ContentTypesPageEdit extends Component {
   }
 }
 
-ContentTypesPageEdit.propTypes = {
+CollectionPageEdit.propTypes = {
   _: PropTypes.func.isRequired,
   path: PropTypes.string.isRequired,
-  handleCreateContentType: PropTypes.func,
-  handleUpdateContentType: PropTypes.func,
+  handleCreateCollection: PropTypes.func,
+  handleUpdateCollection: PropTypes.func,
   pushState: PropTypes.func,
   isNew: PropTypes.bool,
   item: PropTypes.map,
 };
 
-ContentTypesPageEdit.defaultProps = {
-  handleCreateContentType: noop,
-  handleUpdateContentType: noop,
+CollectionPageEdit.defaultProps = {
+  handleCreateCollection: noop,
+  handleUpdateCollection: noop,
   pushState: noop,
   isNew: true,
   item: Map(),
@@ -103,14 +103,14 @@ const mapStateToProps = (
     },
   },
 ) => ({
-  item: getContentType(state, id),
+  item: getCollection(state, id),
   isNew: !id,
 });
 
 const mapDispatchToProps = dispatch => ({
   pushState: path => dispatch(push(path)),
-  handleCreateContentType: data => dispatch(createContentType(data)),
-  handleUpdateContentType: id => data => dispatch(updateContentType(id, data)),
+  handleCreateCollection: data => dispatch(createCollection(data)),
+  handleUpdateCollection: id => data => dispatch(updateCollection(id, data)),
 });
 
 export default compose(
@@ -119,9 +119,9 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'contentTypes',
-    action: ({ id }) => id && fetchContentType(id),
+    type: 'collection',
+    action: ({ id }) => id && fetchCollection(id),
   }),
   withPermissions(),
   withTranslate,
-)(ContentTypesPageEdit);
+)(CollectionPageEdit);

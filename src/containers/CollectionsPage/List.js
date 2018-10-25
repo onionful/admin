@@ -4,10 +4,10 @@ import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { List } from 'immutable';
 import { noop } from 'lodash';
-import { fetchContentTypes, getContentTypes } from 'reducers/contentTypes/actions';
+import { fetchCollections, getCollections } from 'reducers/collections/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
-class ContentPageList extends Component {
+class CollectionsPageList extends Component {
   onCreateClick = () => {
     const {
       handlePush,
@@ -27,9 +27,7 @@ class ContentPageList extends Component {
   };
 
   render() {
-    const { _, contentType, data } = this.props;
-
-    console.log('LIST contentType', contentType);
+    const { _, data } = this.props;
 
     const columns = [
       {
@@ -54,8 +52,8 @@ class ContentPageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={_('content.list.title')}
-          description={_('content.list.description')}
+          title={_('collections.list.title')}
+          description={_('collections.list.description')}
           action={
             <Button onClick={this.onCreateClick} type="primary" icon="plus">
               {_('global.create')}
@@ -87,21 +85,20 @@ class ContentPageList extends Component {
   }
 }
 
-ContentPageList.propTypes = {
+CollectionsPageList.propTypes = {
   _: PropTypes.func.isRequired,
   match: PropTypes.match.isRequired,
-  contentType: PropTypes.map.isRequired,
   handlePush: PropTypes.func,
   data: PropTypes.list,
 };
 
-ContentPageList.defaultProps = {
+CollectionsPageList.defaultProps = {
   handlePush: noop,
   data: List(),
 };
 
 const mapStateToProps = state => ({
-  data: getContentTypes(state),
+  data: getCollections(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -114,9 +111,9 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'content',
-    action: () => fetchContentTypes(),
+    type: 'collections',
+    action: () => fetchCollections(),
   }),
   withPermissions(),
   withTranslate,
-)(ContentPageList);
+)(CollectionsPageList);

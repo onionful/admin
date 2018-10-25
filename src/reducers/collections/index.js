@@ -10,25 +10,25 @@ const initialState = fromJS({
 
 export default typeToReducer(
   {
-    [types.CONTENT_TYPE_ITEM]: {
+    [types.COLLECTION_ITEM]: {
       PENDING: state => state.merge({ isLoading: true, error: null }),
       REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
       FULFILLED: (state, { payload: { data } }) =>
         state.merge({ isLoading: false, error: null, data }),
     },
-    [types.CONTENT_TYPE_LIST]: {
+    [types.COLLECTION_LIST]: {
       PENDING: state => state.merge({ isLoading: true, error: null }),
       REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
       FULFILLED: (state, { payload: { data } }) =>
         state.merge({ isLoading: false, error: null, data }),
     },
-    [types.CONTENT_TYPE_CREATE]: {
+    [types.COLLECTION_CREATE]: {
       PENDING: state => state.merge({ isLoading: true, error: null }),
       REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
       FULFILLED: (state, { payload: { data } }) =>
         state.merge({ isLoading: false, error: null }).setIn(['data', data.id], data),
     },
-    [types.CONTENT_TYPE_UPDATE]: {
+    [types.COLLECTION_UPDATE]: {
       PENDING: state => state.merge({ isLoading: true, error: null }),
       REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
       FULFILLED: (state, { payload: { data } }) =>

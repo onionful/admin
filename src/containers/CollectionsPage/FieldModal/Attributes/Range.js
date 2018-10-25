@@ -7,14 +7,14 @@ const Range = ({ _, errors, fieldDecorator, type }) => (
     <Col span={12}>
       <Form.Item validateStatus={errors[`${type}From`] ? 'error' : 'success'}>
         {fieldDecorator(`${type}From`)(
-          <InputNumber>{_(`contentTypes.attributes.${type}From`)}</InputNumber>,
+          <InputNumber>{_(`collections.attributes.${type}From`)}</InputNumber>,
         )}
       </Form.Item>
     </Col>
     <Col span={12}>
       <Form.Item validateStatus={errors[`${type}To`] ? 'error' : 'success'}>
         {fieldDecorator(`${type}To`)(
-          <InputNumber>{_(`contentTypes.attributes.${type}To`)}</InputNumber>,
+          <InputNumber>{_(`collections.attributes.${type}To`)}</InputNumber>,
         )}
       </Form.Item>
     </Col>

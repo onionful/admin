@@ -1,18 +1,16 @@
 import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row, Table } from 'antd';
-import { ContentTypeIcon, Lock } from 'components/index';
-import { withPermissions, withTranslate } from 'helpers/index';
+import { FieldTypeIcon, Lock } from 'components';
+import { withPermissions, withTranslate } from 'helpers';
 import slugify from 'slugify';
 import { Component, compose, glamorous, PropTypes, React } from 'utils/create';
-import FieldModal from './FieldModal';
 
 const FieldName = glamorous.strong({
   display: 'block',
 });
 
-class ContentTypesPageForm extends Component {
+class CollectionPageForm extends Component {
   state = {
     lockedId: true,
-    fieldIndex: -1,
   };
 
   setIdValue = name => {
@@ -24,27 +22,12 @@ class ContentTypesPageForm extends Component {
     );
   };
 
-  handleFieldDelete = (e, index) => {
-    const { form } = this.props;
-    const fields = form.getFieldValue('fields');
-
-    fields.splice(index, 1);
-
-    form.setFieldsValue({ fields });
+  handleItemDelete = item => {
+    console.log('item', item);
   };
 
-  handleFieldSubmit = field => {
-    const { form } = this.props;
-    const { fieldIndex } = this.state;
-    const fields = form.getFieldValue('fields');
-
-    fields.splice(fieldIndex >= 0 ? fieldIndex : fields.length, 1, field);
-
-    form.setFieldsValue({ fields });
-  };
-
-  handleModalShow = (field, index = -1) => {
-    this.setState({ fieldIndex: index }, () => this.fieldsModal.show(field));
+  handleItemEdit = item => {
+    console.log('item', item);
   };
 
   handleLockIdClick = () => {
@@ -81,7 +64,7 @@ class ContentTypesPageForm extends Component {
     const { _, children, id, item, form } = this.props;
 
     if (id && item.isEmpty()) {
-      throw new Error(_('errors.contentTypeNotFound'));
+      throw new Error(_('errors.collectionNotFound'));
     }
 
     const initialValue = item.has('fields') ? item.get('fields').toJS() : [];
@@ -122,16 +105,9 @@ class ContentTypesPageForm extends Component {
         <Divider orientation="right">
           <Button onClick={() => this.handleModalShow()}>
             <Icon type="plus" />
-            {_('contentTypes.addField')}
+            {_('collection.addField')}
           </Button>
         </Divider>
-
-        <FieldModal
-          onSubmit={this.handleFieldSubmit}
-          wrappedComponentRef={modal => {
-            this.fieldsModal = modal;
-          }}
-        />
 
         <Table
           showHeader={false}
@@ -143,7 +119,7 @@ class ContentTypesPageForm extends Component {
               align: 'center',
               dataIndex: 'type',
               width: 80,
-              render: type => <ContentTypeIcon type={type} />,
+              render: type => <FieldTypeIcon type={type} />,
             },
             {
               key: 'name',
@@ -160,10 +136,10 @@ class ContentTypesPageForm extends Component {
               width: 100,
               render: (field, record, index) => (
                 <Button.Group>
-                  <Button icon="edit" onClick={() => this.handleModalShow(field, index)} />
+                  <Button icon="edit" onClick={e => this.handleItemEdit(e, index)} />
                   <Popconfirm
                     title={_('global.removeQuestion')}
-                    onConfirm={e => this.handleFieldDelete(e, index)}
+                    onConfirm={e => this.handleItemDelete(e, index)}
                   >
                     <Button icon="delete" type="danger" />
                   </Popconfirm>
@@ -177,7 +153,7 @@ class ContentTypesPageForm extends Component {
   }
 }
 
-ContentTypesPageForm.propTypes = {
+CollectionPageForm.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -186,7 +162,7 @@ ContentTypesPageForm.propTypes = {
   id: PropTypes.string,
 };
 
-ContentTypesPageForm.defaultProps = {
+CollectionPageForm.defaultProps = {
   children: null,
   id: null,
 };
@@ -207,4 +183,4 @@ export default compose(
   withPermissions(),
   withTranslate,
   Form.create({ mapPropsToFields }),
-)(ContentTypesPageForm);
+)(CollectionPageForm);

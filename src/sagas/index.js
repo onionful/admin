@@ -1,12 +1,12 @@
 import { updateProfile } from 'reducers/auth/actions';
 import { PROFILE_GET } from 'reducers/auth/types';
-import { fetchContentTypes } from 'reducers/contentTypes/actions';
+import { fetchCollections } from 'reducers/collections/actions';
 import { setSpace } from 'reducers/spaces/actions';
 import { SET_SPACE } from 'reducers/spaces/types';
 import { all, put, takeLatest } from 'redux-saga/effects';
 
 function* handleSetSpace({ payload }) {
-  yield put(fetchContentTypes());
+  yield put(fetchCollections());
   yield put(updateProfile({ space: payload }));
 }
 

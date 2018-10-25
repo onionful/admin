@@ -2,8 +2,8 @@ import { Avatar, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import { push } from 'connected-react-router';
 import {
-  ContentPage,
-  ContentTypesPage,
+  CollectionPage,
+  CollectionsPage,
   ErrorPage,
   HomePage,
   NotFoundPage,
@@ -16,7 +16,7 @@ import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
-import { getContentTypes } from 'reducers/contentTypes/actions';
+import { getCollections } from 'reducers/collections/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, permissions } from 'utils';
 import { compose, connect, glamorous, PropTypes, React } from 'utils/create';
@@ -129,7 +129,7 @@ class App extends React.Component {
       profile,
       space,
       spaces,
-      contentTypes,
+      collections,
     } = this.props;
     const { collapsed, error, errorInfo } = this.state;
 
@@ -142,18 +142,18 @@ class App extends React.Component {
 
     const menuItems = [
       {
-        key: 'content',
+        key: 'collection',
         items: [
-          ...contentTypes.toJS().map(contentType => ({
-            name: contentType.name,
-            key: `content/${contentType.id}`,
+          ...collections.toJS().map(collection => ({
+            name: collection.name,
+            key: `collection/${collection.id}`,
             icon: 'file',
-            render: props => <ContentPage {...props} contentType={contentType} />,
+            render: props => <CollectionPage {...props} collection={collection} />,
           })),
           {
-            key: 'content-types',
+            key: 'collections',
             icon: 'file-add',
-            component: ContentTypesPage,
+            component: CollectionsPage,
             permission: permissions.USERS_LIST,
           },
         ],
@@ -268,7 +268,7 @@ App.propTypes = {
   profile: PropTypes.map,
   space: PropTypes.string,
   spaces: PropTypes.list,
-  contentTypes: PropTypes.list,
+  collections: PropTypes.list,
   handleGetProfile: PropTypes.func,
   handleLogout: PropTypes.func,
   handleSetSpace: PropTypes.func,
@@ -282,7 +282,7 @@ App.defaultProps = {
   profile: Map(),
   space: null,
   spaces: List(),
-  contentTypes: List(),
+  collections: List(),
   handleGetProfile: noop,
   handleLogout: noop,
   handleSetSpace: noop,
@@ -295,7 +295,7 @@ const mapStateToProps = state => ({
   profile: getProfile(state),
   space: getCurrentSpace(state),
   spaces: getSpaces(state),
-  contentTypes: getContentTypes(state),
+  collections: getCollections(state),
 });
 
 const mapDispatchToProps = dispatch => ({

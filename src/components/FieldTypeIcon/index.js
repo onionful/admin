@@ -13,14 +13,14 @@ const Wrapper = glamorous.span(({ type }) => ({
   color: colors.white,
 }));
 
-const ContentTypeIcon = ({ type }) => (
+const FieldTypeIcon = ({ type }) => (
   <Wrapper type={type}>
     <Icon name={types[type].icon} />
   </Wrapper>
 );
 
-ContentTypeIcon.propTypes = {
+FieldTypeIcon.propTypes = {
   type: PropTypes.string.isRequired,
 };
 
-export default ContentTypeIcon;
+export default FieldTypeIcon;

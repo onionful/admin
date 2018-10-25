@@ -2,24 +2,24 @@ import { push } from 'connected-react-router';
 import { withPermissions } from 'helpers';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { compose, connect, PropTypes, React } from 'utils/create';
-import ContentPageEdit from './Edit';
-import ContentPageList from './List';
+import CollectionPageEdit from './Edit';
+import CollectionPageList from './List';
 
-const ContentPage = ({ contentType, match: { path } }) => (
+const CollectionPage = ({ collection, match: { path } }) => (
   <Switch>
     <Route
       exact
       path={path}
-      render={props => <ContentPageList {...props} contentType={contentType} />}
+      render={props => <CollectionPageList {...props} collection={collection} />}
     />
-    <Route path={`${path}/create`} render={props => <ContentPageEdit {...props} path={path} />} />
-    <Route path={`${path}/edit/:id`} render={props => <ContentPageEdit {...props} path={path} />} />
+    <Route path={`${path}/create`} render={props => <CollectionPageEdit {...props} path={path} />} />
+    <Route path={`${path}/edit/:id`} render={props => <CollectionPageEdit {...props} path={path} />} />
   </Switch>
 );
 
-ContentPage.propTypes = {
+CollectionPage.propTypes = {
   match: PropTypes.match.isRequired,
-  contentType: PropTypes.map.isRequired,
+  collection: PropTypes.map.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -33,4 +33,4 @@ export default compose(
   ),
   withPermissions(),
   withRouter,
-)(ContentPage);
+)(CollectionPage);

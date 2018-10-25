@@ -1,13 +1,13 @@
-contentTypes:
+collections:
   list:
-    title: Content Types
-    description: Create and update your own Content Types.
+    title: Collections
+    description: Create and update your own Collections.
   create:
-    title: Create new Content Type
-    description: Create new type of your content
+    title: Create new Collection
+    description: Create new type of your collection
   edit:
-    title: Edit "${name}" Content Type
-    description: Edit existing content type
+    title: Edit "${name}" Collection
+    description: Edit existing collection
   addField: Add new field
   types:
     string: Titles, names, paragraphs, list of names
@@ -41,7 +41,7 @@ content:
 
 menu:
   content: Content
-  content-types: Content types
+  collections: Collections
   system: System
   spaces: Spaces
   users: Users
@@ -63,5 +63,5 @@ global:
   removeQuestion: Are you sure?
 
 errors:
-  contentTypeNotFound: Content type not found
+  collectionNotFound: Collection not found
   required: Field is required
