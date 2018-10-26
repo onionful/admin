@@ -83,6 +83,10 @@ class DraggableTable extends Component {
     return { dataSource };
   }
 
+  state = {
+    dataSource: [],
+  };
+
   moveRow = (from, to) => {
     const { dataSource } = this.state;
     const { onSort } = this.props;
