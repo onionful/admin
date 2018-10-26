@@ -77,11 +77,10 @@ const DraggableBodyRow = DropTarget(
 );
 
 class DraggableTable extends Component {
-  constructor(...args) {
-    super(...args);
+  static getDerivedStateFromProps(props) {
+    const { dataSource } = props;
 
-    const { dataSource } = this.props;
-    this.state = { dataSource };
+    return { dataSource };
   }
 
   moveRow = (from, to) => {
