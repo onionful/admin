@@ -1,6 +1,6 @@
 export { default as Authorize } from './Authorize';
 export { default as CollectionsPage } from './CollectionsPage';
-export { default as CollectionPage } from './CollectionPage';
+export { default as CollectionsContentPage } from './CollectionsContentPage';
 export { default as ErrorPage } from './ErrorPage';
 export { default as HomePage } from './HomePage';
 export { default as Login } from './Login';

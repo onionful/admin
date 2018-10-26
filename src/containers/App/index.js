@@ -2,7 +2,7 @@ import { Avatar, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import { push } from 'connected-react-router';
 import {
-  CollectionPage,
+  CollectionsContentPage,
   CollectionsPage,
   ErrorPage,
   HomePage,
@@ -144,11 +144,11 @@ class App extends React.Component {
       {
         key: 'collection',
         items: [
-          ...collections.toJS().map(collection => ({
-            name: collection.name,
-            key: `collection/${collection.id}`,
+          ...collections.toList().map(collection => ({
+            key: `collection/${collection.get('id')}`,
             icon: 'file',
-            render: props => <CollectionPage {...props} collection={collection} />,
+            name: collection.get('name'),
+            render: props => <CollectionsContentPage {...props} collection={collection} />,
           })),
           {
             key: 'collections',
@@ -241,7 +241,7 @@ class App extends React.Component {
                         <Route exact path="/" component={HomePage} />
                         {menuItems.map(section =>
                           section.items
-                            .filter(({ component }) => component)
+                            // .filter(({ component }) => component)
                             .map(({ key, render, component }) => (
                               <Route path={`/${key}`} render={render} component={component} />
                             )),
@@ -268,7 +268,7 @@ App.propTypes = {
   profile: PropTypes.map,
   space: PropTypes.string,
   spaces: PropTypes.list,
-  collections: PropTypes.list,
+  collections: PropTypes.map,
   handleGetProfile: PropTypes.func,
   handleLogout: PropTypes.func,
   handleSetSpace: PropTypes.func,
@@ -282,7 +282,7 @@ App.defaultProps = {
   profile: Map(),
   space: null,
   spaces: List(),
-  collections: List(),
+  collections: Map(),
   handleGetProfile: noop,
   handleLogout: noop,
   handleSetSpace: noop,

@@ -4,7 +4,7 @@ import { compose, PropTypes, React } from 'utils/create';
 
 const Editor = ({ _, fieldDecorator, type }) => (
   <Form.Item>
-    {fieldDecorator(type, [{ required: false }])(
+    {fieldDecorator(type, { rules: [{ required: false }] })(
       <Checkbox defaultChecked>{_('collections.attributes.editor')}</Checkbox>,
     )}
   </Form.Item>

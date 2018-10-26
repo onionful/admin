@@ -1,5 +1,6 @@
-import { Button } from 'antd';
-import { SectionHeader } from 'components/index';
+import { Button, Col, Form, Row } from 'antd';
+import { Input } from 'antd/lib/input';
+import { Lock, SectionHeader } from 'components/index';
 import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { Map } from 'immutable';
@@ -11,9 +12,8 @@ import {
   updateCollection,
 } from 'reducers/collections/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
-import Form from './Form';
 
-class CollectionPageEdit extends Component {
+class CollectionsContentPageEdit extends Component {
   handleCancelClick = () => {
     const { pushState, path } = this.props;
 
@@ -36,7 +36,8 @@ class CollectionPageEdit extends Component {
   };
 
   render() {
-    const { _, isNew, item } = this.props;
+    const { _, form, isNew, collection, item } = this.props;
+    const { lockedId } = this.state;
 
     if (!isNew && item.isEmpty()) {
       // throw new Error(_('errors.collectionNotFound'));
@@ -44,20 +45,20 @@ class CollectionPageEdit extends Component {
 
     const meta = isNew
       ? {
-          title: _('collections.create.title'),
-          description: _('collections.create.description'),
+          title: _('collection.create.title', { name: collection.get('name') }),
+          description: _('collection.create.description'),
           save: _('global.save'),
           cancel: _('global.cancel'),
         }
       : {
-          title: _('collections.edit.title', { name: item.get('name') }),
-          description: _('collections.edit.description'),
+          title: _('collection.edit.title', { name: collection.get('name') }),
+          description: _('collection.edit.description'),
           save: _('global.update'),
           cancel: _('global.cancel'),
         };
 
     return (
-      <Form item={item} onSubmit={this.handleSubmit}>
+      <Form layout="vertical" onSubmit={this.handleSubmit}>
         <SectionHeader
           title={meta.title}
           description={meta.description}
@@ -72,14 +73,44 @@ class CollectionPageEdit extends Component {
             </Button.Group>
           }
         />
+
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item label={_('global.id')}>
+              {form.getFieldDecorator('id', {
+                disabled: true,
+                rules: [{ required: true, message: _('errors.required') }],
+              })(
+                <Input
+                  type="text"
+                  addonAfter={<Lock locked={lockedId} onLock={this.handleLockIdClick} />}
+                  disabled={lockedId}
+                  onChange={this.handleIdChange}
+                />,
+              )}
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label={_('global.name')}>
+              {form.getFieldDecorator('name', {
+                rules: [{ required: true, message: _('errors.required') }],
+              })(<Input type="text" onChange={this.handleNameChange} />)}
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item label={_('global.description')}>
+          {form.getFieldDecorator('description')(<Input.TextArea autosize />)}
+        </Form.Item>
       </Form>
     );
   }
 }
 
-CollectionPageEdit.propTypes = {
+CollectionsContentPageEdit.propTypes = {
   _: PropTypes.func.isRequired,
+  form: PropTypes.form.isRequired,
   path: PropTypes.string.isRequired,
+  collection: PropTypes.map.isRequired,
   handleCreateCollection: PropTypes.func,
   handleUpdateCollection: PropTypes.func,
   pushState: PropTypes.func,
@@ -87,7 +118,7 @@ CollectionPageEdit.propTypes = {
   item: PropTypes.map,
 };
 
-CollectionPageEdit.defaultProps = {
+CollectionsContentPageEdit.defaultProps = {
   handleCreateCollection: noop,
   handleUpdateCollection: noop,
   pushState: noop,
@@ -113,15 +144,28 @@ const mapDispatchToProps = dispatch => ({
   handleUpdateCollection: id => data => dispatch(updateCollection(id, data)),
 });
 
+const mapPropsToFields = ({ item = {} }) => ({
+  name: Form.createFormField({
+    value: item.get('name'),
+  }),
+  id: Form.createFormField({
+    value: item.get('id'),
+  }),
+  description: Form.createFormField({
+    value: item.get('description'),
+  }),
+});
+
 export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'collection',
+    type: 'collections',
     action: ({ id }) => id && fetchCollection(id),
   }),
   withPermissions(),
   withTranslate,
-)(CollectionPageEdit);
+  Form.create({ mapPropsToFields }),
+)(CollectionsContentPageEdit);

@@ -1,6 +1,11 @@
 const attributes = ['name', 'defaultValue' /* 'required', 'unique' */];
 
 export default {
+  identifier: {
+    icon: 'globe',
+    color: '#6c50ff',
+    attributes: ['name', 'copyValue'],
+  },
   string: {
     icon: 'font',
     color: '#ffb500',

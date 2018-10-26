@@ -15,48 +15,53 @@ const Container = styled.div({
   justifyContent: 'center',
 });
 
-export default ({ type, action }) => WrappedComponent =>
-  connect(
-    state => ({
-      isLoading: state.getIn([type, 'isLoading']),
-    }),
-    dispatch => ({
-      handleFetch: props => {
-        const result = action(props);
-        if (result) {
-          dispatch(result);
-        }
-      },
-    }),
-  )(
-    class extends Component {
-      static propTypes = {
-        isLoading: PropTypes.bool,
-        handleFetch: PropTypes.func,
-      };
+export default ({ type, action }) => WrappedComponent => {
+  class withLoading extends Component {
+    componentDidMount() {
+      const { handleFetch } = this.props;
+      handleFetch(this.props);
+    }
 
-      static defaultProps = {
-        isLoading: true,
-        handleFetch: noop,
-      };
+    render() {
+      const { isLoading } = this.props;
 
-      componentDidMount() {
-        const { handleFetch } = this.props;
-        handleFetch(this.props);
+      if (isLoading) {
+        return (
+          <Container>
+            <Spin />
+          </Container>
+        );
       }
 
-      render() {
-        const { isLoading } = this.props;
+      return <WrappedComponent {...this.props} />;
+    }
+  }
 
-        if (isLoading) {
-          return (
-            <Container>
-              <Spin />
-            </Container>
-          );
-        }
+  withLoading.propTypes = {
+    isLoading: PropTypes.bool,
+    handleFetch: PropTypes.func,
+  };
 
-        return <WrappedComponent {...this.props} />;
+  withLoading.defaultProps = {
+    isLoading: true,
+    handleFetch: noop,
+  };
+
+  const mapStateToProps = state => ({
+    isLoading: state.getIn([type, 'isLoading']),
+  });
+
+  const mapDispatchToProps = dispatch => ({
+    handleFetch: props => {
+      const result = action(props);
+      if (result) {
+        dispatch(result);
       }
     },
-  );
+  });
+
+  return connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(withLoading);
+};

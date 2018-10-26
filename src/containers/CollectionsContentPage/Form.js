@@ -1,14 +1,11 @@
-import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row, Table } from 'antd';
-import { FieldTypeIcon, Lock } from 'components';
+/* eslint-disable */
+import { Col, Form, Input, Row } from 'antd';
+import { Lock } from 'components';
 import { withPermissions, withTranslate } from 'helpers';
 import slugify from 'slugify';
-import { Component, compose, styled, PropTypes, React } from 'utils/create';
+import { Component, compose, PropTypes, React, styled } from 'utils/create';
 
-const FieldName = styled.strong({
-  display: 'block',
-});
-
-class CollectionPageForm extends Component {
+class CollectionsContentPageForm extends Component {
   state = {
     lockedId: true,
   };
@@ -101,59 +98,12 @@ class CollectionPageForm extends Component {
         <Form.Item label={_('global.description')}>
           {form.getFieldDecorator('description')(<Input.TextArea autosize />)}
         </Form.Item>
-
-        <Divider orientation="right">
-          <Button onClick={() => this.handleModalShow()}>
-            <Icon type="plus" />
-            {_('collection.addField')}
-          </Button>
-        </Divider>
-
-        <Table
-          showHeader={false}
-          pagination={false}
-          dataSource={form.getFieldValue('fields')}
-          rowKey="id"
-          columns={[
-            {
-              align: 'center',
-              dataIndex: 'type',
-              width: 80,
-              render: type => <FieldTypeIcon type={type} />,
-            },
-            {
-              key: 'name',
-              render: field => (
-                <div>
-                  <FieldName>{field.name}</FieldName>
-                  <small>{field.id}</small>
-                </div>
-              ),
-            },
-            {
-              align: 'center',
-              key: 'actions',
-              width: 100,
-              render: (field, record, index) => (
-                <Button.Group>
-                  <Button icon="edit" onClick={e => this.handleItemEdit(e, index)} />
-                  <Popconfirm
-                    title={_('global.removeQuestion')}
-                    onConfirm={e => this.handleItemDelete(e, index)}
-                  >
-                    <Button icon="delete" type="danger" />
-                  </Popconfirm>
-                </Button.Group>
-              ),
-            },
-          ]}
-        />
       </Form>
     );
   }
 }
 
-CollectionPageForm.propTypes = {
+CollectionsContentPageForm.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
   onSubmit: PropTypes.func.isRequired,
@@ -162,7 +112,7 @@ CollectionPageForm.propTypes = {
   id: PropTypes.string,
 };
 
-CollectionPageForm.defaultProps = {
+CollectionsContentPageForm.defaultProps = {
   children: null,
   id: null,
 };
@@ -183,4 +133,4 @@ export default compose(
   withPermissions(),
   withTranslate,
   Form.create({ mapPropsToFields }),
-)(CollectionPageForm);
+)(CollectionsContentPageForm);

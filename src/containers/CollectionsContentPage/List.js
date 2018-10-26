@@ -4,10 +4,10 @@ import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { List } from 'immutable';
 import { noop } from 'lodash';
-import { fetchCollections, getCollections } from 'reducers/collections/actions';
+import { fetchCollection } from 'reducers/collections/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
-class CollectionPageList extends Component {
+class CollectionsContentPageList extends Component {
   onCreateClick = () => {
     const {
       handlePush,
@@ -28,8 +28,6 @@ class CollectionPageList extends Component {
 
   render() {
     const { _, collection, data } = this.props;
-
-    console.log('LIST collection', collection);
 
     const columns = [
       {
@@ -54,8 +52,8 @@ class CollectionPageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={_('collection.list.title')}
-          description={_('collection.list.description')}
+          title={_('collection.list.title', { name: collection.get('name') })}
+          description={_('collection.list.description', { name: collection.get('name') })}
           action={
             <Button onClick={this.onCreateClick} type="primary" icon="plus">
               {_('global.create')}
@@ -73,10 +71,10 @@ class CollectionPageList extends Component {
               title: 'Action',
               key: 'action',
               align: 'center',
-              render: (text, record) => (
+              render: (text, item) => (
                 <Button.Group>
-                  <Button icon="edit" onClick={() => this.onEditClick(record)} />
-                  <Button icon="delete" onClick={() => this.onEditClick(record)} />
+                  <Button icon="edit" onClick={() => this.onEditClick(item)} />
+                  <Button icon="delete" onClick={() => this.onEditClick(item)} />
                 </Button.Group>
               ),
             },
@@ -87,7 +85,7 @@ class CollectionPageList extends Component {
   }
 }
 
-CollectionPageList.propTypes = {
+CollectionsContentPageList.propTypes = {
   _: PropTypes.func.isRequired,
   match: PropTypes.match.isRequired,
   collection: PropTypes.map.isRequired,
@@ -95,14 +93,10 @@ CollectionPageList.propTypes = {
   data: PropTypes.list,
 };
 
-CollectionPageList.defaultProps = {
+CollectionsContentPageList.defaultProps = {
   handlePush: noop,
   data: List(),
 };
-
-const mapStateToProps = state => ({
-  data: getCollections(state),
-});
 
 const mapDispatchToProps = dispatch => ({
   handlePush: path => dispatch(push(path)),
@@ -110,13 +104,13 @@ const mapDispatchToProps = dispatch => ({
 
 export default compose(
   connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'collection',
-    action: () => fetchCollections(),
+    type: 'collections',
+    action: () => fetchCollection('aktualnosci'),
   }),
   withPermissions(),
   withTranslate,
-)(CollectionPageList);
+)(CollectionsContentPageList);

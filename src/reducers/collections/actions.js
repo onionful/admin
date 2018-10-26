@@ -22,7 +22,7 @@ export const createCollection = data =>
 
 export const updateCollection = (id, data) =>
   spaceApi(api => ({
-    type: types.COLLECTION_CREATE,
+    type: types.COLLECTION_UPDATE,
     payload: api.put(`/collections/${id}`, data),
   }));
 

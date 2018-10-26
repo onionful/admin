@@ -25,7 +25,7 @@ const Description = styled.div({
   padding: '0 1rem',
 });
 
-class Index extends Component {
+class FieldModal extends Component {
   state = {
     field: {},
     type: undefined,
@@ -62,12 +62,16 @@ class Index extends Component {
     const { form } = this.props;
 
     this.setState({ field, type: field.type, visible: true });
-    forEach(field, (initialValue, key) => form.getFieldDecorator(key, { initialValue }));
+    console.log('field', field);
+    forEach(field, (initialValue, key) => {
+      console.log('key, initialValue', key, initialValue);
+      form.getFieldDecorator(key, { initialValue })
+    });
   };
 
   render() {
     const { field, type, errors, visible } = this.state;
-    const { _, form } = this.props;
+    const { _, form, fields } = this.props;
 
     const showBackButton = type && isEmpty(field);
 
@@ -102,20 +106,21 @@ class Index extends Component {
               </StyledButton>
             ))}
 
-          {type && <Attributes type={type} form={form} errors={errors} />}
+          {type && <Attributes type={type} form={form} fields={fields} errors={errors} />}
         </Form>
       </Modal>
     );
   }
 }
 
-Index.propTypes = {
+FieldModal.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
+  fields: PropTypes.fields.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 
 export default compose(
   withTranslate,
   Form.create(),
-)(Index);
+)(FieldModal);

@@ -86,6 +86,7 @@ class CollectionsPageForm extends Component {
 
     const initialValue = item.has('fields') ? item.get('fields').toJS() : [];
     form.getFieldDecorator('fields', { initialValue });
+    const fields = form.getFieldValue('fields');
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
@@ -128,6 +129,7 @@ class CollectionsPageForm extends Component {
 
         <FieldModal
           onSubmit={this.handleFieldSubmit}
+          fields={fields}
           wrappedComponentRef={modal => {
             this.fieldsModal = modal;
           }}
@@ -136,7 +138,7 @@ class CollectionsPageForm extends Component {
         <Table
           showHeader={false}
           pagination={false}
-          dataSource={form.getFieldValue('fields')}
+          dataSource={fields}
           rowKey="id"
           columns={[
             {

@@ -10,6 +10,7 @@ collections:
     description: Edit existing collection
   addField: Add new field
   types:
+    identifier: Identifier used as a part of the URL
     string: Titles, names, paragraphs, list of names
     number: Everything that is a number
     text: Description, text paragraphs, articles
@@ -20,6 +21,7 @@ collections:
   attributes:
     id: Identifier
     name: Name
+    copyValue: Copy value from
     defaultValue: Default value
     required: Required
     unique: Unique
@@ -27,13 +29,13 @@ collections:
     editor: Show content editor
     numberFormat: Number format
     multiple: Multiple images
-content:
+collection:
   list:
-    title: Content
-    description: Create and update your own Content Types.
-#  create:
-#    title: Create new Content Type
-#    description: Create new type of your content
+    title: ${name} - items list
+    description: Create and update your "${name}" collection's items
+  create:
+    title: ${name} - create new item
+    description: Create new item inside your "${name}" collection
 #  edit:
 #    title: Edit "${name}" Content Type
 #    description: Edit existing content type
@@ -62,6 +64,7 @@ global:
   title: Title
   update: Update
   removeQuestion: Are you sure?
+  none: none
 
 errors:
   collectionNotFound: Collection not found

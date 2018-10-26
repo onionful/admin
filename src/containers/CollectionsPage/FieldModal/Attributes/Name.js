@@ -35,7 +35,7 @@ class Name extends Component {
             validateStatus={errors.id ? 'error' : 'success'}
             label={_('collections.attributes.id')}
           >
-            {fieldDecorator('id', [{ required: true }])(
+            {fieldDecorator('id', { rules: [{ required: true }] })(
               <Input
                 addonBefore="ID"
                 disabled={locked}
@@ -49,7 +49,7 @@ class Name extends Component {
             validateStatus={errors[type] ? 'error' : 'success'}
             label={_(`collections.attributes.${type}`)}
           >
-            {fieldDecorator(type, [{ required: true }])(
+            {fieldDecorator(type, { rules: [{ required: true }] })(
               <Input onChange={this.handleValueChange} />,
             )}
           </Form.Item>

@@ -15,6 +15,13 @@ export const PropTypes = {
   form: RPropTypes.shape({
     validateFields: RPropTypes.func,
   }),
+  fields: RPropTypes.arrayOf(
+    RPropTypes.shape({
+      id: RPropTypes.string.isRequired,
+      name: RPropTypes.string.isRequired,
+      type: RPropTypes.string.isRequired,
+    }),
+  ),
 };
 
 export const getDisplayName = WrappedComponent =>
