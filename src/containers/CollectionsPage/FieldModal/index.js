@@ -4,7 +4,7 @@ import { types } from 'config/index';
 import { withTranslate } from 'helpers/index';
 import { entries, isEmpty, forEach, upperFirst, mapValues, noop } from 'lodash';
 import { Component, compose, styled, PropTypes, React } from 'utils/create';
-import Attributes from './Attributes';
+import Attribute from './Attribute';
 
 const StyledButton = styled(Button)({
   display: 'flex',
@@ -104,7 +104,7 @@ class FieldModal extends Component {
               </StyledButton>
             ))}
 
-          {type && <Attributes type={type} form={form} fields={fields} errors={errors} />}
+          {type && <Attribute type={type} form={form} fields={fields} errors={errors} />}
         </Form>
       </Modal>
     );
