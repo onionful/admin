@@ -1,7 +1,7 @@
 import { Col, Form, Input, Row } from 'antd';
 import { Lock } from 'components';
 import { withTranslate } from 'helpers';
-import { camelCase } from 'lodash';
+import { camelCase, isEmpty } from 'lodash';
 import { Component, compose, PropTypes, React } from 'utils/create';
 
 class Name extends Component {

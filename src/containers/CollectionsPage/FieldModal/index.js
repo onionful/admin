@@ -29,6 +29,7 @@ class FieldModal extends Component {
   state = {
     field: {},
     type: undefined,
+    id: undefined,
     errors: null,
     visible: false,
   };
@@ -61,14 +62,14 @@ class FieldModal extends Component {
   show = (field = {}) => {
     const { form } = this.props;
 
-    this.setState({ field, type: field.type, visible: true });
+    this.setState({ field, type: field.type, id: field.id, visible: true });
 
     const values = Object.assign(mapValues(form.getFieldsValue(), noop), field);
     forEach(values, (initialValue, key) => form.getFieldDecorator(key, { initialValue }));
   };
 
   render() {
-    const { field, type, errors, visible } = this.state;
+    const { field, type, id, errors, visible } = this.state;
     const { _, form, fields } = this.props;
 
     const showBackButton = type && isEmpty(field);
@@ -104,7 +105,7 @@ class FieldModal extends Component {
               </StyledButton>
             ))}
 
-          {type && <Attribute type={type} form={form} fields={fields} errors={errors} />}
+          {type && <Attribute type={type} id={id} form={form} fields={fields} errors={errors} />}
         </Form>
       </Modal>
     );
