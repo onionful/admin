@@ -8,6 +8,7 @@ const getAttribute = type => components[type] || Throw(`Unknown attribute: ${typ
 const Attributes = ({ form, fields, errors, type }) =>
   (types[type] || Throw(`Unknown type: ${type}`)).attributes.map(attr => {
     const Attribute = getAttribute(attr);
+
     return (
       <Attribute
         key={attr}

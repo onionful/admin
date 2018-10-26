@@ -14,12 +14,8 @@ export default typeToReducer(
     [types.COLLECTION_ITEM]: {
       PENDING: state => state.merge({ isLoading: true, error: null }),
       REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
-      FULFILLED: (state, { payload: { data } }) => {
-        console.log('data', data);
-        return state
-          .merge({ isLoading: false, error: null })
-          .setIn(['data', data.id], fromJS(data));
-      },
+      FULFILLED: (state, { payload: { data } }) =>
+        state.merge({ isLoading: false, error: null }).setIn(['data', data.id], fromJS(data)),
     },
     [types.COLLECTION_LIST]: {
       PENDING: state => state.merge({ isLoading: true, error: null }),

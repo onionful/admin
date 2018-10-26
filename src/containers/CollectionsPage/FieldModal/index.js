@@ -2,7 +2,7 @@ import { Button, Form, Modal } from 'antd';
 import { FieldTypeIcon } from 'components';
 import { types } from 'config/index';
 import { withTranslate } from 'helpers/index';
-import { entries, isEmpty, forEach, upperFirst } from 'lodash';
+import { entries, isEmpty, forEach, upperFirst, mapValues, noop } from 'lodash';
 import { Component, compose, styled, PropTypes, React } from 'utils/create';
 import Attributes from './Attributes';
 
@@ -62,11 +62,9 @@ class FieldModal extends Component {
     const { form } = this.props;
 
     this.setState({ field, type: field.type, visible: true });
-    console.log('field', field);
-    forEach(field, (initialValue, key) => {
-      console.log('key, initialValue', key, initialValue);
-      form.getFieldDecorator(key, { initialValue })
-    });
+
+    const values = Object.assign(mapValues(form.getFieldsValue(), noop), field);
+    forEach(values, (initialValue, key) => form.getFieldDecorator(key, { initialValue }));
   };
 
   render() {

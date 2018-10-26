@@ -1,3 +1,4 @@
+export { default as DraggableTable } from './DraggableTable';
 export { default as Editor } from './Editor';
 export { default as FieldTypeIcon } from './FieldTypeIcon';
 export { default as Lock } from './Lock';

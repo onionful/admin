@@ -1,6 +1,6 @@
-import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row, Table } from 'antd';
-import { FieldTypeIcon, Lock } from 'components/index';
-import { withPermissions, withTranslate } from 'helpers/index';
+import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row } from 'antd';
+import { DraggableTable, FieldTypeIcon, Lock } from 'components';
+import { withPermissions, withTranslate } from 'helpers';
 import slugify from 'slugify';
 import { Component, compose, styled, PropTypes, React } from 'utils/create';
 import FieldModal from './FieldModal';
@@ -135,10 +135,11 @@ class CollectionsPageForm extends Component {
           }}
         />
 
-        <Table
+        <DraggableTable
           showHeader={false}
           pagination={false}
           dataSource={fields}
+          onSort={sorted => form.setFieldsValue({ fields: sorted })}
           rowKey="id"
           columns={[
             {
