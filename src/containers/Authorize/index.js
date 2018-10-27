@@ -20,10 +20,10 @@ export class Authorize extends Component {
 }
 
 Authorize.propTypes = {
+  authenticate: PropTypes.func,
   location: PropTypes.shape({
     hash: PropTypes.string.isRequired,
   }).isRequired,
-  authenticate: PropTypes.func,
 };
 
 Authorize.defaultProps = {

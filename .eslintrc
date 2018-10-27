@@ -14,7 +14,8 @@
     "import/prefer-default-export": 0,
     "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "jsx-a11y/href-no-hash": 0,
-    "react/jsx-filename-extension": [2, { "extensions": [".js"] }]
+    "react/jsx-filename-extension": [2, { "extensions": [".js"] }],
+    "react/sort-prop-types": 1
   },
   "settings": {
     "import/resolver": {

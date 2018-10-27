@@ -16,8 +16,8 @@ const Field = ({ form, field, type }) => {
 };
 
 Field.propTypes = {
-  form: PropTypes.form.isRequired,
   field: PropTypes.map.isRequired,
+  form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
 };
 

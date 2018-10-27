@@ -65,9 +65,9 @@ class SpacesPage extends Component {
 }
 
 SpacesPage.propTypes = {
+  data: PropTypes.list,
   handleFetchSpaces: PropTypes.func,
   isLoading: PropTypes.bool,
-  data: PropTypes.list,
 };
 
 SpacesPage.defaultProps = {

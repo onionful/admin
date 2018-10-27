@@ -35,8 +35,8 @@ const Login = ({ handleLogin, isAuthenticated }) =>
   );
 
 Login.propTypes = {
-  isAuthenticated: PropTypes.bool,
   handleLogin: PropTypes.func,
+  isAuthenticated: PropTypes.bool,
 };
 
 Login.defaultProps = {

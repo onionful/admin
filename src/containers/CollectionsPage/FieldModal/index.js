@@ -115,8 +115,8 @@ class FieldModal extends Component {
 
 FieldModal.propTypes = {
   _: PropTypes.func.isRequired,
-  form: PropTypes.form.isRequired,
   fields: PropTypes.fields.isRequired,
+  form: PropTypes.form.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 

@@ -38,8 +38,8 @@ export default ({ type, action }) => WrappedComponent => {
   }
 
   withLoading.propTypes = {
-    isLoading: PropTypes.bool,
     handleFetch: PropTypes.func,
+    isLoading: PropTypes.bool,
   };
 
   withLoading.defaultProps = {

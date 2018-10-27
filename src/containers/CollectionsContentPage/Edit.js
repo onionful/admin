@@ -83,14 +83,14 @@ class CollectionsContentPageEdit extends Component {
 
 CollectionsContentPageEdit.propTypes = {
   _: PropTypes.func.isRequired,
-  form: PropTypes.form.isRequired,
-  path: PropTypes.string.isRequired,
   collection: PropTypes.map.isRequired,
+  form: PropTypes.form.isRequired,
   handleCreateCollection: PropTypes.func,
   handleUpdateCollection: PropTypes.func,
-  pushState: PropTypes.func,
   isNew: PropTypes.bool,
   item: PropTypes.map,
+  path: PropTypes.string.isRequired,
+  pushState: PropTypes.func,
 };
 
 CollectionsContentPageEdit.defaultProps = {

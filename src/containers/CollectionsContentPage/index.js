@@ -26,8 +26,8 @@ const CollectionsContentPage = ({ collection, match: { path } }) => (
 );
 
 CollectionsContentPage.propTypes = {
-  match: PropTypes.match.isRequired,
   collection: PropTypes.map.isRequired,
+  match: PropTypes.match.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

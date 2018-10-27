@@ -262,17 +262,17 @@ class App extends React.Component {
 
 App.propTypes = {
   _: PropTypes.func.isRequired,
-  hasPermission: PropTypes.func,
-  isAuthenticated: PropTypes.bool,
-  isProfileLoading: PropTypes.bool,
-  profile: PropTypes.map,
-  space: PropTypes.string,
-  spaces: PropTypes.list,
   collections: PropTypes.map,
   handleGetProfile: PropTypes.func,
   handleLogout: PropTypes.func,
   handleSetSpace: PropTypes.func,
+  hasPermission: PropTypes.func,
+  isAuthenticated: PropTypes.bool,
+  isProfileLoading: PropTypes.bool,
+  profile: PropTypes.map,
   pushState: PropTypes.func,
+  space: PropTypes.string,
+  spaces: PropTypes.list,
 };
 
 App.defaultProps = {

@@ -26,9 +26,9 @@ const SectionHeader = ({ title, description, action }) => (
 );
 
 SectionHeader.propTypes = {
-  title: PropTypes.node.isRequired,
-  description: PropTypes.node.isRequired,
   action: PropTypes.node,
+  description: PropTypes.node.isRequired,
+  title: PropTypes.node.isRequired,
 };
 
 SectionHeader.defaultProps = {

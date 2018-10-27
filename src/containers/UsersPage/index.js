@@ -154,9 +154,9 @@ class UsersPage extends Component {
 }
 
 UsersPage.propTypes = {
+  data: PropTypes.map,
   handleFetchUsers: PropTypes.func,
   isLoading: PropTypes.bool,
-  data: PropTypes.map,
 };
 
 UsersPage.defaultProps = {

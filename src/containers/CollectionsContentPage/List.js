@@ -87,10 +87,10 @@ class CollectionsContentPageList extends Component {
 
 CollectionsContentPageList.propTypes = {
   _: PropTypes.func.isRequired,
-  match: PropTypes.match.isRequired,
   collection: PropTypes.map.isRequired,
-  handlePush: PropTypes.func,
   data: PropTypes.list,
+  handlePush: PropTypes.func,
+  match: PropTypes.match.isRequired,
 };
 
 CollectionsContentPageList.defaultProps = {

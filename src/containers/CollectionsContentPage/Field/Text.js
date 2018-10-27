@@ -19,8 +19,8 @@ class Text extends Component {
 }
 
 Text.propTypes = {
-  form: PropTypes.form.isRequired,
   field: PropTypes.map.isRequired,
+  form: PropTypes.form.isRequired,
 };
 
 export default Text;

@@ -72,10 +72,10 @@ class SpacesModal extends Component {
 }
 
 SpacesModal.propTypes = {
-  spaces: PropTypes.list,
-  isLoading: PropTypes.bool,
   handleFetchSpaces: PropTypes.func,
   handleSetSpace: PropTypes.func,
+  isLoading: PropTypes.bool,
+  spaces: PropTypes.list,
 };
 
 SpacesModal.defaultProps = {
