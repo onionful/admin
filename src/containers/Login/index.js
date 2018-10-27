@@ -4,7 +4,7 @@ import { noop } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { login } from 'reducers/auth/actions';
-import { styled, PropTypes, React } from 'utils/create';
+import { PropTypes, React, styled } from 'utils/create';
 
 const StyledRow = styled(Row)({
   height: '100vh',

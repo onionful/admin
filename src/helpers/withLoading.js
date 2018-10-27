@@ -1,7 +1,7 @@
 import { Spin } from 'antd';
 import { noop } from 'lodash';
 import { colors } from 'utils';
-import { Component, connect, styled, PropTypes, React } from 'utils/create';
+import { Component, connect, PropTypes, React, styled } from 'utils/create';
 
 const Container = styled.div({
   position: 'absolute',

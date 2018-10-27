@@ -1,11 +1,10 @@
-/* eslint-disable */
-import { React, Component } from 'utils/create';
-import { Editor as DraftEditor, EditorState, RichUtils } from 'draft-js';
-import EditorX from 'draft-js-plugins-editor';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
-import { stateToMarkdown } from 'draft-js-export-markdown';
+import { EditorState, RichUtils } from 'draft-js';
 
 import createBlockBreakoutPlugin from 'draft-js-block-breakout-plugin';
+import { stateFromMarkdown } from 'draft-js-import-markdown';
+import EditorX from 'draft-js-plugins-editor';
+/* eslint-disable */
+import { Component, React } from 'utils/create';
 
 const options = {
   breakoutBlockType: 'unordered-list-item',

@@ -2,8 +2,8 @@ import { Button, Form, Modal } from 'antd';
 import { FieldTypeIcon } from 'components';
 import { types } from 'config/index';
 import { withTranslate } from 'helpers/index';
-import { entries, isEmpty, forEach, upperFirst, mapValues, noop } from 'lodash';
-import { Component, compose, styled, PropTypes, React } from 'utils/create';
+import { entries, forEach, isEmpty, mapValues, noop, upperFirst } from 'lodash';
+import { Component, compose, PropTypes, React, styled } from 'utils/create';
 import Attribute from './Attribute';
 
 const StyledButton = styled(Button)({

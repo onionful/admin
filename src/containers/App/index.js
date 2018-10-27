@@ -19,7 +19,7 @@ import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCollections } from 'reducers/collections/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, media, permissions } from 'utils';
-import { compose, connect, styled, PropTypes, React } from 'utils/create';
+import { compose, connect, PropTypes, React, styled } from 'utils/create';
 
 const { Sider, Footer } = Layout;
 
@@ -185,7 +185,7 @@ class App extends React.Component {
                 <UserInfo onClick={this.onProfileClick}>
                   <Avatar size="large" src={profile.get('picture')} />
                   {!collapsed && <div>{profileName}</div>}
-                  </UserInfo>
+                </UserInfo>
               </Tooltip>
             )}
 

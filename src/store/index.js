@@ -1,13 +1,13 @@
 import { connectRouter, routerMiddleware } from 'connected-react-router/immutable';
 import { createBrowserHistory } from 'history';
 import { fromJS } from 'immutable';
+import { addTranslationForLanguage, initialize } from 'react-localize-redux';
 import reducers from 'reducers';
 import { applyMiddleware, compose, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
 import createSagaMiddleware from 'redux-saga';
 import thunk from 'redux-thunk';
 import sagas from 'sagas';
-import { addTranslationForLanguage, initialize } from 'react-localize-redux';
 import translations from 'translations';
 
 export const history = createBrowserHistory();

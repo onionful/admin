@@ -1,7 +1,7 @@
-import { Icon } from 'react-fa';
-import { colors } from 'utils/index';
-import { styled, PropTypes, React } from 'utils/create';
 import { types } from 'config';
+import { Icon } from 'react-fa';
+import { PropTypes, React, styled } from 'utils/create';
+import { colors } from 'utils/index';
 
 const Wrapper = styled.span(({ type }) => ({
   backgroundColor: types[type].color,

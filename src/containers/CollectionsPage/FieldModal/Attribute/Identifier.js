@@ -1,7 +1,7 @@
 import { Checkbox, Col, Input, Row } from 'antd';
 import { withTranslate } from 'helpers';
-import { Component, compose, PropTypes, React } from 'utils/create';
 import { isEmpty } from 'lodash';
+import { Component, compose, PropTypes, React } from 'utils/create';
 
 class Identifier extends Component {
   constructor(...args) {

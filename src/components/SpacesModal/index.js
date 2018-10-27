@@ -4,7 +4,7 @@ import { List as IList } from 'immutable';
 import { noop } from 'lodash';
 import { fetchSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors } from 'utils';
-import { Component, connect, styled, PropTypes, React } from 'utils/create';
+import { Component, connect, PropTypes, React, styled } from 'utils/create';
 
 const StyledLogo = styled(Logo)({
   display: 'block',

@@ -1,6 +1,6 @@
 import { Col, Row } from 'antd';
 import { colors } from 'utils';
-import { styled, PropTypes, React } from 'utils/create';
+import { PropTypes, React, styled } from 'utils/create';
 
 const Header = styled.h1({
   margin: 0,

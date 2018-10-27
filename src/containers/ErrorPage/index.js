@@ -1,6 +1,6 @@
 import { Logo } from 'components';
 import { colors } from 'utils';
-import { styled, PropTypes, React } from 'utils/create';
+import { PropTypes, React, styled } from 'utils/create';
 
 const StyledLogo = styled(Logo)({
   width: '10rem',

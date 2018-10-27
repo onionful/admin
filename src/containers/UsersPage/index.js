@@ -5,7 +5,7 @@ import { noop } from 'lodash';
 import moment from 'moment';
 import { fetchUsers } from 'reducers/users/actions';
 import { permissions } from 'utils';
-import { Component, compose, connect, styled, PropTypes, React } from 'utils/create';
+import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
 
 const columns = [
   {

@@ -7,12 +7,7 @@ const getField = type => components[type] || Throw(`Unknown field: ${type}`);
 const Field = ({ form, field, type }) => {
   const Instance = getField(type);
 
-  return (
-    <Instance
-      field={field}
-      form={form}
-    />
-  );
+  return <Instance field={field} form={form} />;
 };
 
 Field.propTypes = {
