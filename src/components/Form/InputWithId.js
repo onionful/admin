@@ -36,14 +36,14 @@ class InputWithId extends Component {
     return (
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item label={idLabel}>
+          <Form.Item label={valueLabel}>
             {form.getFieldDecorator(valueKey, { rules: [{ required: true }] })(
               <Input onChange={this.handleValueChange} />,
             )}
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item label={valueLabel}>
+          <Form.Item label={idLabel}>
             {form.getFieldDecorator(idKey, { rules: [{ required: true }] })(
               <Input
                 disabled={locked}

@@ -1,6 +1,5 @@
-import { Button, Col, Form, Row } from 'antd';
-import { Input } from 'antd/lib/input';
-import { Lock, SectionHeader } from 'components/index';
+import { Button, Form } from 'antd';
+import { SectionHeader } from 'components/index';
 import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { Map } from 'immutable';
@@ -12,6 +11,7 @@ import {
   updateCollection,
 } from 'reducers/collections/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
+import Field from './Field';
 
 class CollectionsContentPageEdit extends Component {
   handleCancelClick = () => {
@@ -37,7 +37,6 @@ class CollectionsContentPageEdit extends Component {
 
   render() {
     const { _, form, isNew, collection, item } = this.props;
-    const { lockedId } = this.state;
 
     if (!isNew && item.isEmpty()) {
       // throw new Error(_('errors.collectionNotFound'));
@@ -45,14 +44,14 @@ class CollectionsContentPageEdit extends Component {
 
     const meta = isNew
       ? {
-          title: _('collection.create.title', { name: collection.get('name') }),
-          description: _('collection.create.description'),
+          title: _('collection.create.title', collection.toJS()),
+          description: _('collection.create.description', collection.toJS()),
           save: _('global.save'),
           cancel: _('global.cancel'),
         }
       : {
-          title: _('collection.edit.title', { name: collection.get('name') }),
-          description: _('collection.edit.description'),
+          title: _('collection.edit.title', collection.toJS()),
+          description: _('collection.edit.description', collection.toJS()),
           save: _('global.update'),
           cancel: _('global.cancel'),
         };
@@ -74,33 +73,9 @@ class CollectionsContentPageEdit extends Component {
           }
         />
 
-        <Row gutter={24}>
-          <Col span={12}>
-            <Form.Item label={_('global.id')}>
-              {form.getFieldDecorator('id', {
-                disabled: true,
-                rules: [{ required: true, message: _('errors.required') }],
-              })(
-                <Input
-                  type="text"
-                  addonAfter={<Lock locked={lockedId} onLock={this.handleLockIdClick} />}
-                  disabled={lockedId}
-                  onChange={this.handleIdChange}
-                />,
-              )}
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label={_('global.name')}>
-              {form.getFieldDecorator('name', {
-                rules: [{ required: true, message: _('errors.required') }],
-              })(<Input type="text" onChange={this.handleNameChange} />)}
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item label={_('global.description')}>
-          {form.getFieldDecorator('description')(<Input.TextArea autosize />)}
-        </Form.Item>
+        {collection.get('fields').map(field => (
+          <Field key={field.get('id')} form={form} field={field} type={field.get('type')} />
+        ))}
       </Form>
     );
   }
