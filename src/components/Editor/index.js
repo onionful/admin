@@ -36,7 +36,7 @@ class Editor extends Component {
   };
 
   onChange = editorState => {
-    console.log('change', stateToMarkdown(editorState.getCurrentContent()));
+    // console.log('change', stateToMarkdown(editorState.getCurrentContent()));
     this.setState({ editorState });
   };
 
