@@ -9,7 +9,7 @@
     "eject": "react-app-rewired eject"
   },
   "dependencies": {
-    "antd": "^3.10.2",
+    "antd": "^3.10.3",
     "auth0-js": "^9.8.1",
     "axios": "^0.18.0",
     "connected-react-router": "^4.5.0",
