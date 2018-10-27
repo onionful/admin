@@ -15,11 +15,11 @@ class InputWithId extends Component {
   }
 
   handleValueChange = ({ target: { value } }) => {
-    const { form } = this.props;
+    const { form, idKey } = this.props;
     const { locked } = this.state;
 
     if (locked) {
-      form.setFieldsValue({ id: camelCase(value) });
+      form.setFieldsValue({ [idKey]: camelCase(value) });
     }
   };
 
