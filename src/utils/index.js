@@ -3,6 +3,7 @@ import config from 'config';
 
 export { default as Auth } from './Auth';
 export { default as colors } from './colors';
+export { default as media } from './media';
 export { default as permissions } from './permissions';
 
 const apiHandler = Space =>
