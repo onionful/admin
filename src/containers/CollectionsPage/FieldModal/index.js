@@ -66,6 +66,7 @@ class FieldModal extends Component {
 
     const values = Object.assign(mapValues(form.getFieldsValue(), noop), field);
     forEach(values, (initialValue, key) => form.getFieldDecorator(key, { initialValue }));
+    form.resetFields();
   };
 
   render() {

@@ -9,8 +9,6 @@ const Attribute = ({ form, fields, errors, type, id }) =>
   (types[type] || Throw(`Unknown type: ${type}`)).attributes.map(attr => {
     const Instance = getAttribute(attr);
 
-    console.log('type, attr', type, attr);
-
     return (
       <Instance
         key={attr}
