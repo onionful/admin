@@ -1,4 +1,4 @@
-import { Button, Form, Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { FieldTypeIcon } from 'components';
 import { types } from 'config/index';
 import { withTranslate } from 'helpers/index';
@@ -70,8 +70,8 @@ class FieldModal extends Component {
   };
 
   render() {
-    const { field, type, id, errors, visible } = this.state;
     const { _, form, fields } = this.props;
+    const { field, type, id, errors, visible } = this.state;
 
     const showBackButton = type && isEmpty(field);
 
@@ -94,20 +94,18 @@ class FieldModal extends Component {
           </Button>,
         ]}
       >
-        <Form hideRequiredMark>
-          {!type &&
-            entries(types).map(([fieldType]) => (
-              <StyledButton key={fieldType} onClick={() => this.handleTypeSelected(fieldType)}>
-                <FieldTypeIcon type={fieldType} />
-                <Description>
-                  <strong>{upperFirst(fieldType)}</strong>
-                  <small>{_(`collections.types.${fieldType}`)}</small>
-                </Description>
-              </StyledButton>
-            ))}
+        {!type &&
+          entries(types).map(([fieldType]) => (
+            <StyledButton key={fieldType} onClick={() => this.handleTypeSelected(fieldType)}>
+              <FieldTypeIcon type={fieldType} />
+              <Description>
+                <strong>{upperFirst(fieldType)}</strong>
+                <small>{_(`collections.types.${fieldType}`)}</small>
+              </Description>
+            </StyledButton>
+          ))}
 
-          {type && <Attribute type={type} id={id} form={form} fields={fields} errors={errors} />}
-        </Form>
+        {type && <Attribute type={type} id={id} form={form} fields={fields} errors={errors} />}
       </Modal>
     );
   }
@@ -115,12 +113,13 @@ class FieldModal extends Component {
 
 FieldModal.propTypes = {
   _: PropTypes.func.isRequired,
-  fields: PropTypes.fields.isRequired,
   form: PropTypes.form.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  fields: PropTypes.fields,
 };
 
-export default compose(
-  withTranslate,
-  Form.create(),
-)(FieldModal);
+FieldModal.defaultProps = {
+  fields: [],
+};
+
+export default compose(withTranslate)(FieldModal);

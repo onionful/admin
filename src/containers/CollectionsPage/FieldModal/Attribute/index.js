@@ -23,8 +23,8 @@ const Attribute = ({ form, fields, errors, type, id }) =>
 Attribute.propTypes = {
   fields: PropTypes.fields.isRequired,
   form: PropTypes.form.isRequired,
-  id: PropTypes.string,
   type: PropTypes.string.isRequired,
+  id: PropTypes.string,
 };
 
 Attribute.defaultProps = {

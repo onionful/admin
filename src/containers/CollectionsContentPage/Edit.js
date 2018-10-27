@@ -44,14 +44,14 @@ class CollectionsContentPageEdit extends Component {
 
     const meta = isNew
       ? {
-          title: _('collection.create.title', collection.toJS()),
-          description: _('collection.create.description', collection.toJS()),
+          title: _('collection.create.title', collection),
+          description: _('collection.create.description', collection),
           save: _('global.save'),
           cancel: _('global.cancel'),
         }
       : {
-          title: _('collection.edit.title', collection.toJS()),
-          description: _('collection.edit.description', collection.toJS()),
+          title: _('collection.edit.title', collection),
+          description: _('collection.edit.description', collection),
           save: _('global.update'),
           cancel: _('global.cancel'),
         };
@@ -85,11 +85,11 @@ CollectionsContentPageEdit.propTypes = {
   _: PropTypes.func.isRequired,
   collection: PropTypes.map.isRequired,
   form: PropTypes.form.isRequired,
+  path: PropTypes.string.isRequired,
   handleCreateCollection: PropTypes.func,
   handleUpdateCollection: PropTypes.func,
   isNew: PropTypes.bool,
   item: PropTypes.map,
-  path: PropTypes.string.isRequired,
   pushState: PropTypes.func,
 };
 

@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Form, Icon, Input, Popconfirm, Row } from 'antd';
+import { Button, Col, Divider, Form, Icon, Input, message, Popconfirm, Row } from 'antd';
 import { DraggableTable, FieldTypeIcon, Lock, SectionHeader } from 'components';
 import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers';
@@ -22,7 +22,14 @@ class CollectionsPageEdit extends Component {
   state = {
     lockedId: true,
     fieldIndex: -1,
+    fieldsTouched: false,
   };
+
+  constructor(...args) {
+    super(...args);
+
+    this.fieldsModal = React.createRef();
+  }
 
   handleCancelClick = () => {
     const { pushState, path } = this.props;
@@ -59,7 +66,7 @@ class CollectionsPageEdit extends Component {
   };
 
   handleModalShow = (field, index = -1) => {
-    this.setState({ fieldIndex: index }, () => this.fieldsModal.show(field));
+    this.setState({ fieldIndex: index }, () => this.fieldsModal.current.show(field));
   };
 
   handleNameChange = () => {
@@ -73,24 +80,23 @@ class CollectionsPageEdit extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const {
-      form,
-      isNew,
-      item,
-      pushState,
-      path,
-      handleCreateCollection,
-      handleUpdateCollection,
-    } = this.props;
+    const { _, form, isNew, item, handleCreateCollection, handleUpdateCollection } = this.props;
 
     form.validateFields((err, values) => {
       if (!err) {
         const handler = isNew ? handleCreateCollection : handleUpdateCollection(item.get('id'));
-        handler(values).then(() => {
-          pushState(path);
+        handler(values).then(ee => {
+          console.log('e', ee);
+          message.success(_(`messages.collections.${isNew ? 'created' : 'updated'}`));
         });
       }
     });
+  };
+
+  handleTableSort = fields => {
+    const { form } = this.props;
+    this.setState({ fieldsTouched: true });
+    form.setFieldsValue({ fields });
   };
 
   setIdValue = name => {
@@ -103,43 +109,30 @@ class CollectionsPageEdit extends Component {
   };
 
   render() {
-    const { lockedId } = this.state;
+    const { fieldsTouched, lockedId } = this.state;
     const { _, isNew, item, id, form } = this.props;
 
     if (id && item.isEmpty()) {
       throw new Error(_('errors.collectionNotFound'));
     }
 
+    const touched = fieldsTouched || form.isFieldsTouched();
     const initialValue = item.has('fields') ? item.get('fields').toJS() : [];
     form.getFieldDecorator('fields', { initialValue });
     const fields = form.getFieldValue('fields');
 
-    const meta = isNew
-      ? {
-          title: _('collections.create.title'),
-          description: _('collections.create.description'),
-          save: _('global.save'),
-          cancel: _('global.cancel'),
-        }
-      : {
-          title: _('collections.edit.title', { name: item.get('name') }),
-          description: _('collections.edit.description'),
-          save: _('global.update'),
-          cancel: _('global.cancel'),
-        };
-
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <SectionHeader
-          title={meta.title}
-          description={meta.description}
+          title={_(`collections.title.${isNew ? 'create' : 'edit'}`, item)}
+          description={_(`collections.description.${isNew ? 'create' : 'edit'}`)}
           action={
             <Button.Group>
               <Button onClick={this.handleCancelClick} icon="rollback">
-                {_('global.cancel')}
+                {_(`global.${touched ? 'cancel' : 'back'}`)}
               </Button>
-              <Button htmlType="submit" type="primary" icon="save">
-                {meta.save}
+              <Button htmlType="submit" type="primary" icon="save" disabled={!touched}>
+                {_('global.save')}
               </Button>
             </Button.Group>
           }
@@ -182,17 +175,16 @@ class CollectionsPageEdit extends Component {
 
         <FieldModal
           onSubmit={this.handleFieldSubmit}
+          form={form}
           fields={fields}
-          wrappedComponentRef={modal => {
-            this.fieldsModal = modal;
-          }}
+          ref={this.fieldsModal}
         />
 
         <DraggableTable
           showHeader={false}
           pagination={false}
           dataSource={fields}
-          onSort={sorted => form.setFieldsValue({ fields: sorted })}
+          onSort={this.handleTableSort}
           rowKey="id"
           columns={[
             {
@@ -236,12 +228,12 @@ class CollectionsPageEdit extends Component {
 CollectionsPageEdit.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
+  path: PropTypes.string.isRequired,
   handleCreateCollection: PropTypes.func,
   handleUpdateCollection: PropTypes.func,
   id: PropTypes.string,
   isNew: PropTypes.bool,
   item: PropTypes.map,
-  path: PropTypes.string.isRequired,
   pushState: PropTypes.func,
 };
 

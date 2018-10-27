@@ -15,7 +15,7 @@ const Container = styled.div({
   justifyContent: 'center',
 });
 
-export default ({ type, action }) => WrappedComponent => {
+export default ({ type, action, hide = false }) => WrappedComponent => {
   class withLoading extends Component {
     componentDidMount() {
       const { handleFetch } = this.props;
@@ -26,10 +26,17 @@ export default ({ type, action }) => WrappedComponent => {
       const { isLoading } = this.props;
 
       if (isLoading) {
+        if (hide) {
+          return (
+            <Container>
+              <Spin />
+            </Container>
+          );
+        }
         return (
-          <Container>
-            <Spin />
-          </Container>
+          <Spin>
+            <WrappedComponent {...this.props} />
+          </Spin>
         );
       }
 

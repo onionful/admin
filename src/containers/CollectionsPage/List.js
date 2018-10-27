@@ -52,8 +52,8 @@ class CollectionsPageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={_('collections.list.title')}
-          description={_('collections.list.description')}
+          title={_('collections.title.list')}
+          description={_('collections.description.list')}
           action={
             <Button onClick={this.onCreateClick} type="primary" icon="plus">
               {_('global.create')}
@@ -87,9 +87,9 @@ class CollectionsPageList extends Component {
 
 CollectionsPageList.propTypes = {
   _: PropTypes.func.isRequired,
+  match: PropTypes.match.isRequired,
   data: PropTypes.map,
   handlePush: PropTypes.func,
-  match: PropTypes.match.isRequired,
 };
 
 CollectionsPageList.defaultProps = {

@@ -1,9 +1,12 @@
+import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { getTranslate, withLocalize } from 'react-localize-redux';
 import { compose, connect, getDisplayName, PropTypes, React } from 'utils/create';
 
 export default WrappedComponent => {
-  const WithTranslate = props => <WrappedComponent {...props} />;
+  const WithTranslate = ({ forwardedRef, ...props }) => (
+    <WrappedComponent {...props} ref={forwardedRef} />
+  );
 
   WithTranslate.displayName = `WithTranslate(${getDisplayName(WrappedComponent)})`;
 
@@ -16,11 +19,19 @@ export default WrappedComponent => {
   };
 
   const mapStateToProps = state => ({
-    _: getTranslate(state.get('localize')),
+    _: (id, data, options) =>
+      getTranslate(state.get('localize'))(id, data instanceof Map ? data.toJS() : data, options),
   });
 
-  return compose(
-    connect(mapStateToProps),
+  const WithTranslateComposed = compose(
+    connect(
+      mapStateToProps,
+      null,
+      null,
+      { withRef: true },
+    ),
     withLocalize,
   )(WithTranslate);
+
+  return React.forwardRef((props, ref) => <WithTranslateComposed {...props} forwardedRef={ref} />);
 };

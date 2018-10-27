@@ -1,14 +1,14 @@
 collections:
-  list:
-    title: Collections
-    description: Create and update your own Collections.
-  create:
-    title: Create new Collection
-    description: Create new type of your collection
-  edit:
-    title: Edit "${name}" Collection
-    description: Edit existing collection
+  title:
+    list: Collections
+    create: Create new Collection
+    edit: Edit "${name}" Collection
+  description:
+    list: Create and update your own Collections.
+    create: Create new type of your collection
+    edit: Edit existing collection
   addField: Add new field
+
   types:
     string: Titles, names, single paragraphs
     number: Everything that is a number
