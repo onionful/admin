@@ -10,8 +10,7 @@ collections:
     description: Edit existing collection
   addField: Add new field
   types:
-    identifier: Identifier used as a part of the URL
-    string: Titles, names, paragraphs, list of names
+    string: Titles, names, single paragraphs
     number: Everything that is a number
     text: Description, text paragraphs, articles
     media: Images, videos, PDFs
@@ -29,6 +28,8 @@ collections:
     editor: Show content editor
     numberFormat: Number format
     multiple: Multiple images
+    identifier: Generate identifier
+    identifier_placeholder: identifier name, i.e. `id` or `slug`
 collection:
   list:
     title: ${name} - items list

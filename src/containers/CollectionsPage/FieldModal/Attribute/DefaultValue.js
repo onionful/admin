@@ -3,7 +3,7 @@ import { withTranslate } from 'helpers';
 import { compose, PropTypes, React } from 'utils/create';
 
 const DefaultValue = ({ _, form, type }) => (
-  <Form.Item label={_('collections.attributes.defaultValue')}>
+  <Form.Item label={_(`collections.attributes.${type}`)}>
     {form.getFieldDecorator(type)(<Input />)}
   </Form.Item>
 );

@@ -1,44 +1,39 @@
-const attributes = ['name', 'defaultValue' /* 'required', 'unique' */];
+const common = ['name', 'defaultValue' /* 'required', 'unique' */];
 
 export default {
-  identifier: {
-    icon: 'globe',
-    color: '#6c50ff',
-    attributes: ['name', 'copyValue'],
-  },
   string: {
     icon: 'font',
     color: '#ffb500',
-    attributes: [...attributes /* , 'range' */],
+    attributes: [...common, 'identifier'],
   },
   text: {
     icon: 'align-left',
     color: '#ff9200',
-    attributes: [...attributes, 'editor'],
+    attributes: [...common, 'editor'],
   },
   number: {
     icon: 'hashtag',
     color: '#e8442f',
-    attributes: [...attributes, 'range', 'numberFormat'],
+    attributes: [...common, 'range', 'numberFormat'],
   },
   media: {
     icon: 'image',
     color: '#b981d5',
-    attributes: [...attributes, 'multiple'],
+    attributes: [...common, 'multiple'],
   },
   date: {
     icon: 'calendar',
     color: '#1c8ee2',
-    attributes,
+    attributes: common,
   },
   email: {
     icon: 'at',
     color: '#3c8c98',
-    attributes,
+    attributes: common,
   },
   bool: {
     icon: 'check-square',
     color: '#69ba05',
-    attributes,
+    attributes: common,
   },
 };
