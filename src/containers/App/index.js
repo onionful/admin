@@ -18,7 +18,7 @@ import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCollections } from 'reducers/collections/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
-import { colors, permissions } from 'utils';
+import { colors, media, permissions } from 'utils';
 import { compose, connect, styled, PropTypes, React } from 'utils/create';
 
 const { Sider, Footer } = Layout;
@@ -176,7 +176,7 @@ class App extends React.Component {
 
     return (
       <Spin spinning={isProfileLoading}>
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout style={{ minHeight: '100vh', maxWidth: media.xl }}>
           <Sider breakpoint="lg" collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
             <StyledLogo collapsed={collapsed} />
 
@@ -185,7 +185,7 @@ class App extends React.Component {
                 <UserInfo onClick={this.onProfileClick}>
                   <Avatar size="large" src={profile.get('picture')} />
                   {!collapsed && <div>{profileName}</div>}
-                </UserInfo>
+                  </UserInfo>
               </Tooltip>
             )}
 
