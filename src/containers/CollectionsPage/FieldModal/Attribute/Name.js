@@ -4,17 +4,25 @@ import { withTranslate } from 'helpers';
 import { camelCase, isEmpty } from 'lodash';
 import { Component, compose, PropTypes, React } from 'utils/create';
 
+const ID = 'id';
+
 class Name extends Component {
-  state = {
-    locked: true,
-  };
+  constructor(...args) {
+    super(...args);
+
+    const { form, type } = this.props;
+    const id = form.getFieldValue(ID);
+    const name = camelCase(form.getFieldValue(type));
+
+    this.state = { locked: isEmpty(id) || name === id };
+  }
 
   handleValueChange = ({ target: { value } }) => {
-    const { setValues } = this.props;
+    const { form } = this.props;
     const { locked } = this.state;
 
     if (locked) {
-      setValues({ id: camelCase(value) });
+      form.setFieldsValue({ id: camelCase(value) });
     }
   };
 
@@ -35,7 +43,7 @@ class Name extends Component {
             validateStatus={errors.id ? 'error' : 'success'}
             label={_('collections.attributes.id')}
           >
-            {fieldDecorator('id', { rules: [{ required: true }] })(
+            {fieldDecorator(ID, { rules: [{ required: true }] })(
               <Input
                 addonBefore="ID"
                 disabled={locked}
@@ -62,7 +70,7 @@ class Name extends Component {
 Name.propTypes = {
   _: PropTypes.func.isRequired,
   fieldDecorator: PropTypes.func.isRequired,
-  setValues: PropTypes.func.isRequired,
+  form: PropTypes.form.isRequired,
   errors: PropTypes.object.isRequired, // eslint-disable-line
   type: PropTypes.string.isRequired,
 };

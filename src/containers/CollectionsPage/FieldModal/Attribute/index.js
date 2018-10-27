@@ -11,10 +11,10 @@ const Attribute = ({ form, fields, errors, type, id }) =>
 
     return (
       <Instance
-        key={attr}
+        key={[type, id, attr].join()}
         type={attr}
         errors={errors || {}}
-        setValues={form.setFieldsValue}
+        form={form}
         fieldDecorator={(fieldId, options = {}) => form.getFieldDecorator(fieldId, options)}
         fields={fields}
       />
