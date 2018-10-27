@@ -2,9 +2,9 @@ import { Checkbox, Form } from 'antd';
 import { withTranslate } from 'helpers';
 import { compose, PropTypes, React } from 'utils/create';
 
-const Editor = ({ _, fieldDecorator, type }) => (
+const Editor = ({ _, form, type }) => (
   <Form.Item>
-    {fieldDecorator(type, { rules: [{ required: false }] })(
+    {form.getFieldDecorator(type, { rules: [{ required: false }] })(
       <Checkbox defaultChecked>{_('collections.attributes.editor')}</Checkbox>,
     )}
   </Form.Item>
@@ -12,7 +12,7 @@ const Editor = ({ _, fieldDecorator, type }) => (
 
 Editor.propTypes = {
   _: PropTypes.func.isRequired,
-  fieldDecorator: PropTypes.func.isRequired,
+  form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
 };
 export default compose(withTranslate)(Editor);

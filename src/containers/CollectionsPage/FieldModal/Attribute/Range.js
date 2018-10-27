@@ -2,18 +2,18 @@ import { Col, Form, InputNumber, Row } from 'antd';
 import { withTranslate } from 'helpers';
 import { compose, PropTypes, React } from 'utils/create';
 
-const Range = ({ _, errors, fieldDecorator, type }) => (
+const Range = ({ _, errors, form, type }) => (
   <Row>
     <Col span={12}>
       <Form.Item validateStatus={errors[`${type}From`] ? 'error' : 'success'}>
-        {fieldDecorator(`${type}From`)(
+        {form.getFieldDecorator(`${type}From`)(
           <InputNumber>{_(`collections.attributes.${type}From`)}</InputNumber>,
         )}
       </Form.Item>
     </Col>
     <Col span={12}>
       <Form.Item validateStatus={errors[`${type}To`] ? 'error' : 'success'}>
-        {fieldDecorator(`${type}To`)(
+        {form.getFieldDecorator(`${type}To`)(
           <InputNumber>{_(`collections.attributes.${type}To`)}</InputNumber>,
         )}
       </Form.Item>
@@ -23,7 +23,7 @@ const Range = ({ _, errors, fieldDecorator, type }) => (
 
 Range.propTypes = {
   _: PropTypes.func.isRequired,
-  fieldDecorator: PropTypes.func.isRequired,
+  form: PropTypes.form.isRequired,
   errors: PropTypes.object.isRequired, // eslint-disable-line
   type: PropTypes.string.isRequired,
 };

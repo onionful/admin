@@ -2,9 +2,9 @@ import { Form, Select } from 'antd';
 import { withTranslate } from 'helpers';
 import { compose, PropTypes, React } from 'utils/create';
 
-const DefaultValue = ({ _, fieldDecorator, type, fields }) => (
+const DefaultValue = ({ _, form, type, fields }) => (
   <Form.Item label={_('collections.attributes.copyValue')}>
-    {fieldDecorator(type)(
+    {form.getFieldDecorator(type)(
       <Select allowClear>
         {fields.filter(field => field.type === 'string').map(field => (
           <Select.Option key={field.id} value={field.id}>
@@ -18,7 +18,7 @@ const DefaultValue = ({ _, fieldDecorator, type, fields }) => (
 
 DefaultValue.propTypes = {
   _: PropTypes.func.isRequired,
-  fieldDecorator: PropTypes.func.isRequired,
+  form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
   fields: PropTypes.fields.isRequired,
 };

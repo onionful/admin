@@ -33,7 +33,7 @@ class Name extends Component {
   };
 
   render() {
-    const { _, fieldDecorator, type, errors } = this.props;
+    const { _, form, type, errors } = this.props;
     const { locked } = this.state;
 
     return (
@@ -43,7 +43,7 @@ class Name extends Component {
             validateStatus={errors.id ? 'error' : 'success'}
             label={_('collections.attributes.id')}
           >
-            {fieldDecorator(ID, { rules: [{ required: true }] })(
+            {form.getFieldDecorator(ID, { rules: [{ required: true }] })(
               <Input
                 addonBefore="ID"
                 disabled={locked}
@@ -57,7 +57,7 @@ class Name extends Component {
             validateStatus={errors[type] ? 'error' : 'success'}
             label={_(`collections.attributes.${type}`)}
           >
-            {fieldDecorator(type, { rules: [{ required: true }] })(
+            {form.getFieldDecorator(type, { rules: [{ required: true }] })(
               <Input onChange={this.handleValueChange} />,
             )}
           </Form.Item>
@@ -69,7 +69,6 @@ class Name extends Component {
 
 Name.propTypes = {
   _: PropTypes.func.isRequired,
-  fieldDecorator: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
   errors: PropTypes.object.isRequired, // eslint-disable-line
   type: PropTypes.string.isRequired,

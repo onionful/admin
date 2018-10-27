@@ -15,7 +15,6 @@ const Attribute = ({ form, fields, errors, type, id }) =>
         type={attr}
         errors={errors || {}}
         form={form}
-        fieldDecorator={(fieldId, options = {}) => form.getFieldDecorator(fieldId, options)}
         fields={fields}
       />
     );
