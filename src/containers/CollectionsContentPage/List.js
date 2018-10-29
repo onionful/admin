@@ -52,8 +52,8 @@ class CollectionsContentPageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={_('collection.list.title', { name: collection.get('name') })}
-          description={_('collection.list.description', { name: collection.get('name') })}
+          title={_('collection.title.list', collection)}
+          description={_('collection.description.list', collection)}
           action={
             <Button onClick={this.onCreateClick} type="primary" icon="plus">
               {_('global.create')}
@@ -68,7 +68,7 @@ class CollectionsContentPageList extends Component {
           columns={[
             ...columns,
             {
-              title: 'Action',
+              title: _('global.action'),
               key: 'action',
               align: 'center',
               render: (text, item) => (

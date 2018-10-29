@@ -38,11 +38,6 @@ collection:
     create: Create new item inside your "${name}" collection
     list: Create and update your "${name}" collection's items
 
-#  edit:
-#    title: Edit "${name}" Content Type
-#    description: Edit existing content type
-#  addField: Add new field
-
 menu:
   content: Content
   collection: Collections
@@ -54,19 +49,24 @@ menu:
   logout: Logout
 
 global:
+  action: Action
   back: Back
   copyrights: Onionful (MIT) created by [hsz](https://hsz.mobi/)
   cancel: Cancel
   create: Create
+  createdAt: Created at
   description: Description
+  email: E-mail
   fields: Fields
   id: Identifier
   name: Name
+  none: none
+  removeQuestion: Are you sure?
   save: Save
+  selectSpace: Select space
   title: Title
   update: Update
-  removeQuestion: Are you sure?
-  none: none
+  updatedAt: Updated at
 
 errors:
   collectionNotFound: Collection not found

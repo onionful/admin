@@ -68,7 +68,7 @@ class CollectionsPageList extends Component {
           columns={[
             ...columns,
             {
-              title: 'Action',
+              title: _('global.action'),
               key: 'action',
               align: 'center',
               render: (text, record) => (

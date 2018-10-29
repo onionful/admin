@@ -8,12 +8,12 @@ import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 const columns = [
   {
-    title: 'Identifier',
+    title: _('global.id'),
     dataIndex: 'id',
     sorter: true,
   },
   {
-    title: 'Name',
+    title: _('global.name'),
     dataIndex: 'name',
   },
   {
@@ -22,19 +22,19 @@ const columns = [
     render: value => <Avatar src={value} />,
   },
   {
-    title: 'Created at',
+    title: _('global.createdAt'),
     dataIndex: 'createdAt',
     render: value => <span title={value}>{moment(value).fromNow()}</span>,
     sorter: (a, b) => moment(a.createdAt) - moment(b.createdAt),
   },
   {
-    title: 'Updated at',
+    title: _('global.updatedAt'),
     dataIndex: 'updatedAt',
     render: value => <span title={value}>{moment(value).fromNow()}</span>,
     sorter: (a, b) => moment(a.updatedAt) - moment(b.updatedAt),
   },
   {
-    title: 'Action',
+    title: _('global.action'),
     key: 'action',
     render: () => <div>actions</div>,
   },

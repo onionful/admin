@@ -192,7 +192,7 @@ class App extends React.Component {
             <Spin spinning={spaces.isEmpty()}>
               <SpaceSelect
                 showSearch
-                placeholder="Select space"
+                placeholder={_('global.selectSpace')}
                 optionFilterProp="children"
                 onChange={this.onSpaceChange}
                 value={space}

@@ -13,6 +13,8 @@ import {
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 import Field from './Field';
 
+const mapValues = require('lodash');
+
 class CollectionsContentPageEdit extends Component {
   handleCancelClick = () => {
     const { pushState, path } = this.props;
@@ -42,32 +44,20 @@ class CollectionsContentPageEdit extends Component {
       // throw new Error(_('errors.collectionNotFound'));
     }
 
-    const meta = isNew
-      ? {
-          title: _('collection.create.title', collection),
-          description: _('collection.create.description', collection),
-          save: _('global.save'),
-          cancel: _('global.cancel'),
-        }
-      : {
-          title: _('collection.edit.title', collection),
-          description: _('collection.edit.description', collection),
-          save: _('global.update'),
-          cancel: _('global.cancel'),
-        };
+    const touched = form.isFieldsTouched();
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <SectionHeader
-          title={meta.title}
-          description={meta.description}
+          title={_(`collection.title.${isNew ? 'create' : 'edit'}`, item)}
+          description={_(`collection.description.${isNew ? 'create' : 'edit'}`)}
           action={
             <Button.Group>
               <Button onClick={this.handleCancelClick} icon="rollback">
-                {_('global.cancel')}
+                {_(`global.${touched ? 'cancel' : 'back'}`)}
               </Button>
               <Button htmlType="submit" type="primary" icon="save">
-                {meta.save}
+                {_('global.save')}
               </Button>
             </Button.Group>
           }
@@ -119,17 +109,8 @@ const mapDispatchToProps = dispatch => ({
   handleUpdateCollection: id => data => dispatch(updateCollection(id, data)),
 });
 
-const mapPropsToFields = ({ item = {} }) => ({
-  name: Form.createFormField({
-    value: item.get('name'),
-  }),
-  id: Form.createFormField({
-    value: item.get('id'),
-  }),
-  description: Form.createFormField({
-    value: item.get('description'),
-  }),
-});
+const mapPropsToFields = ({ item = {} }) =>
+  mapValues(item.toJS(), value => Form.createFormField({ value }));
 
 export default compose(
   connect(

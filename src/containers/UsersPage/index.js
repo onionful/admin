@@ -13,15 +13,15 @@ const columns = [
     render: value => <Avatar src={value} />,
   },
   {
-    title: 'Name',
+    title: _('global.name'),
     dataIndex: 'name',
   },
   {
-    title: 'E-mail',
+    title: _('global.email'),
     dataIndex: 'email',
   },
   {
-    title: 'Created at',
+    title: _('global.createdAt'),
     dataIndex: 'created_at',
     render: value => <span title={value}>{moment(value).fromNow()}</span>,
     sorter: (a, b) => moment(a.created_at) - moment(b.created_at),
@@ -45,7 +45,7 @@ const columns = [
     dataIndex: 'logins_count',
   },
   {
-    title: 'Action',
+    title: _('global.action'),
     key: 'action',
     render: () => <div>actions</div>,
   },
