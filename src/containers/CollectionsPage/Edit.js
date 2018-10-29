@@ -1,5 +1,6 @@
-import { Button, Col, Divider, Form, Icon, Input, message, Popconfirm, Row } from 'antd';
-import { DraggableTable, FieldTypeIcon, Lock, SectionHeader } from 'components';
+import { Button, Divider, Form, Icon, Input, message, Popconfirm } from 'antd';
+import { DraggableTable, FieldTypeIcon, SectionHeader } from 'components';
+import { InputWithId } from 'components/Form';
 import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
@@ -10,7 +11,6 @@ import {
   getCollection,
   updateCollection,
 } from 'reducers/collections/actions';
-import slugify from 'slugify';
 import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
 import FieldModal from './FieldModal';
 
@@ -20,7 +20,6 @@ const FieldName = styled.strong({
 
 class CollectionsPageEdit extends Component {
   state = {
-    lockedId: true,
     fieldIndex: -1,
     fieldsTouched: false,
   };
@@ -56,25 +55,8 @@ class CollectionsPageEdit extends Component {
     form.setFieldsValue({ fields });
   };
 
-  handleIdChange = () => {
-    this.setIdValue('id');
-  };
-
-  handleLockIdClick = () => {
-    const { lockedId } = this.state;
-    this.setState({ lockedId: !lockedId });
-  };
-
   handleModalShow = (field, index = -1) => {
     this.setState({ fieldIndex: index }, () => this.fieldsModal.current.show(field));
-  };
-
-  handleNameChange = () => {
-    const { lockedId } = this.state;
-
-    if (lockedId) {
-      this.setIdValue('name');
-    }
   };
 
   handleSubmit = e => {
@@ -98,17 +80,8 @@ class CollectionsPageEdit extends Component {
     form.setFieldsValue({ fields });
   };
 
-  setIdValue = name => {
-    const { form } = this.props;
-
-    setTimeout(
-      () => form.setFieldsValue({ id: slugify(form.getFieldValue(name), { lower: true }) }),
-      0,
-    );
-  };
-
   render() {
-    const { fieldsTouched, lockedId } = this.state;
+    const { fieldsTouched } = this.state;
     const { _, isNew, item, id, form } = this.props;
 
     if (id && item.isEmpty()) {
@@ -136,30 +109,14 @@ class CollectionsPageEdit extends Component {
           }
         />
 
-        <Row gutter={24}>
-          <Col span={12}>
-            <Form.Item label={_('global.id')}>
-              {form.getFieldDecorator('id', {
-                disabled: true,
-                rules: [{ required: true, message: _('errors.required') }],
-              })(
-                <Input
-                  type="text"
-                  addonAfter={<Lock locked={lockedId} onLock={this.handleLockIdClick} />}
-                  disabled={lockedId}
-                  onChange={this.handleIdChange}
-                />,
-              )}
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label={_('global.name')}>
-              {form.getFieldDecorator('name', {
-                rules: [{ required: true, message: _('errors.required') }],
-              })(<Input type="text" onChange={this.handleNameChange} />)}
-            </Form.Item>
-          </Col>
-        </Row>
+        <InputWithId
+          form={form}
+          idKey="id"
+          idLabel={_('global.id')}
+          valueKey="name"
+          valueLabel={_('global.name')}
+        />
+
         <Form.Item label={_('global.description')}>
           {form.getFieldDecorator('description')(<Input.TextArea autosize />)}
         </Form.Item>

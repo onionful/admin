@@ -31,12 +31,13 @@ collections:
     identifier: Generate identifier
     identifier_placeholder: identifier name, i.e. `id` or `slug`
 collection:
-  list:
-    title: ${name} - items list
-    description: Create and update your "${name}" collection's items
-  create:
-    title: ${name} - create new item
-    description: Create new item inside your "${name}" collection
+  title:
+    create: ${name} - create new item
+    list: ${name} - items list
+  description:
+    create: Create new item inside your "${name}" collection
+    list: Create and update your "${name}" collection's items
+
 #  edit:
 #    title: Edit "${name}" Content Type
 #    description: Edit existing content type
