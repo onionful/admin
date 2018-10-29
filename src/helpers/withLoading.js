@@ -1,21 +1,8 @@
 import { Spin } from 'antd';
 import { noop } from 'lodash';
-import { colors } from 'utils';
-import { Component, connect, PropTypes, React, styled } from 'utils/create';
+import { Component, connect, PropTypes, React } from 'utils/create';
 
-const Container = styled.div({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: colors.lightGray,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-export default ({ type, action, hide = false }) => WrappedComponent => {
+export default ({ type, action }) => WrappedComponent => {
   class withLoading extends Component {
     componentDidMount() {
       const { handleFetch } = this.props;
@@ -25,22 +12,11 @@ export default ({ type, action, hide = false }) => WrappedComponent => {
     render() {
       const { isLoading } = this.props;
 
-      if (isLoading) {
-        if (hide) {
-          return (
-            <Container>
-              <Spin />
-            </Container>
-          );
-        }
-        return (
-          <Spin>
-            <WrappedComponent {...this.props} />
-          </Spin>
-        );
-      }
-
-      return <WrappedComponent {...this.props} />;
+      return (
+        <Spin spinning={isLoading}>
+          <WrappedComponent {...this.props} />
+        </Spin>
+      );
     }
   }
 

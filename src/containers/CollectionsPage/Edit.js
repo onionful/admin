@@ -3,7 +3,7 @@ import { DraggableTable, FieldTypeIcon, Lock, SectionHeader } from 'components';
 import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
-import { noop } from 'lodash';
+import { mapValues, noop } from 'lodash';
 import {
   createCollection,
   fetchCollection,
@@ -85,8 +85,7 @@ class CollectionsPageEdit extends Component {
     form.validateFields((err, values) => {
       if (!err) {
         const handler = isNew ? handleCreateCollection : handleUpdateCollection(item.get('id'));
-        handler(values).then(ee => {
-          console.log('e', ee);
+        handler(values).then(() => {
           message.success(_(`messages.collections.${isNew ? 'created' : 'updated'}`));
         });
       }
@@ -116,9 +115,8 @@ class CollectionsPageEdit extends Component {
       throw new Error(_('errors.collectionNotFound'));
     }
 
+    form.getFieldDecorator('fields');
     const touched = fieldsTouched || form.isFieldsTouched();
-    const initialValue = item.has('fields') ? item.get('fields').toJS() : [];
-    form.getFieldDecorator('fields', { initialValue });
     const fields = form.getFieldValue('fields');
 
     return (
@@ -264,17 +262,8 @@ const mapDispatchToProps = dispatch => ({
   handleUpdateCollection: id => data => dispatch(updateCollection(id, data)),
 });
 
-const mapPropsToFields = ({ item = {} }) => ({
-  name: Form.createFormField({
-    value: item.get('name'),
-  }),
-  id: Form.createFormField({
-    value: item.get('id'),
-  }),
-  description: Form.createFormField({
-    value: item.get('description'),
-  }),
-});
+const mapPropsToFields = ({ item = {} }) =>
+  mapValues(item.toJS(), value => Form.createFormField({ value }));
 
 export default compose(
   connect(

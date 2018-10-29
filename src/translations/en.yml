@@ -70,3 +70,8 @@ global:
 errors:
   collectionNotFound: Collection not found
   required: Field is required
+
+messages:
+  collections:
+    created: Collection has been created
+    updated: Collection has been updated
