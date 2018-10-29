@@ -1,44 +1,10 @@
 import { Avatar, Table } from 'antd';
-import { withPermissions } from 'helpers';
+import { withPermissions, withTranslate } from 'helpers';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import moment from 'moment';
 import { fetchSpaces } from 'reducers/spaces/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
-
-const columns = [
-  {
-    title: _('global.id'),
-    dataIndex: 'id',
-    sorter: true,
-  },
-  {
-    title: _('global.name'),
-    dataIndex: 'name',
-  },
-  {
-    title: 'Owner',
-    dataIndex: 'createdBy',
-    render: value => <Avatar src={value} />,
-  },
-  {
-    title: _('global.createdAt'),
-    dataIndex: 'createdAt',
-    render: value => <span title={value}>{moment(value).fromNow()}</span>,
-    sorter: (a, b) => moment(a.createdAt) - moment(b.createdAt),
-  },
-  {
-    title: _('global.updatedAt'),
-    dataIndex: 'updatedAt',
-    render: value => <span title={value}>{moment(value).fromNow()}</span>,
-    sorter: (a, b) => moment(a.updatedAt) - moment(b.updatedAt),
-  },
-  {
-    title: _('global.action'),
-    key: 'action',
-    render: () => <div>actions</div>,
-  },
-];
 
 class SpacesPage extends Component {
   componentDidMount() {
@@ -47,7 +13,41 @@ class SpacesPage extends Component {
   }
 
   render() {
-    const { data, isLoading } = this.props;
+    const { _, data, isLoading } = this.props;
+
+    const columns = [
+      {
+        title: _('global.id'),
+        dataIndex: 'id',
+        sorter: true,
+      },
+      {
+        title: _('global.name'),
+        dataIndex: 'name',
+      },
+      {
+        title: 'Owner',
+        dataIndex: 'createdBy',
+        render: value => <Avatar src={value} />,
+      },
+      {
+        title: _('global.createdAt'),
+        dataIndex: 'createdAt',
+        render: value => <span title={value}>{moment(value).fromNow()}</span>,
+        sorter: (a, b) => moment(a.createdAt) - moment(b.createdAt),
+      },
+      {
+        title: _('global.updatedAt'),
+        dataIndex: 'updatedAt',
+        render: value => <span title={value}>{moment(value).fromNow()}</span>,
+        sorter: (a, b) => moment(a.updatedAt) - moment(b.updatedAt),
+      },
+      {
+        title: _('global.action'),
+        key: 'action',
+        render: () => <div>actions</div>,
+      },
+    ];
 
     return (
       <div>
@@ -65,6 +65,7 @@ class SpacesPage extends Component {
 }
 
 SpacesPage.propTypes = {
+  _: PropTypes.func.isRequired,
   data: PropTypes.list,
   handleFetchSpaces: PropTypes.func,
   isLoading: PropTypes.bool,
@@ -91,4 +92,5 @@ export default compose(
     mapDispatchToProps,
   ),
   withPermissions(),
+  withTranslate,
 )(SpacesPage);

@@ -1,55 +1,11 @@
 import { Avatar, Icon, Input, Table } from 'antd';
-import { withPermissions } from 'helpers';
+import { withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import moment from 'moment';
 import { fetchUsers } from 'reducers/users/actions';
 import { permissions } from 'utils';
 import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
-
-const columns = [
-  {
-    dataIndex: 'picture',
-    render: value => <Avatar src={value} />,
-  },
-  {
-    title: _('global.name'),
-    dataIndex: 'name',
-  },
-  {
-    title: _('global.email'),
-    dataIndex: 'email',
-  },
-  {
-    title: _('global.createdAt'),
-    dataIndex: 'created_at',
-    render: value => <span title={value}>{moment(value).fromNow()}</span>,
-    sorter: (a, b) => moment(a.created_at) - moment(b.created_at),
-  },
-  {
-    title: 'Last login',
-    dataIndex: 'last_login',
-    render: value => <span title={value}>{moment(value).fromNow()}</span>,
-    sorter: (a, b) => moment(a.last_login) - moment(b.last_login),
-  },
-  {
-    title: 'Service',
-    dataIndex: 'identities',
-    render: value =>
-      value.map(({ provider }) => (
-        <Icon key={provider} type={{ 'google-oauth2': 'google' }[provider] || provider} />
-      )),
-  },
-  {
-    title: 'Logins count',
-    dataIndex: 'logins_count',
-  },
-  {
-    title: _('global.action'),
-    key: 'action',
-    render: () => <div>actions</div>,
-  },
-];
 
 const SearchReset = styled(Icon)({
   marginRight: '1rem',
@@ -110,8 +66,52 @@ class UsersPage extends Component {
   };
 
   render() {
-    const { isLoading, data } = this.props;
+    const { _, isLoading, data } = this.props;
     const { search, searchCurrent } = this.state;
+
+    const columns = [
+      {
+        dataIndex: 'picture',
+        render: value => <Avatar src={value} />,
+      },
+      {
+        title: _('global.name'),
+        dataIndex: 'name',
+      },
+      {
+        title: _('global.email'),
+        dataIndex: 'email',
+      },
+      {
+        title: _('global.createdAt'),
+        dataIndex: 'created_at',
+        render: value => <span title={value}>{moment(value).fromNow()}</span>,
+        sorter: (a, b) => moment(a.created_at) - moment(b.created_at),
+      },
+      {
+        title: 'Last login',
+        dataIndex: 'last_login',
+        render: value => <span title={value}>{moment(value).fromNow()}</span>,
+        sorter: (a, b) => moment(a.last_login) - moment(b.last_login),
+      },
+      {
+        title: 'Service',
+        dataIndex: 'identities',
+        render: value =>
+          value.map(({ provider }) => (
+            <Icon key={provider} type={{ 'google-oauth2': 'google' }[provider] || provider} />
+          )),
+      },
+      {
+        title: 'Logins count',
+        dataIndex: 'logins_count',
+      },
+      {
+        title: _('global.action'),
+        key: 'action',
+        render: () => <div>actions</div>,
+      },
+    ];
 
     const searchSuffix = searchCurrent ? (
       <SearchReset key="searchReset" type="close-circle" onClick={this.handleSearchReset} />
@@ -154,6 +154,7 @@ class UsersPage extends Component {
 }
 
 UsersPage.propTypes = {
+  _: PropTypes.func.isRequired,
   data: PropTypes.map,
   handleFetchUsers: PropTypes.func,
   isLoading: PropTypes.bool,
@@ -180,4 +181,5 @@ export default compose(
     mapDispatchToProps,
   ),
   withPermissions(permissions.USERS_LIST),
+  withTranslate,
 )(UsersPage);
