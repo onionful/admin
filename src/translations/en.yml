@@ -75,6 +75,7 @@ global:
 
 errors:
   collectionNotFound: Collection not found
+  nameTaken: Name is already taken by another field
   required: Field is required
 
 messages:

@@ -1,7 +1,7 @@
 import { Col, Form, Icon, Input, Row, Tooltip } from 'antd';
 import { Lock } from 'components';
 import { withTranslate } from 'helpers';
-import { isEmpty, kebabCase } from 'lodash';
+import { camelCase, isEmpty, noop } from 'lodash';
 import { Component, compose, PropTypes, React, styled } from 'utils/create';
 
 const NoAutoGenerateIcon = styled(({ className, tooltip }) => (
@@ -16,9 +16,9 @@ class InputWithId extends Component {
   constructor(...args) {
     super(...args);
 
-    const { form, idKey, valueKey } = this.props;
+    const { form, idKey, normalize, valueKey } = this.props;
     const id = form.getFieldValue(idKey);
-    const value = kebabCase(form.getFieldValue(valueKey));
+    const value = normalize(form.getFieldValue(valueKey));
 
     this.state = { locked: isEmpty(id) || value === id };
   }
@@ -39,8 +39,11 @@ class InputWithId extends Component {
   };
 
   render() {
-    const { _, autoGenerateId, form, idKey, idLabel, valueKey, valueLabel } = this.props;
+    const { _, autoGenerateId, form, idKey, idLabel, normalize, valueKey, valueLabel } = this.props;
+    const { idValidator = noop } = this.context;
     const { locked } = this.state;
+
+    console.log('idValidator', idValidator);
 
     return (
       <Row gutter={16}>
@@ -55,10 +58,11 @@ class InputWithId extends Component {
           <Form.Item label={idLabel}>
             <Tooltip title={locked ? '' : _('components.inputWithId.idTooltip')}>
               {form.getFieldDecorator(idKey, {
-                rules: [{ required: true }],
-                normalize: kebabCase,
+                normalize,
+                rules: [{ required: true }, { validator: idValidator(idKey) }],
               })(
                 <Input
+                  disabled={locked}
                   addonAfter={
                     <div>
                       {!autoGenerateId &&
@@ -70,7 +74,6 @@ class InputWithId extends Component {
                       <Lock locked={locked} onLock={this.handleLock} />
                     </div>
                   }
-                  disabled={locked}
                 />,
               )}
             </Tooltip>
@@ -89,10 +92,16 @@ InputWithId.propTypes = {
   valueKey: PropTypes.string.isRequired,
   valueLabel: PropTypes.string.isRequired,
   autoGenerateId: PropTypes.bool,
+  normalize: PropTypes.func,
 };
 
 InputWithId.defaultProps = {
   autoGenerateId: true,
+  normalize: camelCase,
+};
+
+InputWithId.contextTypes = {
+  idValidator: PropTypes.func,
 };
 
 export default compose(withTranslate)(InputWithId);

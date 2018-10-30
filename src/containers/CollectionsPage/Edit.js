@@ -145,7 +145,11 @@ class CollectionsPageEdit extends Component {
           </Button>
         </Divider>
 
-        <FieldModal onSubmit={this.handleFieldSubmit} wrappedComponentRef={this.fieldsModal} />
+        <FieldModal
+          onSubmit={this.handleFieldSubmit}
+          wrappedComponentRef={this.fieldsModal}
+          collection={item}
+        />
 
         <DraggableTable
           showHeader={false}

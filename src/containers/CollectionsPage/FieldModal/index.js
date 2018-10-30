@@ -34,6 +34,32 @@ class FieldModal extends Component {
     visible: false,
   };
 
+  getChildContext() {
+    const { _, collection } = this.props;
+    const { field } = this.state;
+    const conflictMessage = _('errors.nameTaken');
+
+    return {
+      idValidator: key => (rule, value, cb) => {
+        const reserved = []
+          .concat(
+            ...collection.keySeq(),
+            ...collection.get('fields').map(f => [f.get('id'), f.get('identifier')]),
+          )
+          .filter(v => v && v !== field[key]);
+
+        console.log('reserved.includes(value)', reserved.includes(value));
+        cb(...(reserved.includes(value) ? [conflictMessage] : []));
+      },
+      identifierValidator: (first, second) => (rule, value, cb) => {
+        const { form } = this.props;
+        const values = form.getFieldsValue([first, second]);
+
+        cb(...(values[first] === values[second] ? [conflictMessage] : []));
+      },
+    };
+  }
+
   handleBack = () => {
     this.setState({ type: undefined });
   };
@@ -117,8 +143,14 @@ class FieldModal extends Component {
 
 FieldModal.propTypes = {
   _: PropTypes.func.isRequired,
+  collection: PropTypes.map.isRequired,
   form: PropTypes.form.isRequired,
   onSubmit: PropTypes.func.isRequired,
+};
+
+FieldModal.childContextTypes = {
+  idValidator: PropTypes.func,
+  identifierValidator: PropTypes.func,
 };
 
 export default compose(
