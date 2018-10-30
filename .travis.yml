@@ -6,7 +6,7 @@ node_js:
 script:
   - npm install -g travis-ci-cloudfront-invalidation
   - npm install
-  - npm test
+#  - npm test
   - npm run build
 
 deploy:
