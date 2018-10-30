@@ -38,21 +38,23 @@ class CollectionsPageEdit extends Component {
 
   handleFieldDelete = (e, index) => {
     const { form } = this.props;
-    const fields = form.getFieldValue('fields');
+    const fields = form.getFieldValue('fields') || [];
 
     fields.splice(index, 1);
 
     form.setFieldsValue({ fields });
+    this.fieldsTouched();
   };
 
   handleFieldSubmit = field => {
     const { form } = this.props;
     const { fieldIndex } = this.state;
-    const fields = form.getFieldValue('fields');
+    const fields = form.getFieldValue('fields') || [];
 
     fields.splice(fieldIndex >= 0 ? fieldIndex : fields.length, 1, field);
 
     form.setFieldsValue({ fields });
+    this.fieldsTouched();
   };
 
   handleModalShow = (field, index = -1) => {
@@ -62,22 +64,36 @@ class CollectionsPageEdit extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    const { _, form, isNew, item, handleCreateCollection, handleUpdateCollection } = this.props;
+    const {
+      _,
+      form,
+      isNew,
+      item,
+      handleCreateCollection,
+      handleUpdateCollection,
+      path,
+      pushState,
+    } = this.props;
 
     form.validateFields((err, values) => {
       if (!err) {
         const handler = isNew ? handleCreateCollection : handleUpdateCollection(item.get('id'));
         handler(values).then(() => {
           message.success(_(`messages.collections.${isNew ? 'created' : 'updated'}`));
+          pushState(`${path}/edit/${values.id}`);
         });
       }
     });
   };
 
-  handleTableSort = fields => {
+  handleTableSort = (fields = []) => {
     const { form } = this.props;
-    this.setState({ fieldsTouched: true });
     form.setFieldsValue({ fields });
+    this.fieldsTouched();
+  };
+
+  fieldsTouched = () => {
+    this.setState({ fieldsTouched: true });
   };
 
   render() {
@@ -110,10 +126,11 @@ class CollectionsPageEdit extends Component {
         />
 
         <InputWithId
+          autoGenerateId={isNew}
           form={form}
           idKey="id"
-          idLabel={_('global.id')}
           valueKey="name"
+          idLabel={_('global.id')}
           valueLabel={_('global.name')}
         />
 
@@ -128,12 +145,7 @@ class CollectionsPageEdit extends Component {
           </Button>
         </Divider>
 
-        <FieldModal
-          onSubmit={this.handleFieldSubmit}
-          form={form}
-          fields={fields}
-          ref={this.fieldsModal}
-        />
+        <FieldModal onSubmit={this.handleFieldSubmit} wrappedComponentRef={this.fieldsModal} />
 
         <DraggableTable
           showHeader={false}
@@ -165,7 +177,7 @@ class CollectionsPageEdit extends Component {
                 <Button.Group>
                   <Button icon="edit" onClick={() => this.handleModalShow(field, index)} />
                   <Popconfirm
-                    title={_('global.removeQuestion')}
+                    title={_('global.deleteQuestion')}
                     onConfirm={e => this.handleFieldDelete(e, index)}
                   >
                     <Button icon="delete" type="danger" />
@@ -220,7 +232,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapPropsToFields = ({ item = {} }) =>
-  mapValues(item.toJS(), value => Form.createFormField({ value }));
+  mapValues({ fields: [], ...item.toJS() }, value => Form.createFormField({ value }));
 
 export default compose(
   connect(

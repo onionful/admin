@@ -1,10 +1,10 @@
-import { Button, Table } from 'antd';
+import { Button, message, Popconfirm, Table } from 'antd';
 import { SectionHeader } from 'components/index';
 import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { fetchCollections, getCollections } from 'reducers/collections/actions';
+import { deleteCollection, fetchCollections, getCollections } from 'reducers/collections/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class CollectionsPageList extends Component {
@@ -17,7 +17,21 @@ class CollectionsPageList extends Component {
     handlePush(`${path}/create`);
   };
 
-  onEditClick = ({ id }) => {
+  handleDelete = ({ id }) => {
+    const {
+      _,
+      handleDeleteCollection,
+      handlePush,
+      match: { path },
+    } = this.props;
+
+    handleDeleteCollection(id).then(() => {
+      message.success(_('messages.collections.deleted'));
+      handlePush(`${path}`);
+    });
+  };
+
+  handleEdit = ({ id }) => {
     const {
       handlePush,
       match: { path },
@@ -73,8 +87,13 @@ class CollectionsPageList extends Component {
               align: 'center',
               render: (text, record) => (
                 <Button.Group>
-                  <Button icon="edit" onClick={() => this.onEditClick(record)} />
-                  <Button icon="delete" onClick={() => this.onEditClick(record)} />
+                  <Button icon="edit" onClick={() => this.handleEdit(record)} />
+                  <Popconfirm
+                    title={_('global.deleteQuestion')}
+                    onConfirm={() => this.handleDelete(record)}
+                  >
+                    <Button icon="delete" type="danger" />
+                  </Popconfirm>
                 </Button.Group>
               ),
             },
@@ -89,10 +108,12 @@ CollectionsPageList.propTypes = {
   _: PropTypes.func.isRequired,
   match: PropTypes.match.isRequired,
   data: PropTypes.map,
+  handleDeleteCollection: PropTypes.func,
   handlePush: PropTypes.func,
 };
 
 CollectionsPageList.defaultProps = {
+  handleDeleteCollection: noop,
   handlePush: noop,
   data: Map(),
 };
@@ -102,6 +123,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  handleDeleteCollection: id => dispatch(deleteCollection(id)),
   handlePush: path => dispatch(push(path)),
 });
 

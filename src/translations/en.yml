@@ -38,6 +38,11 @@ collection:
     create: Create new item inside your "${name}" collection
     list: Create and update your "${name}" collection's items
 
+components:
+  inputWithId:
+    idTooltip: Type a capital letter to separate
+    noAutoGenerator: Auto-generating disabled - unlock to edit
+
 menu:
   content: Content
   collection: Collections
@@ -61,7 +66,7 @@ global:
   id: Identifier
   name: Name
   none: none
-  removeQuestion: Are you sure?
+  deleteQuestion: Are you sure?
   save: Save
   selectSpace: Select space
   title: Title
@@ -76,3 +81,4 @@ messages:
   collections:
     created: Collection has been created
     updated: Collection has been updated
+    deleted: Collection has been deleted

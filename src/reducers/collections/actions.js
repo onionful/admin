@@ -26,6 +26,12 @@ export const updateCollection = (id, data) =>
     payload: api.put(`/collections/${id}`, data),
   }));
 
+export const deleteCollection = id =>
+  spaceApi(api => ({
+    type: types.COLLECTION_DELETE,
+    payload: api.delete(`/collections/${id}`),
+  }));
+
 export const getCollections = state => state.getIn(['collections', 'data']);
 
 export const getCollection = (state, id) =>

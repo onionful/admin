@@ -1,10 +1,10 @@
-import { Button, Modal } from 'antd';
+import { Button, Form, Modal } from 'antd';
 import { FieldTypeIcon } from 'components';
 import { types } from 'config/index';
 import { withTranslate } from 'helpers/index';
 import { entries, forEach, isEmpty, mapValues, noop, upperFirst } from 'lodash';
 import { Component, compose, PropTypes, React, styled } from 'utils/create';
-import Attribute from './Attribute';
+import FieldType from './FieldType';
 
 const StyledButton = styled(Button)({
   display: 'flex',
@@ -70,7 +70,7 @@ class FieldModal extends Component {
   };
 
   render() {
-    const { _, form, fields } = this.props;
+    const { _, form } = this.props;
     const { field, type, id, errors, visible } = this.state;
 
     const showBackButton = type && isEmpty(field);
@@ -105,7 +105,11 @@ class FieldModal extends Component {
             </StyledButton>
           ))}
 
-        {type && <Attribute type={type} id={id} form={form} fields={fields} errors={errors} />}
+        {type && (
+          <Form hideRequiredMark>
+            <FieldType type={type} id={id} form={form} errors={errors} />
+          </Form>
+        )}
       </Modal>
     );
   }
@@ -115,11 +119,9 @@ FieldModal.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  fields: PropTypes.fields,
 };
 
-FieldModal.defaultProps = {
-  fields: [],
-};
-
-export default compose(withTranslate)(FieldModal);
+export default compose(
+  withTranslate,
+  Form.create(),
+)(FieldModal);

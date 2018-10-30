@@ -1,7 +1,16 @@
-import { Col, Form, Input, Row } from 'antd';
+import { Col, Form, Icon, Input, Row, Tooltip } from 'antd';
 import { Lock } from 'components';
-import { camelCase, isEmpty } from 'lodash';
-import { Component, PropTypes, React } from 'utils/create';
+import { withTranslate } from 'helpers';
+import { isEmpty, kebabCase } from 'lodash';
+import { Component, compose, PropTypes, React, styled } from 'utils/create';
+
+const NoAutoGenerateIcon = styled(({ className, tooltip }) => (
+  <Tooltip title={tooltip}>
+    <Icon type="disconnect" className={className} />
+  </Tooltip>
+))({
+  marginRight: '1rem',
+});
 
 class InputWithId extends Component {
   constructor(...args) {
@@ -9,17 +18,17 @@ class InputWithId extends Component {
 
     const { form, idKey, valueKey } = this.props;
     const id = form.getFieldValue(idKey);
-    const value = camelCase(form.getFieldValue(valueKey));
+    const value = kebabCase(form.getFieldValue(valueKey));
 
     this.state = { locked: isEmpty(id) || value === id };
   }
 
   handleValueChange = ({ target: { value } }) => {
-    const { form, idKey } = this.props;
+    const { autoGenerateId, form, idKey } = this.props;
     const { locked } = this.state;
 
-    if (locked) {
-      form.setFieldsValue({ [idKey]: camelCase(value) });
+    if (autoGenerateId && locked) {
+      form.setFieldsValue({ [idKey]: value });
     }
   };
 
@@ -30,26 +39,41 @@ class InputWithId extends Component {
   };
 
   render() {
-    const { form, idKey, idLabel, valueKey, valueLabel } = this.props;
+    const { _, autoGenerateId, form, idKey, idLabel, valueKey, valueLabel } = this.props;
     const { locked } = this.state;
 
     return (
       <Row gutter={16}>
         <Col span={12}>
           <Form.Item label={valueLabel}>
-            {form.getFieldDecorator(valueKey, { rules: [{ required: true }] })(
-              <Input onChange={this.handleValueChange} />,
-            )}
+            {form.getFieldDecorator(valueKey, {
+              rules: [{ required: true }],
+            })(<Input onChange={this.handleValueChange} />)}
           </Form.Item>
         </Col>
         <Col span={12}>
           <Form.Item label={idLabel}>
-            {form.getFieldDecorator(idKey, { rules: [{ required: true }] })(
-              <Input
-                disabled={locked}
-                addonAfter={<Lock locked={locked} onLock={this.handleLock} />}
-              />,
-            )}
+            <Tooltip title={locked ? '' : _('components.inputWithId.idTooltip')}>
+              {form.getFieldDecorator(idKey, {
+                rules: [{ required: true }],
+                normalize: kebabCase,
+              })(
+                <Input
+                  addonAfter={
+                    <div>
+                      {!autoGenerateId &&
+                        locked && (
+                          <NoAutoGenerateIcon
+                            tooltip={_('components.inputWithId.noAutoGenerator')}
+                          />
+                        )}
+                      <Lock locked={locked} onLock={this.handleLock} />
+                    </div>
+                  }
+                  disabled={locked}
+                />,
+              )}
+            </Tooltip>
           </Form.Item>
         </Col>
       </Row>
@@ -58,11 +82,17 @@ class InputWithId extends Component {
 }
 
 InputWithId.propTypes = {
+  _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
   idKey: PropTypes.string.isRequired,
   idLabel: PropTypes.string.isRequired,
   valueKey: PropTypes.string.isRequired,
   valueLabel: PropTypes.string.isRequired,
+  autoGenerateId: PropTypes.bool,
 };
 
-export default InputWithId;
+InputWithId.defaultProps = {
+  autoGenerateId: true,
+};
+
+export default compose(withTranslate)(InputWithId);
