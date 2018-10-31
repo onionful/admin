@@ -1,7 +1,7 @@
 import { Col, Form, Icon, Input, Row, Tooltip } from 'antd';
 import { Lock } from 'components';
 import { withTranslate } from 'helpers';
-import { camelCase, isEmpty, noop } from 'lodash';
+import { isEmpty, kebabCase, noop } from 'lodash';
 import { Component, compose, PropTypes, React, styled } from 'utils/create';
 
 const NoAutoGenerateIcon = styled(({ className, tooltip }) => (
@@ -95,7 +95,7 @@ InputWithId.propTypes = {
 
 InputWithId.defaultProps = {
   autoGenerateId: true,
-  normalize: camelCase,
+  normalize: kebabCase,
 };
 
 InputWithId.contextTypes = {

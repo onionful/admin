@@ -1,13 +1,13 @@
 import { InputWithId } from 'components/Form';
 import { withTranslate } from 'helpers';
-import { kebabCase } from 'lodash';
+import { camelCase } from 'lodash';
 import { compose, PropTypes, React } from 'utils/create';
 
 const Name = ({ _, type, form }) => (
   <InputWithId
     idKey="id"
     idLabel={_('collections.attributes.id')}
-    normalize={kebabCase}
+    normalize={camelCase}
     valueKey={type}
     valueLabel={_(`collections.attributes.${type}`)}
     form={form}
