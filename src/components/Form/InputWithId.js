@@ -43,8 +43,6 @@ class InputWithId extends Component {
     const { idValidator = noop } = this.context;
     const { locked } = this.state;
 
-    console.log('idValidator', idValidator);
-
     return (
       <Row gutter={16}>
         <Col span={12}>

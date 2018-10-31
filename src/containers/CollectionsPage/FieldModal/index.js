@@ -48,7 +48,6 @@ class FieldModal extends Component {
           )
           .filter(v => v && v !== field[key]);
 
-        console.log('reserved.includes(value)', reserved.includes(value));
         cb(...(reserved.includes(value) ? [conflictMessage] : []));
       },
       identifierValidator: (first, second) => (rule, value, cb) => {
