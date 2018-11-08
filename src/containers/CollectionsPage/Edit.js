@@ -98,10 +98,10 @@ class CollectionsPageEdit extends Component {
 
   render() {
     const { fieldsTouched } = this.state;
-    const { _, isNew, item, id, form } = this.props;
+    const { _, id, isNew, item, form } = this.props;
 
-    if (id && item.isEmpty()) {
-      throw new Error(_('errors.collectionNotFound'));
+    if (id && !item.get('id')) {
+      // throw new Error(_('errors.collectionNotFound'));
     }
 
     form.getFieldDecorator('fields');
@@ -184,7 +184,7 @@ class CollectionsPageEdit extends Component {
                     title={_('global.deleteQuestion')}
                     onConfirm={e => this.handleFieldDelete(e, index)}
                   >
-                    <Button icon="delete" type="danger" />
+                    <Button icon="delete" type="danger" disabled={field.id === 'id'} />
                   </Popconfirm>
                 </Button.Group>
               ),
@@ -227,6 +227,7 @@ const mapStateToProps = (
 ) => ({
   item: getCollection(state, id),
   isNew: !id,
+  id,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -236,7 +237,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapPropsToFields = ({ item = {} }) =>
-  mapValues({ fields: [], ...item.toJS() }, value => Form.createFormField({ value }));
+  mapValues(item.toJS(), value => Form.createFormField({ value }));
 
 export default compose(
   connect(

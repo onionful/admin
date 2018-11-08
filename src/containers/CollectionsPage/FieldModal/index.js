@@ -40,21 +40,14 @@ class FieldModal extends Component {
     const conflictMessage = _('errors.nameTaken');
 
     return {
+      collection,
       idValidator: key => (rule, value, cb) => {
+        console.log("collection.get('fields')", collection.get('fields'));
         const reserved = []
-          .concat(
-            ...collection.keySeq(),
-            ...collection.get('fields').map(f => [f.get('id'), f.get('identifier')]),
-          )
+          .concat(...collection.keySeq(), ...collection.get('fields').map(f => f.get('id')))
           .filter(v => v && v !== field[key]);
 
         cb(...(reserved.includes(value) ? [conflictMessage] : []));
-      },
-      identifierValidator: (first, second) => (rule, value, cb) => {
-        const { form } = this.props;
-        const values = form.getFieldsValue([first, second]);
-
-        cb(...(values[first] === values[second] ? [conflictMessage] : []));
       },
     };
   }
@@ -120,15 +113,17 @@ class FieldModal extends Component {
         ]}
       >
         {!type &&
-          entries(types).map(([fieldType]) => (
-            <StyledButton key={fieldType} onClick={() => this.handleTypeSelected(fieldType)}>
-              <FieldTypeIcon type={fieldType} />
-              <Description>
-                <strong>{upperFirst(fieldType)}</strong>
-                <small>{_(`collections.types.${fieldType}`)}</small>
-              </Description>
-            </StyledButton>
-          ))}
+          entries(types)
+            .filter(([, { singleton }]) => !singleton)
+            .map(([fieldType]) => (
+              <StyledButton key={fieldType} onClick={() => this.handleTypeSelected(fieldType)}>
+                <FieldTypeIcon type={fieldType} />
+                <Description>
+                  <strong>{upperFirst(fieldType)}</strong>
+                  <small>{_(`collections.types.${fieldType}`)}</small>
+                </Description>
+              </StyledButton>
+            ))}
 
         {type && (
           <Form hideRequiredMark>
@@ -148,8 +143,8 @@ FieldModal.propTypes = {
 };
 
 FieldModal.childContextTypes = {
+  collection: PropTypes.map,
   idValidator: PropTypes.func,
-  identifierValidator: PropTypes.func,
 };
 
 export default compose(

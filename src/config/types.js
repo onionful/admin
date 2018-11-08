@@ -1,10 +1,16 @@
-const common = ['name', 'defaultValue' /* 'required', 'unique' */];
+const common = ['name' /* 'required', 'unique' */];
 
 export default {
+  identifier: {
+    icon: 'globe',
+    color: '#474747',
+    attributes: ['fieldRef'],
+    singleton: true,
+  },
   string: {
     icon: 'font',
     color: '#ffb500',
-    attributes: [...common, 'identifier'],
+    attributes: [...common],
   },
   text: {
     icon: 'align-left',

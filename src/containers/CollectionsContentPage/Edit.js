@@ -3,7 +3,7 @@ import { SectionHeader } from 'components/index';
 import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { Map } from 'immutable';
-import { noop } from 'lodash';
+import { mapValues, noop } from 'lodash';
 import {
   createCollection,
   fetchCollection,
@@ -13,8 +13,6 @@ import {
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 import Field from './Field';
 
-const mapValues = require('lodash');
-
 class CollectionsContentPageEdit extends Component {
   handleCancelClick = () => {
     const { pushState, path } = this.props;
@@ -22,19 +20,10 @@ class CollectionsContentPageEdit extends Component {
     pushState(path);
   };
 
-  handleSubmit = values => {
-    const {
-      isNew,
-      item,
-      pushState,
-      path,
-      handleCreateCollection,
-      handleUpdateCollection,
-    } = this.props;
+  handleSubmit = e => {
+    e.preventDefault();
 
-    (isNew ? handleCreateCollection : handleUpdateCollection(item.get('id')))(values).then(() => {
-      pushState(path);
-    });
+    console.log('submit');
   };
 
   render() {
@@ -76,16 +65,16 @@ CollectionsContentPageEdit.propTypes = {
   collection: PropTypes.map.isRequired,
   form: PropTypes.form.isRequired,
   path: PropTypes.string.isRequired,
-  handleCreateCollection: PropTypes.func,
-  handleUpdateCollection: PropTypes.func,
+  // handleCreateCollection: PropTypes.func,
+  // handleUpdateCollection: PropTypes.func,
   isNew: PropTypes.bool,
   item: PropTypes.map,
   pushState: PropTypes.func,
 };
 
 CollectionsContentPageEdit.defaultProps = {
-  handleCreateCollection: noop,
-  handleUpdateCollection: noop,
+  // handleCreateCollection: noop,
+  // handleUpdateCollection: noop,
   pushState: noop,
   isNew: true,
   item: Map(),

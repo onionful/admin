@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { fromJS } from 'immutable';
 import { spaceApi } from 'utils';
 import * as types from './types';
 
@@ -35,4 +35,5 @@ export const deleteCollection = id =>
 export const getCollections = state => state.getIn(['collections', 'data']);
 
 export const getCollection = (state, id) =>
-  state.getIn(['collections', 'data']).find(item => item.get('id') === id) || Map();
+  state.getIn(['collections', 'data']).find(item => item.get('id') === id) ||
+  fromJS({ fields: [{ id: 'id', name: 'ID', type: 'identifier' }] });

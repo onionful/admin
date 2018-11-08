@@ -27,4 +27,5 @@ Range.propTypes = {
   errors: PropTypes.object.isRequired, // eslint-disable-line
   type: PropTypes.string.isRequired,
 };
+
 export default compose(withTranslate)(Range);

@@ -20,8 +20,8 @@ collections:
   attributes:
     id: Identifier
     name: Name
-    copyValue: Copy value from
     defaultValue: Default value
+    fieldRef: Copy value from
     required: Required
     unique: Unique
     range: Range

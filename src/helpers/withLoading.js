@@ -14,7 +14,7 @@ export default ({ type, action }) => WrappedComponent => {
 
       return (
         <Spin spinning={isLoading}>
-          <WrappedComponent {...this.props} />
+          <WrappedComponent {...this.props} isLoading={isLoading} />
         </Spin>
       );
     }

@@ -16,7 +16,6 @@ const Name = ({ _, type, form }) => (
 
 Name.propTypes = {
   _: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired, // eslint-disable-line
   form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
 };

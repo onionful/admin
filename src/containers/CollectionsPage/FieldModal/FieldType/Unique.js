@@ -13,4 +13,5 @@ Unique.propTypes = {
   form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
 };
+
 export default compose(withTranslate)(Unique);
