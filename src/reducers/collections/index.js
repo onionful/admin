@@ -24,7 +24,7 @@ export default typeToReducer(
         state.merge({
           isLoading: false,
           error: null,
-          data: keyBy(data, 'id'),
+          data: fromJS(keyBy(data, 'id')),
         }),
     },
     [types.COLLECTION_CREATE]: {

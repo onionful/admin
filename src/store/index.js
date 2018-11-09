@@ -1,4 +1,4 @@
-import { connectRouter, routerMiddleware } from 'connected-react-router/immutable';
+import { routerMiddleware } from 'connected-react-router/immutable';
 import { createBrowserHistory } from 'history';
 import { fromJS } from 'immutable';
 import { addTranslationForLanguage, initialize } from 'react-localize-redux';
@@ -29,7 +29,7 @@ export default () => {
     ...enhancers,
   );
 
-  const store = createStore(connectRouter(history)(reducers), initialState, composedEnhancers);
+  const store = createStore(reducers(history), initialState, composedEnhancers);
   sagaMiddleware.run(sagas, store.getState);
 
   store.dispatch(initialize(translations));
