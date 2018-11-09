@@ -11,6 +11,11 @@ export const setSpace = space => ({
   payload: space,
 });
 
+export const deleteSpace = id => ({
+  type: types.SPACES_DELETE,
+  payload: api.delete(`/spaces/${id}`),
+});
+
 export const getSpaces = state => state.getIn(['spaces', 'data']);
 
 export const getCurrentSpace = state => state.getIn(['spaces', 'current']);

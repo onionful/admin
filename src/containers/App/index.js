@@ -11,7 +11,7 @@ import {
   UsersPage,
 } from 'containers';
 import { withTranslate } from 'helpers';
-import { List, Map } from 'immutable';
+import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile } from 'reducers/auth';
@@ -200,7 +200,7 @@ class App extends React.Component {
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
               >
-                {spaces.map(item => (
+                {spaces.toList().map(item => (
                   <Select.Option key={item.get('id')} value={item.get('id')}>
                     {item.get('name')}
                   </Select.Option>
@@ -271,7 +271,7 @@ App.propTypes = {
   profile: PropTypes.map,
   pushState: PropTypes.func,
   space: PropTypes.string,
-  spaces: PropTypes.list,
+  spaces: PropTypes.map,
 };
 
 App.defaultProps = {
@@ -280,7 +280,7 @@ App.defaultProps = {
   isProfileLoading: true,
   profile: Map(),
   space: null,
-  spaces: List(),
+  spaces: Map(),
   collections: Map(),
   handleGetProfile: noop,
   handleLogout: noop,

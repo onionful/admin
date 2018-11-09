@@ -1,7 +1,7 @@
 import { List, Modal } from 'antd';
 import Logo from 'components/Logo';
-import { List as IList } from 'immutable';
 import { noop } from 'lodash';
+import { Map } from 'immutable';
 import { fetchSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors } from 'utils';
 import { Component, connect, PropTypes, React, styled } from 'utils/create';
@@ -61,7 +61,7 @@ class SpacesModal extends Component {
         <List
           bordered
           loading={isLoading}
-          dataSource={spaces}
+          dataSource={spaces.toList()}
           renderItem={item => (
             <Item onClick={() => this.onItemClick(item.get('id'))}>{item.get('name')}</Item>
           )}
@@ -75,11 +75,11 @@ SpacesModal.propTypes = {
   handleFetchSpaces: PropTypes.func,
   handleSetSpace: PropTypes.func,
   isLoading: PropTypes.bool,
-  spaces: PropTypes.list,
+  spaces: PropTypes.map,
 };
 
 SpacesModal.defaultProps = {
-  spaces: IList(),
+  spaces: Map(),
   isLoading: true,
   handleFetchSpaces: noop,
   handleSetSpace: noop,
