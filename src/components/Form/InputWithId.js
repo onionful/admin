@@ -63,12 +63,9 @@ class InputWithId extends Component {
                   disabled={locked}
                   addonAfter={
                     <div>
-                      {!autoGenerateId &&
-                        locked && (
-                          <NoAutoGenerateIcon
-                            tooltip={_('components.inputWithId.noAutoGenerator')}
-                          />
-                        )}
+                      {!autoGenerateId && locked && (
+                        <NoAutoGenerateIcon tooltip={_('components.inputWithId.noAutoGenerator')} />
+                      )}
                       <Lock locked={locked} onLock={this.handleLock} />
                     </div>
                   }

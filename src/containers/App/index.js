@@ -229,31 +229,30 @@ class App extends React.Component {
 
           {!isProfileLoading && !space && !error && <SpacesModal />}
 
-          {!isProfileLoading &&
-            (space || error) && (
-              <Layout>
-                <Container>
-                  {error ? (
-                    <ErrorPage error={error} errorInfo={errorInfo} />
-                  ) : (
-                    <Content>
-                      <Switch>
-                        <Route exact path="/" component={HomePage} />
-                        {menuItems.map(section =>
-                          section.items
-                            // .filter(({ component }) => component)
-                            .map(({ key, render, component }) => (
-                              <Route path={`/${key}`} render={render} component={component} />
-                            )),
-                        )}
-                        <Route component={NotFoundPage} />
-                      </Switch>
-                    </Content>
-                  )}
-                </Container>
-                <Footer style={{ textAlign: 'center' }}>{_('global.copyrights')}</Footer>
-              </Layout>
-            )}
+          {!isProfileLoading && (space || error) && (
+            <Layout>
+              <Container>
+                {error ? (
+                  <ErrorPage error={error} errorInfo={errorInfo} />
+                ) : (
+                  <Content>
+                    <Switch>
+                      <Route exact path="/" component={HomePage} />
+                      {menuItems.map(section =>
+                        section.items
+                          // .filter(({ component }) => component)
+                          .map(({ key, render, component }) => (
+                            <Route path={`/${key}`} render={render} component={component} />
+                          )),
+                      )}
+                      <Route component={NotFoundPage} />
+                    </Switch>
+                  </Content>
+                )}
+              </Container>
+              <Footer style={{ textAlign: 'center' }}>{_('global.copyrights')}</Footer>
+            </Layout>
+          )}
         </Layout>
       </Spin>
     );
