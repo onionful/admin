@@ -53,8 +53,16 @@ class SpacesPageList extends Component {
         dataIndex: 'name',
       },
       {
-        title: _('global.description'),
-        dataIndex: 'description',
+        title: _('global.url'),
+        dataIndex: 'url',
+      },
+      {
+        title: _('global.owners'),
+        dataIndex: 'owners',
+      },
+      {
+        title: _('global.users'),
+        dataIndex: 'users',
       },
     ];
 

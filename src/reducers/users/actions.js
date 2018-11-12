@@ -5,3 +5,5 @@ export const fetchUsers = params => ({
   type: types.USERS_LIST,
   payload: api.get('/users', { params }),
 });
+
+export const findUsers = query => api.get(`/users/find/${query}`);

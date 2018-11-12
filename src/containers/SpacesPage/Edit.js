@@ -1,44 +1,22 @@
-import { Avatar, Button, Divider, Form, Icon, Input, message, Popconfirm, Table } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { SectionHeader } from 'components';
-import { InputWithId } from 'components/Form';
+import { InputWithId, UsersSelect } from 'components/Form';
 import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { mapValues, noop } from 'lodash';
-import moment from 'moment';
-import {
-  createCollection,
-  fetchCollection,
-  getCollection,
-  updateCollection,
-} from 'reducers/collections/actions';
+import { createSpace, fetchSpace, getSpace, updateSpace } from 'reducers/spaces/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
-class CollectionsPageEdit extends Component {
+class SpacesPageEdit extends Component {
   state = {
     fieldsTouched: false,
   };
-
-  constructor(...args) {
-    super(...args);
-
-    this.fieldsModal = React.createRef();
-  }
 
   handleCancelClick = () => {
     const { pushState, path } = this.props;
 
     pushState(path);
-  };
-
-  handleFieldDelete = (e, index) => {
-    const { form } = this.props;
-    const fields = form.getFieldValue('fields') || [];
-
-    fields.splice(index, 1);
-
-    form.setFieldsValue({ fields });
-    this.fieldsTouched();
   };
 
   handleSubmit = e => {
@@ -49,31 +27,21 @@ class CollectionsPageEdit extends Component {
       form,
       isNew,
       item,
-      handleCreateCollection,
-      handleUpdateCollection,
+      handleCreateSpace,
+      handleUpdateSpace,
       path,
       pushState,
     } = this.props;
 
     form.validateFields((err, values) => {
       if (!err) {
-        const handler = isNew ? handleCreateCollection : handleUpdateCollection(item.get('id'));
+        const handler = isNew ? handleCreateSpace : handleUpdateSpace(item.get('id'));
         handler(values).then(() => {
-          message.success(_(`messages.collections.${isNew ? 'created' : 'updated'}`));
+          message.success(_(`messages.spaces.${isNew ? 'created' : 'updated'}`));
           pushState(`${path}/edit/${values.id}`);
         });
       }
     });
-  };
-
-  handleTableSort = (fields = []) => {
-    const { form } = this.props;
-    form.setFieldsValue({ fields });
-    this.fieldsTouched();
-  };
-
-  fieldsTouched = () => {
-    this.setState({ fieldsTouched: true });
   };
 
   render() {
@@ -86,7 +54,6 @@ class CollectionsPageEdit extends Component {
 
     form.getFieldDecorator('fields');
     const touched = fieldsTouched || form.isFieldsTouched();
-    const fields = form.getFieldValue('fields');
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
@@ -114,88 +81,31 @@ class CollectionsPageEdit extends Component {
           valueLabel={_('global.name')}
         />
 
-        <Form.Item label={_('global.description')}>
-          {form.getFieldDecorator('description')(<Input.TextArea autosize />)}
+        <Form.Item label={_('global.url')}>
+          {form.getFieldDecorator('url', { rules: [{ type: 'url' }] })(<Input />)}
         </Form.Item>
 
-        <Divider orientation="right">
-          <Button onClick={() => this.handleModalShow()}>
-            <Icon type="plus" />
-            {_('collections.addField')}
-          </Button>
-        </Divider>
-
-        <Table
-          showHeader={false}
-          pagination={false}
-          dataSource={fields}
-          onSort={this.handleTableSort}
-          rowKey="id"
-          columns={[
-            {
-              title: _('global.id'),
-              dataIndex: 'id',
-              sorter: true,
-            },
-            {
-              title: _('global.name'),
-              dataIndex: 'name',
-            },
-            {
-              title: 'Owner',
-              dataIndex: 'createdBy',
-              render: value => <Avatar src={value} />,
-            },
-            {
-              title: _('global.createdAt'),
-              dataIndex: 'createdAt',
-              render: value => <span title={value}>{moment(value).fromNow()}</span>,
-              sorter: (a, b) => moment(a.createdAt) - moment(b.createdAt),
-            },
-            {
-              title: _('global.updatedAt'),
-              dataIndex: 'updatedAt',
-              render: value => <span title={value}>{moment(value).fromNow()}</span>,
-              sorter: (a, b) => moment(a.updatedAt) - moment(b.updatedAt),
-            },
-            {
-              align: 'center',
-              key: 'actions',
-              width: 100,
-              render: (field, record, index) => (
-                <Button.Group>
-                  <Button icon="edit" onClick={() => this.handleModalShow(field, index)} />
-                  <Popconfirm
-                    title={_('global.deleteQuestion')}
-                    onConfirm={e => this.handleFieldDelete(e, index)}
-                  >
-                    <Button icon="delete" type="danger" disabled={field.id === 'id'} />
-                  </Popconfirm>
-                </Button.Group>
-              ),
-            },
-          ]}
-        />
+        <UsersSelect form={form} id="owners" label={_('global.owners')} />
       </Form>
     );
   }
 }
 
-CollectionsPageEdit.propTypes = {
+SpacesPageEdit.propTypes = {
   _: PropTypes.func.isRequired,
   form: PropTypes.form.isRequired,
   path: PropTypes.string.isRequired,
-  handleCreateCollection: PropTypes.func,
-  handleUpdateCollection: PropTypes.func,
+  handleCreateSpace: PropTypes.func,
+  handleUpdateSpace: PropTypes.func,
   id: PropTypes.string,
   isNew: PropTypes.bool,
   item: PropTypes.map,
   pushState: PropTypes.func,
 };
 
-CollectionsPageEdit.defaultProps = {
-  handleCreateCollection: noop,
-  handleUpdateCollection: noop,
+SpacesPageEdit.defaultProps = {
+  handleCreateSpace: noop,
+  handleUpdateSpace: noop,
   pushState: noop,
   isNew: true,
   id: null,
@@ -210,15 +120,15 @@ const mapStateToProps = (
     },
   },
 ) => ({
-  item: getCollection(state, id),
   isNew: !id,
   id,
+  item: getSpace(state, id),
 });
 
 const mapDispatchToProps = dispatch => ({
   pushState: path => dispatch(push(path)),
-  handleCreateCollection: data => dispatch(createCollection(data)),
-  handleUpdateCollection: id => data => dispatch(updateCollection(id, data)),
+  handleCreateSpace: data => dispatch(createSpace(data)),
+  handleUpdateSpace: id => data => dispatch(updateSpace(id, data)),
 });
 
 const mapPropsToFields = ({ item = {} }) =>
@@ -231,9 +141,9 @@ export default compose(
   ),
   withLoading({
     type: 'collections',
-    action: ({ id }) => id && fetchCollection(id),
+    action: ({ id }) => id && fetchSpace(id),
   }),
   withPermissions(),
   withTranslate,
   Form.create({ mapPropsToFields }),
-)(CollectionsPageEdit);
+)(SpacesPageEdit);
