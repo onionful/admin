@@ -1,9 +1,9 @@
-import { Avatar, Form, Select, Spin } from 'antd';
+import { Form, Select, Spin } from 'antd';
 import { debounce } from 'lodash';
 import { findUsers } from 'reducers/users/actions';
-import { Component, PropTypes, React, styled } from 'utils/create';
+import { Component, PropTypes, React } from 'utils/create';
 
-const UserName = styled.span({ marginLeft: '0.5rem' });
+// const UserName = styled.span({ marginLeft: '0.5rem' });
 
 class UsersSelect extends Component {
   constructor(...args) {
@@ -67,9 +67,10 @@ class UsersSelect extends Component {
             onSearch={this.handleSearch}
           >
             {data.map(d => (
-              <Select.Option key={d.value} disabled>
-                <Avatar size="small" src={d.picture} />
-                <UserName>{d.text}</UserName>
+              <Select.Option key={d.value}>
+                {d.text}
+                {/* <Avatar size="small" src={d.picture} /> */}
+                {/* <UserName>{d.text}</UserName> */}
               </Select.Option>
             ))}
           </Select>,

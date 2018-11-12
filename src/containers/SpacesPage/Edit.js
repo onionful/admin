@@ -9,10 +9,6 @@ import { createSpace, fetchSpace, getSpace, updateSpace } from 'reducers/spaces/
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class SpacesPageEdit extends Component {
-  state = {
-    fieldsTouched: false,
-  };
-
   handleCancelClick = () => {
     const { pushState, path } = this.props;
 
@@ -36,6 +32,7 @@ class SpacesPageEdit extends Component {
     form.validateFields((err, values) => {
       if (!err) {
         const handler = isNew ? handleCreateSpace : handleUpdateSpace(item.get('id'));
+        Object.assign(values, { owners: values.owners.map(({ key }) => key) });
         handler(values).then(() => {
           message.success(_(`messages.spaces.${isNew ? 'created' : 'updated'}`));
           pushState(`${path}/edit/${values.id}`);
@@ -45,15 +42,13 @@ class SpacesPageEdit extends Component {
   };
 
   render() {
-    const { fieldsTouched } = this.state;
     const { _, id, isNew, item, form } = this.props;
 
     if (id && !item.get('id')) {
       // throw new Error(_('errors.collectionNotFound'));
     }
 
-    form.getFieldDecorator('fields');
-    const touched = fieldsTouched || form.isFieldsTouched();
+    const touched = form.isFieldsTouched();
 
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
@@ -68,8 +63,8 @@ class SpacesPageEdit extends Component {
               </Button>
             </Button.Group>
           }
-          description={_(`collections.description.${isNew ? 'create' : 'edit'}`)}
-          title={_(`collections.title.${isNew ? 'create' : 'edit'}`, item)}
+          description={_(`spaces.description.${isNew ? 'create' : 'edit'}`)}
+          title={_(`spaces.title.${isNew ? 'create' : 'edit'}`, item)}
         />
 
         <InputWithId
@@ -140,7 +135,7 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'collections',
+    type: 'spaces',
     action: ({ id }) => id && fetchSpace(id),
   }),
   withPermissions(),

@@ -1,10 +1,10 @@
 collections:
   title:
     list: Collections
-    create: Create new Collection
-    edit: Edit "${name}" Collection
+    create: Create collection
+    edit: Edit collection - ${name}
   description:
-    list: Create and update your own Collections.
+    list: Create and update your collections
     create: Create new type of your collection
     edit: Edit existing collection
   addField: Add new field
@@ -30,13 +30,24 @@ collections:
     multiple: Multiple images
     identifier: Generate identifier
     identifier_placeholder: identifier name, i.e. `id` or `slug`
+
 collection:
   title:
-    create: ${name} - create new item
     list: ${name} - items list
+    create: ${name} - create item
   description:
-    create: Create new item inside your "${name}" collection
     list: Create and update your "${name}" collection's items
+    create: Create new item inside your "${name}" collection
+
+spaces:
+  title:
+    list: Spaces
+    create: Create space
+    edit: Edit space - ${name}
+  description:
+    list: Create and update your spaces
+    create: Create new space
+    edit: Edit existing space
 
 components:
   inputWithId:
