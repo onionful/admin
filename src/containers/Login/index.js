@@ -23,7 +23,7 @@ const Login = ({ handleLogin, isAuthenticated }) =>
   isAuthenticated ? (
     <Redirect to="/" />
   ) : (
-    <StyledRow type="flex" align="middle" justify="center">
+    <StyledRow align="middle" justify="center" type="flex">
       <Col>
         <StyledLogo />
         <Button ghost onClick={handleLogin}>
@@ -40,8 +40,8 @@ Login.propTypes = {
 };
 
 Login.defaultProps = {
-  isAuthenticated: false,
   handleLogin: noop,
+  isAuthenticated: false,
 };
 
 const mapStateToProps = state => ({

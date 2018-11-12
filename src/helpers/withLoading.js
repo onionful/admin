@@ -26,8 +26,8 @@ export default ({ type, action }) => WrappedComponent => {
   };
 
   withLoading.defaultProps = {
-    isLoading: true,
     handleFetch: noop,
+    isLoading: true,
   };
 
   const mapStateToProps = state => ({

@@ -42,7 +42,6 @@ class FieldModal extends Component {
     return {
       collection,
       idValidator: key => (rule, value, cb) => {
-        console.log("collection.get('fields')", collection.get('fields'));
         const reserved = []
           .concat(...collection.keySeq(), ...collection.get('fields').map(f => f.get('id')))
           .filter(v => v && v !== field[key]);
@@ -95,22 +94,28 @@ class FieldModal extends Component {
 
     return (
       <Modal
-        title={_('collections.addField', { type })}
-        visible={visible}
-        onCancel={this.handleCancel}
         footer={[
           showBackButton && (
             <BackButton key="back" type="dashed" onClick={this.handleBack}>
               {_('global.back')}
             </BackButton>
           ),
-          <Button key="cancel" onClick={this.handleCancel}>
+          <Button key="cancel" htmlType="button" onClick={this.handleCancel}>
             {_('global.cancel')}
           </Button>,
-          <Button key="submit" disabled={!type} type="primary" onClick={this.handleSubmit}>
+          <Button
+            key="submit"
+            disabled={!type}
+            htmlType="submit"
+            type="primary"
+            onClick={this.handleSubmit}
+          >
             {_('global.save')}
           </Button>,
         ]}
+        title={_('collections.addField', { type })}
+        visible={visible}
+        onCancel={this.handleCancel}
       >
         {!type &&
           entries(types)
@@ -127,7 +132,7 @@ class FieldModal extends Component {
 
         {type && (
           <Form hideRequiredMark>
-            <FieldType type={type} id={id} form={form} errors={errors} />
+            <FieldType errors={errors} form={form} id={id} type={type} />
           </Form>
         )}
       </Modal>

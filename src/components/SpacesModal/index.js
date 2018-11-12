@@ -52,16 +52,16 @@ class SpacesModal extends Component {
     return (
       <Modal
         visible
+        bodyStyle={{ backgroundColor: colors.background, color: colors.white }}
         closable={false}
         footer={null}
-        bodyStyle={{ backgroundColor: colors.background, color: colors.white }}
       >
         <StyledLogo />
         <Header>Select your current space</Header>
         <List
           bordered
-          loading={isLoading}
           dataSource={spaces.toList()}
+          loading={isLoading}
           renderItem={item => (
             <Item onClick={() => this.onItemClick(item.get('id'))}>{item.get('name')}</Item>
           )}
@@ -79,10 +79,10 @@ SpacesModal.propTypes = {
 };
 
 SpacesModal.defaultProps = {
-  spaces: Map(),
-  isLoading: true,
   handleFetchSpaces: noop,
   handleSetSpace: noop,
+  isLoading: true,
+  spaces: Map(),
 };
 
 const mapStateToProps = state => ({

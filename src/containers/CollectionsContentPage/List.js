@@ -52,19 +52,16 @@ class CollectionsContentPageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={_('collection.title.list', collection)}
-          description={_('collection.description.list', collection)}
           action={
-            <Button onClick={this.onCreateClick} type="primary" icon="plus">
+            <Button htmlType="submit" icon="plus" type="primary" onClick={this.onCreateClick}>
               {_('global.create')}
             </Button>
           }
+          description={_('collection.description.list', collection)}
+          title={_('collection.title.list', collection)}
         />
 
         <Table
-          rowKey="id"
-          dataSource={data.toJS()}
-          size="small"
           columns={[
             ...columns,
             {
@@ -73,12 +70,15 @@ class CollectionsContentPageList extends Component {
               align: 'center',
               render: (text, item) => (
                 <Button.Group>
-                  <Button icon="edit" onClick={() => this.onEditClick(item)} />
-                  <Button icon="delete" onClick={() => this.onEditClick(item)} />
+                  <Button htmlType="button" icon="edit" onClick={() => this.onEditClick(item)} />
+                  <Button htmlType="button" icon="delete" onClick={() => this.onEditClick(item)} />
                 </Button.Group>
               ),
             },
           ]}
+          dataSource={data.toJS()}
+          rowKey="id"
+          size="small"
         />
       </div>
     );
@@ -94,8 +94,8 @@ CollectionsContentPageList.propTypes = {
 };
 
 CollectionsContentPageList.defaultProps = {
-  handlePush: noop,
   data: List(),
+  handlePush: noop,
 };
 
 const mapDispatchToProps = dispatch => ({

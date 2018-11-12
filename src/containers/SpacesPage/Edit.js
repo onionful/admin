@@ -58,26 +58,26 @@ class SpacesPageEdit extends Component {
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <SectionHeader
-          title={_(`collections.title.${isNew ? 'create' : 'edit'}`, item)}
-          description={_(`collections.description.${isNew ? 'create' : 'edit'}`)}
           action={
             <Button.Group>
-              <Button onClick={this.handleCancelClick} icon="rollback">
+              <Button htmlType="button" icon="rollback" onClick={this.handleCancelClick}>
                 {_(`global.${touched ? 'cancel' : 'back'}`)}
               </Button>
-              <Button htmlType="submit" type="primary" icon="save" disabled={!touched}>
+              <Button disabled={!touched} htmlType="submit" icon="save" type="primary">
                 {_('global.save')}
               </Button>
             </Button.Group>
           }
+          description={_(`collections.description.${isNew ? 'create' : 'edit'}`)}
+          title={_(`collections.title.${isNew ? 'create' : 'edit'}`, item)}
         />
 
         <InputWithId
           autoGenerateId={isNew}
           form={form}
           idKey="id"
-          valueKey="name"
           idLabel={_('global.id')}
+          valueKey="name"
           valueLabel={_('global.name')}
         />
 
@@ -106,10 +106,10 @@ SpacesPageEdit.propTypes = {
 SpacesPageEdit.defaultProps = {
   handleCreateSpace: noop,
   handleUpdateSpace: noop,
-  pushState: noop,
-  isNew: true,
   id: null,
+  isNew: true,
   item: Map(),
+  pushState: noop,
 };
 
 const mapStateToProps = (

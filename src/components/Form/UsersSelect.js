@@ -58,17 +58,17 @@ class UsersSelect extends Component {
       <Form.Item label={label}>
         {form.getFieldDecorator(id)(
           <Select
-            mode="multiple"
             labelInValue
-            placeholder="Select users"
-            notFoundContent={fetching ? <Spin size="small" /> : null}
             filterOption={false}
-            onSearch={this.handleSearch}
+            mode="multiple"
+            notFoundContent={fetching ? <Spin size="small" /> : null}
+            placeholder="Select users"
             onChange={this.handleChange}
+            onSearch={this.handleSearch}
           >
             {data.map(d => (
-              <Select.Option key={d.value}>
-                <Avatar size={23} src={d.picture} />
+              <Select.Option key={d.value} disabled>
+                <Avatar size="small" src={d.picture} />
                 <UserName>{d.text}</UserName>
               </Select.Option>
             ))}

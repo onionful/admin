@@ -69,19 +69,16 @@ class SpacesPageList extends Component {
     return (
       <div>
         <SectionHeader
-          title={_('collections.title.list')}
-          description={_('collections.description.list')}
           action={
-            <Button onClick={this.onCreateClick} type="primary" icon="plus">
+            <Button htmlType="submit" icon="plus" type="primary" onClick={this.onCreateClick}>
               {_('global.create')}
             </Button>
           }
+          description={_('collections.description.list')}
+          title={_('collections.title.list')}
         />
 
         <Table
-          rowKey="id"
-          dataSource={data.toList().toJS()}
-          size="small"
           columns={[
             ...columns,
             {
@@ -90,17 +87,20 @@ class SpacesPageList extends Component {
               align: 'center',
               render: (text, record) => (
                 <Button.Group>
-                  <Button icon="edit" onClick={() => this.handleEdit(record)} />
+                  <Button htmlType="button" icon="edit" onClick={() => this.handleEdit(record)} />
                   <Popconfirm
                     title={_('global.deleteQuestion')}
                     onConfirm={() => this.handleDelete(record)}
                   >
-                    <Button icon="delete" type="danger" />
+                    <Button htmlType="button" icon="delete" type="danger" />
                   </Popconfirm>
                 </Button.Group>
               ),
             },
           ]}
+          dataSource={data.toList().toJS()}
+          rowKey="id"
+          size="small"
         />
       </div>
     );
@@ -116,9 +116,9 @@ SpacesPageList.propTypes = {
 };
 
 SpacesPageList.defaultProps = {
+  data: Map(),
   handleDeleteSpace: noop,
   handlePush: noop,
-  data: Map(),
 };
 
 const mapStateToProps = state => ({

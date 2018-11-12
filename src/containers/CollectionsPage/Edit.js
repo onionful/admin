@@ -111,26 +111,26 @@ class CollectionsPageEdit extends Component {
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <SectionHeader
-          title={_(`collections.title.${isNew ? 'create' : 'edit'}`, item)}
-          description={_(`collections.description.${isNew ? 'create' : 'edit'}`)}
           action={
             <Button.Group>
-              <Button onClick={this.handleCancelClick} icon="rollback">
+              <Button htmlType="button" icon="rollback" onClick={this.handleCancelClick}>
                 {_(`global.${touched ? 'cancel' : 'back'}`)}
               </Button>
-              <Button htmlType="submit" type="primary" icon="save" disabled={!touched}>
+              <Button disabled={!touched} htmlType="submit" icon="save" type="primary">
                 {_('global.save')}
               </Button>
             </Button.Group>
           }
+          description={_(`collections.description.${isNew ? 'create' : 'edit'}`)}
+          title={_(`collections.title.${isNew ? 'create' : 'edit'}`, item)}
         />
 
         <InputWithId
           autoGenerateId={isNew}
           form={form}
           idKey="id"
-          valueKey="name"
           idLabel={_('global.id')}
+          valueKey="name"
           valueLabel={_('global.name')}
         />
 
@@ -139,24 +139,19 @@ class CollectionsPageEdit extends Component {
         </Form.Item>
 
         <Divider orientation="right">
-          <Button onClick={() => this.handleModalShow()}>
+          <Button htmlType="button" onClick={() => this.handleModalShow()}>
             <Icon type="plus" />
             {_('collections.addField')}
           </Button>
         </Divider>
 
         <FieldModal
-          onSubmit={this.handleFieldSubmit}
-          wrappedComponentRef={this.fieldsModal}
           collection={item}
+          wrappedComponentRef={this.fieldsModal}
+          onSubmit={this.handleFieldSubmit}
         />
 
         <DraggableTable
-          showHeader={false}
-          pagination={false}
-          dataSource={fields}
-          onSort={this.handleTableSort}
-          rowKey="id"
           columns={[
             {
               align: 'center',
@@ -179,17 +174,31 @@ class CollectionsPageEdit extends Component {
               width: 100,
               render: (field, record, index) => (
                 <Button.Group>
-                  <Button icon="edit" onClick={() => this.handleModalShow(field, index)} />
+                  <Button
+                    htmlType="button"
+                    icon="edit"
+                    onClick={() => this.handleModalShow(field, index)}
+                  />
                   <Popconfirm
                     title={_('global.deleteQuestion')}
                     onConfirm={e => this.handleFieldDelete(e, index)}
                   >
-                    <Button icon="delete" type="danger" disabled={field.id === 'id'} />
+                    <Button
+                      disabled={field.id === 'id'}
+                      htmlType="button"
+                      icon="delete"
+                      type="danger"
+                    />
                   </Popconfirm>
                 </Button.Group>
               ),
             },
           ]}
+          dataSource={fields}
+          pagination={false}
+          rowKey="id"
+          showHeader={false}
+          onSort={this.handleTableSort}
         />
       </Form>
     );
@@ -211,10 +220,10 @@ CollectionsPageEdit.propTypes = {
 CollectionsPageEdit.defaultProps = {
   handleCreateCollection: noop,
   handleUpdateCollection: noop,
-  pushState: noop,
-  isNew: true,
   id: null,
+  isNew: true,
   item: Map(),
+  pushState: noop,
 };
 
 const mapStateToProps = (

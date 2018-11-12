@@ -15,6 +15,11 @@
     "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "jsx-a11y/href-no-hash": 0,
     "react/jsx-filename-extension": [2, { "extensions": [".js"] }],
+    "react/jsx-sort-default-props": 1,
+    "react/jsx-sort-props": [
+      1,
+      { "shorthandFirst": true, "callbacksLast": true, "reservedFirst": true }
+    ],
     "react/sort-prop-types": [1, { "requiredFirst": true }]
   },
   "settings": {

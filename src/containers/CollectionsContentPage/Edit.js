@@ -22,8 +22,6 @@ class CollectionsContentPageEdit extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    console.log('submit');
   };
 
   render() {
@@ -38,22 +36,22 @@ class CollectionsContentPageEdit extends Component {
     return (
       <Form layout="vertical" onSubmit={this.handleSubmit}>
         <SectionHeader
-          title={_(`collection.title.${isNew ? 'create' : 'edit'}`, item)}
-          description={_(`collection.description.${isNew ? 'create' : 'edit'}`)}
           action={
             <Button.Group>
-              <Button onClick={this.handleCancelClick} icon="rollback">
+              <Button htmlType="button" icon="rollback" onClick={this.handleCancelClick}>
                 {_(`global.${touched ? 'cancel' : 'back'}`)}
               </Button>
-              <Button htmlType="submit" type="primary" icon="save">
+              <Button htmlType="submit" icon="save" type="primary">
                 {_('global.save')}
               </Button>
             </Button.Group>
           }
+          description={_(`collection.description.${isNew ? 'create' : 'edit'}`)}
+          title={_(`collection.title.${isNew ? 'create' : 'edit'}`, item)}
         />
 
         {collection.get('fields').map(field => (
-          <Field key={field.get('id')} form={form} field={field} type={field.get('type')} />
+          <Field key={field.get('id')} field={field} form={form} type={field.get('type')} />
         ))}
       </Form>
     );
@@ -75,9 +73,9 @@ CollectionsContentPageEdit.propTypes = {
 CollectionsContentPageEdit.defaultProps = {
   // handleCreateCollection: noop,
   // handleUpdateCollection: noop,
-  pushState: noop,
   isNew: true,
   item: Map(),
+  pushState: noop,
 };
 
 const mapStateToProps = (

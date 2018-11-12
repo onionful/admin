@@ -12,13 +12,13 @@ const Description = styled.p({
 });
 
 const SectionHeader = ({ title, description, action }) => (
-  <Row type="flex" align="middle">
+  <Row align="middle" type="flex">
     <Col span={action ? 12 : 24}>
       <Header>{title}</Header>
       <Description>{description}</Description>
     </Col>
     {action && (
-      <Col span={12} align="right">
+      <Col align="right" span={12}>
         {action}
       </Col>
     )}

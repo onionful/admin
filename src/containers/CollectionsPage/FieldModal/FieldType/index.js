@@ -9,7 +9,7 @@ const FieldType = ({ form, errors, type, id }) =>
   (types[type] || Throw(`Unknown type: ${type}`)).attributes.map(attr => {
     const Instance = getAttribute(attr);
 
-    return <Instance key={[type, id, attr].join()} type={attr} errors={errors || {}} form={form} />;
+    return <Instance key={[type, id, attr].join()} errors={errors || {}} form={form} type={attr} />;
   });
 
 FieldType.propTypes = {

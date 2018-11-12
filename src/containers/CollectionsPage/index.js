@@ -7,7 +7,7 @@ import CollectionsPageList from './List';
 
 const CollectionsPage = ({ match: { path } }) => (
   <Switch>
-    <Route exact path={path} component={CollectionsPageList} />
+    <Route exact component={CollectionsPageList} path={path} />
     <Route
       path={`${path}/create`}
       render={props => <CollectionsPageEdit {...props} path={path} />}

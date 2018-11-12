@@ -6,7 +6,7 @@ import { Component, compose, PropTypes, React, styled } from 'utils/create';
 
 const NoAutoGenerateIcon = styled(({ className, tooltip }) => (
   <Tooltip title={tooltip}>
-    <Icon type="disconnect" className={className} />
+    <Icon className={className} type="disconnect" />
   </Tooltip>
 ))({
   marginRight: '1rem',
@@ -60,7 +60,6 @@ class InputWithId extends Component {
                 rules: [{ required: true }, { validator: idValidator(idKey) }],
               })(
                 <Input
-                  disabled={locked}
                   addonAfter={
                     <div>
                       {!autoGenerateId && locked && (
@@ -69,6 +68,7 @@ class InputWithId extends Component {
                       <Lock locked={locked} onLock={this.handleLock} />
                     </div>
                   }
+                  disabled={locked}
                 />,
               )}
             </Tooltip>

@@ -177,11 +177,11 @@ class App extends React.Component {
     return (
       <Spin spinning={isProfileLoading}>
         <Layout style={{ minHeight: '100vh', maxWidth: media.xl }}>
-          <Sider breakpoint="lg" collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
+          <Sider collapsible breakpoint="lg" collapsed={collapsed} onCollapse={this.onCollapse}>
             <StyledLogo collapsed={collapsed} />
 
             {profile && (
-              <Tooltip placement="right" trigger={collapsed ? 'hover' : ''} title={profileName}>
+              <Tooltip placement="right" title={profileName} trigger={collapsed ? 'hover' : ''}>
                 <UserInfo onClick={this.onProfileClick}>
                   <Avatar size="large" src={profile.get('picture')} />
                   {!collapsed && <div>{profileName}</div>}
@@ -192,13 +192,13 @@ class App extends React.Component {
             <Spin spinning={spaces.isEmpty()}>
               <SpaceSelect
                 showSearch
-                placeholder={_('global.selectSpace')}
-                optionFilterProp="children"
-                onChange={this.onSpaceChange}
-                value={space}
                 filterOption={(input, option) =>
                   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
+                optionFilterProp="children"
+                placeholder={_('global.selectSpace')}
+                value={space}
+                onChange={this.onSpaceChange}
               >
                 {spaces.toList().map(item => (
                   <Select.Option key={item.get('id')} value={item.get('id')}>
@@ -208,9 +208,9 @@ class App extends React.Component {
               </SpaceSelect>
 
               <Menu
-                theme="dark"
-                mode="inline"
                 defaultSelectedKeys={['4']}
+                mode="inline"
+                theme="dark"
                 onClick={this.onMenuClick}
               >
                 {menuItems.map(group => (
@@ -237,12 +237,12 @@ class App extends React.Component {
                 ) : (
                   <Content>
                     <Switch>
-                      <Route exact path="/" component={HomePage} />
+                      <Route exact component={HomePage} path="/" />
                       {menuItems.map(section =>
                         section.items
                           // .filter(({ component }) => component)
                           .map(({ key, render, component }) => (
-                            <Route path={`/${key}`} render={render} component={component} />
+                            <Route component={component} path={`/${key}`} render={render} />
                           )),
                       )}
                       <Route component={NotFoundPage} />
@@ -275,17 +275,17 @@ App.propTypes = {
 };
 
 App.defaultProps = {
-  hasPermission: noop,
-  isAuthenticated: false,
-  isProfileLoading: true,
-  profile: Map(),
-  space: null,
-  spaces: Map(),
   collections: Map(),
   handleGetProfile: noop,
   handleLogout: noop,
   handleSetSpace: noop,
+  hasPermission: noop,
+  isAuthenticated: false,
+  isProfileLoading: true,
+  profile: Map(),
   pushState: noop,
+  space: null,
+  spaces: Map(),
 };
 
 const mapStateToProps = state => ({

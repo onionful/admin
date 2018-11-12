@@ -102,8 +102,8 @@ class DraggableTable extends Component {
     return (
       <StyledTable
         {...this.props}
-        dataSource={dataSource}
         components={{ body: { row: DraggableBodyRow } }}
+        dataSource={dataSource}
         onRow={(record, index) => ({
           index,
           moveRow: this.moveRow,

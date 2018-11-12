@@ -122,11 +122,11 @@ class UsersPage extends Component {
         <h1>Users</h1>
         <Search
           enterButton
-          onChange={this.handleSearchChange}
-          onSearch={this.handleSearch}
           placeholder="Search..."
           suffix={searchSuffix}
           value={searchCurrent}
+          onChange={this.handleSearchChange}
+          onSearch={this.handleSearch}
         />
 
         {search && (
@@ -138,15 +138,15 @@ class UsersPage extends Component {
 
         <Table
           columns={columns}
-          rowKey={({ email, logins_count: count }) => `${email}_${count}`}
           dataSource={data.get('users').toJS()}
           loading={isLoading}
           pagination={{
             pageSize: data.get('limit'),
             total: data.get('total'),
           }}
-          onChange={this.handleTableChange}
+          rowKey={({ email, logins_count: count }) => `${email}_${count}`}
           size="small"
+          onChange={this.handleTableChange}
         />
       </div>
     );
@@ -161,9 +161,9 @@ UsersPage.propTypes = {
 };
 
 UsersPage.defaultProps = {
+  data: Map(),
   handleFetchUsers: noop,
   isLoading: false,
-  data: Map(),
 };
 
 const mapStateToProps = state => ({

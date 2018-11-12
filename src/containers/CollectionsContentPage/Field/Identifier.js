@@ -39,8 +39,8 @@ class Identifier extends Component {
         <Form.Item label={field.get('name')}>
           {form.getFieldDecorator(field.get('id'))(
             <Input
-              disabled={locked}
               addonAfter={<Lock locked={locked} onLock={this.handleLock} />}
+              disabled={locked}
             />,
           )}
         </Form.Item>

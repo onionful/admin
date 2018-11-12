@@ -5,12 +5,12 @@ import { compose, PropTypes, React } from 'utils/create';
 
 const Name = ({ _, type, form }) => (
   <InputWithId
+    form={form}
     idKey="id"
     idLabel={_('collections.attributes.id')}
     normalize={camelCase}
     valueKey={type}
     valueLabel={_(`collections.attributes.${type}`)}
-    form={form}
   />
 );
 

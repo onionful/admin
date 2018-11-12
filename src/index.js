@@ -23,9 +23,9 @@ render(
     <LocalizeProvider>
       <ConnectedRouter history={history}>
         <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/auth" component={Authorize} />
-          <Route path="/" component={App} />
+          <Route exact component={Login} path="/login" />
+          <Route exact component={Authorize} path="/auth" />
+          <Route component={App} path="/" />
         </Switch>
       </ConnectedRouter>
     </LocalizeProvider>
