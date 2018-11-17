@@ -5,3 +5,4 @@ export { default as Lock } from './Lock';
 export { default as Logo } from './Logo';
 export { default as SectionHeader } from './SectionHeader';
 export { default as SpacesModal } from './SpacesModal';
+export { default as UserLabel } from './UserLabel';

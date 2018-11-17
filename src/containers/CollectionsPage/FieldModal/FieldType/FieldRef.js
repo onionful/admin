@@ -1,43 +1,56 @@
 /* eslint-disable react/prefer-stateless-function */
 
-import { Form, Select } from 'antd';
+import { Select } from 'antd';
 import { withTranslate } from 'helpers';
-import { Component, compose, PropTypes, React } from 'utils/create';
+import { formValueSelector, Field } from 'redux-form/immutable';
+import { Component, compose, connect, PropTypes, React } from 'utils/create';
+import { List } from 'immutable';
 
 const allowedRefTypes = ['string'];
 
 class FieldRef extends Component {
   render() {
-    const { _, form, type } = this.props;
-    const { collection } = this.context;
+    const { _, fields, type } = this.props;
+    const { createField } = this.context;
 
     return (
-      <Form.Item label={_('collections.attributes.fieldRef')}>
-        {form.getFieldDecorator(type)(
-          <Select allowClear>
-            {collection
-              .get('fields')
-              .filter(field => allowedRefTypes.includes(field.get('type')))
-              .map(field => (
-                <Select.Option key={field.get('id')} value={field.get('id')}>
-                  {field.get('name')}
-                </Select.Option>
-              ))}
-          </Select>,
-        )}
-      </Form.Item>
+      <Field
+        allowClear
+        component={createField(Select)}
+        label={_('collections.attributes.fieldRef')}
+        name={type}
+      >
+        {fields
+          .filter(field => allowedRefTypes.includes(field.get('type')))
+          .map(field => (
+            <Select.Option key={field.get('id')} value={field.get('id')}>
+              {field.get('name')}
+            </Select.Option>
+          ))}
+      </Field>
     );
   }
 }
 
 FieldRef.propTypes = {
   _: PropTypes.func.isRequired,
-  form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
+  fields: PropTypes.list,
+};
+
+FieldRef.defaultProps = {
+  fields: List(),
 };
 
 FieldRef.contextTypes = {
-  collection: PropTypes.map.isRequired,
+  createField: PropTypes.func.isRequired,
 };
 
-export default compose(withTranslate)(FieldRef);
+const selector = formValueSelector('collections');
+
+const mapDispatchToProps = state => ({ fields: selector(state, 'fields') });
+
+export default compose(
+  connect(mapDispatchToProps),
+  withTranslate,
+)(FieldRef);

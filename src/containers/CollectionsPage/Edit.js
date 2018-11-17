@@ -1,72 +1,30 @@
-import { Button, Divider, Form, Icon, Input, message, Popconfirm } from 'antd';
-import { DraggableTable, FieldTypeIcon, SectionHeader } from 'components';
-import { InputWithId } from 'components/Form';
+import { Button, Form, Input, message } from 'antd';
+import { SectionHeader } from 'components';
+import { Identifier } from 'components/Form';
 import { push } from 'connected-react-router';
-import { withLoading, withPermissions, withTranslate } from 'helpers';
+import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
-import { mapValues, noop } from 'lodash';
+import { noop } from 'lodash';
 import {
   createCollection,
   fetchCollection,
   getCollection,
   updateCollection,
 } from 'reducers/collections/actions';
-import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
-import FieldModal from './FieldModal';
-
-const FieldName = styled.strong({
-  display: 'block',
-});
+import { Field, FieldArray, Fields } from 'redux-form/immutable';
+import { Component, compose, connect, PropTypes, React } from 'utils/create';
+import DraggableFieldsTable from './DraggableFieldsTable';
 
 class CollectionsPageEdit extends Component {
-  state = {
-    fieldIndex: -1,
-    fieldsTouched: false,
-  };
-
-  constructor(...args) {
-    super(...args);
-
-    this.fieldsModal = React.createRef();
-  }
-
   handleCancelClick = () => {
     const { pushState, path } = this.props;
 
     pushState(path);
   };
 
-  handleFieldDelete = (e, index) => {
-    const { form } = this.props;
-    const fields = form.getFieldValue('fields') || [];
-
-    fields.splice(index, 1);
-
-    form.setFieldsValue({ fields });
-    this.fieldsTouched();
-  };
-
-  handleFieldSubmit = field => {
-    const { form } = this.props;
-    const { fieldIndex } = this.state;
-    const fields = form.getFieldValue('fields') || [];
-
-    fields.splice(fieldIndex >= 0 ? fieldIndex : fields.length, 1, field);
-
-    form.setFieldsValue({ fields });
-    this.fieldsTouched();
-  };
-
-  handleModalShow = (field, index = -1) => {
-    this.setState({ fieldIndex: index }, () => this.fieldsModal.current.show(field));
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
+  handleSubmit = values => {
     const {
       _,
-      form,
       isNew,
       item,
       handleCreateCollection,
@@ -75,48 +33,31 @@ class CollectionsPageEdit extends Component {
       pushState,
     } = this.props;
 
-    form.validateFields((err, values) => {
-      if (!err) {
-        const handler = isNew ? handleCreateCollection : handleUpdateCollection(item.get('id'));
-        handler(values).then(() => {
-          message.success(_(`messages.collections.${isNew ? 'created' : 'updated'}`));
-          pushState(`${path}/edit/${values.id}`);
-        });
-      }
-    });
-  };
-
-  handleTableSort = (fields = []) => {
-    const { form } = this.props;
-    form.setFieldsValue({ fields });
-    this.fieldsTouched();
-  };
-
-  fieldsTouched = () => {
-    this.setState({ fieldsTouched: true });
+    (isNew ? handleCreateCollection(values) : handleUpdateCollection(item.get('id'), values)).then(
+      () => {
+        message.success(_(`messages.collections.${isNew ? 'created' : 'updated'}`));
+        pushState(`${path}/edit/${values.get('id')}`);
+      },
+    );
   };
 
   render() {
-    const { fieldsTouched } = this.state;
-    const { _, id, isNew, item, form } = this.props;
+    const { _, dirty, handleSubmit, isNew, item } = this.props;
+    const { createField } = this.context;
 
-    if (id && !item.get('id')) {
-      // throw new Error(_('errors.collectionNotFound'));
+    if (!isNew && !item.has('id')) {
+      throw new Error(_('errors.collectionNotFound'));
     }
 
-    form.getFieldDecorator('fields');
-    const touched = fieldsTouched || form.isFieldsTouched();
-    const fields = form.getFieldValue('fields');
-
     return (
-      <Form layout="vertical" onSubmit={this.handleSubmit}>
+      <Form layout="vertical" onSubmit={handleSubmit(this.handleSubmit)}>
         <SectionHeader
           action={
             <Button.Group>
               <Button htmlType="button" icon="rollback" onClick={this.handleCancelClick}>
-                {_(`global.${touched ? 'cancel' : 'back'}`)}
+                {_(`global.${dirty ? 'cancel' : 'back'}`)}
               </Button>
-              <Button disabled={!touched} htmlType="submit" icon="save" type="primary">
+              <Button disabled={!dirty} htmlType="submit" icon="save" type="primary">
                 {_('global.save')}
               </Button>
             </Button.Group>
@@ -125,93 +66,26 @@ class CollectionsPageEdit extends Component {
           title={_(`collections.title.${isNew ? 'create' : 'edit'}`, item)}
         />
 
-        <InputWithId
-          autoGenerateId={isNew}
-          form={form}
-          idKey="id"
-          idLabel={_('global.id')}
-          valueKey="name"
-          valueLabel={_('global.name')}
+        <Fields autoGenerateId={isNew} component={Identifier} names={['name', 'id']} />
+        <Field
+          autosize
+          component={createField(Input.TextArea)}
+          label={_('global.description')}
+          name="description"
         />
 
-        <Form.Item label={_('global.description')}>
-          {form.getFieldDecorator('description')(<Input.TextArea autosize />)}
-        </Form.Item>
-
-        <Divider orientation="right">
-          <Button htmlType="button" onClick={() => this.handleModalShow()}>
-            <Icon type="plus" />
-            {_('collections.addField')}
-          </Button>
-        </Divider>
-
-        <FieldModal
-          collection={item}
-          wrappedComponentRef={this.fieldsModal}
-          onSubmit={this.handleFieldSubmit}
-        />
-
-        <DraggableTable
-          columns={[
-            {
-              align: 'center',
-              dataIndex: 'type',
-              width: 80,
-              render: type => <FieldTypeIcon type={type} />,
-            },
-            {
-              key: 'name',
-              render: field => (
-                <div>
-                  <FieldName>{field.name}</FieldName>
-                  <small>{field.id}</small>
-                </div>
-              ),
-            },
-            {
-              align: 'center',
-              key: 'actions',
-              width: 100,
-              render: (field, record, index) => (
-                <Button.Group>
-                  <Button
-                    htmlType="button"
-                    icon="edit"
-                    onClick={() => this.handleModalShow(field, index)}
-                  />
-                  <Popconfirm
-                    title={_('global.deleteQuestion')}
-                    onConfirm={e => this.handleFieldDelete(e, index)}
-                  >
-                    <Button
-                      disabled={field.id === 'id'}
-                      htmlType="button"
-                      icon="delete"
-                      type="danger"
-                    />
-                  </Popconfirm>
-                </Button.Group>
-              ),
-            },
-          ]}
-          dataSource={fields}
-          pagination={false}
-          rowKey="id"
-          showHeader={false}
-          onSort={this.handleTableSort}
-        />
+        <FieldArray component={DraggableFieldsTable} name="fields" />
       </Form>
     );
   }
 }
 
 CollectionsPageEdit.propTypes = {
+  ...PropTypes.form,
   _: PropTypes.func.isRequired,
-  form: PropTypes.form.isRequired,
   path: PropTypes.string.isRequired,
   handleCreateCollection: PropTypes.func,
   handleUpdateCollection: PropTypes.func,
-  id: PropTypes.string,
   isNew: PropTypes.bool,
   item: PropTypes.map,
   pushState: PropTypes.func,
@@ -220,10 +94,13 @@ CollectionsPageEdit.propTypes = {
 CollectionsPageEdit.defaultProps = {
   handleCreateCollection: noop,
   handleUpdateCollection: noop,
-  id: null,
   isNew: true,
   item: Map(),
   pushState: noop,
+};
+
+CollectionsPageEdit.contextTypes = {
+  createField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (
@@ -233,20 +110,22 @@ const mapStateToProps = (
       params: { id },
     },
   },
-) => ({
-  item: getCollection(state, id),
-  isNew: !id,
-  id,
-});
+) => {
+  const item = getCollection(state, id);
+  return {
+    id,
+    item,
+    isNew: !id,
+    initialValues: item,
+  };
+};
 
-const mapDispatchToProps = dispatch => ({
-  pushState: path => dispatch(push(path)),
-  handleCreateCollection: data => dispatch(createCollection(data)),
-  handleUpdateCollection: id => data => dispatch(updateCollection(id, data)),
-});
-
-const mapPropsToFields = ({ item = {} }) =>
-  mapValues(item.toJS(), value => Form.createFormField({ value }));
+const mapDispatchToProps = {
+  pushState: push,
+  handleFetchCollection: fetchCollection,
+  handleCreateCollection: createCollection,
+  handleUpdateCollection: updateCollection,
+};
 
 export default compose(
   connect(
@@ -254,10 +133,10 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'collections',
-    action: ({ id }) => id && fetchCollection(id),
+    type: ['collectionsList', 'collectionsItem'],
+    action: ({ id, handleFetchCollection }) => id && handleFetchCollection(id),
   }),
   withPermissions(),
   withTranslate,
-  Form.create({ mapPropsToFields }),
+  withForm('collections'),
 )(CollectionsPageEdit);

@@ -2,6 +2,7 @@ import RPropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IPropTypes from 'react-immutable-proptypes';
 import RRPropTypes from 'react-router-prop-types';
+import { propTypes as RFPropTypes } from 'redux-form/immutable';
 
 export { default as styled, css } from 'react-emotion';
 export { compose } from 'redux';
@@ -12,9 +13,10 @@ export const PropTypes = {
   ...IPropTypes,
   ...RPropTypes,
   ...RRPropTypes,
-  form: RPropTypes.shape({
-    validateFields: RPropTypes.func,
-  }),
+  // form: RPropTypes.shape({
+  //   validateFields: RPropTypes.func,
+  // }),
+  form: RFPropTypes,
   fields: RPropTypes.arrayOf(
     RPropTypes.shape({
       id: RPropTypes.string.isRequired,

@@ -1,17 +1,12 @@
-import { Button, Form } from 'antd';
-import { SectionHeader } from 'components/index';
+import { Button, Form, message } from 'antd';
+import { SectionHeader } from 'components';
 import { push } from 'connected-react-router';
-import { withLoading, withPermissions, withTranslate } from 'helpers/index';
+import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
-import { mapValues, noop } from 'lodash';
-import {
-  createCollection,
-  fetchCollection,
-  getCollection,
-  updateCollection,
-} from 'reducers/collections/actions';
+import { noop } from 'lodash';
+import { createContent, fetchContent, getContent, updateContent } from 'reducers/content/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
-import Field from './Field';
+import FieldComponent from './FieldComponent';
 
 class CollectionsContentPageEdit extends Component {
   handleCancelClick = () => {
@@ -20,28 +15,38 @@ class CollectionsContentPageEdit extends Component {
     pushState(path);
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
+  handleSubmit = values => {
+    const {
+      _,
+      isNew,
+      item,
+      handleCreateContent,
+      handleUpdateContent,
+      path,
+      pushState,
+    } = this.props;
+    (isNew ? handleCreateContent(values) : handleUpdateContent(item.get('id'), values)).then(() => {
+      message.success(_(`messages.content.${isNew ? 'created' : 'updated'}`));
+      pushState(`${path}/edit/${values.get('id')}`);
+    });
   };
 
   render() {
-    const { _, form, isNew, collection, item } = this.props;
+    const { _, dirty, handleSubmit, isNew, collection, item } = this.props;
 
     if (!isNew && item.isEmpty()) {
       // throw new Error(_('errors.collectionNotFound'));
     }
 
-    const touched = form.isFieldsTouched();
-
     return (
-      <Form layout="vertical" onSubmit={this.handleSubmit}>
+      <Form layout="vertical" onSubmit={handleSubmit(this.handleSubmit)}>
         <SectionHeader
           action={
             <Button.Group>
               <Button htmlType="button" icon="rollback" onClick={this.handleCancelClick}>
-                {_(`global.${touched ? 'cancel' : 'back'}`)}
+                {_(`global.${dirty ? 'cancel' : 'back'}`)}
               </Button>
-              <Button htmlType="submit" icon="save" type="primary">
+              <Button disabled={!dirty} htmlType="submit" icon="save" type="primary">
                 {_('global.save')}
               </Button>
             </Button.Group>
@@ -51,7 +56,7 @@ class CollectionsContentPageEdit extends Component {
         />
 
         {collection.get('fields').map(field => (
-          <Field key={field.get('id')} field={field} form={form} type={field.get('type')} />
+          <FieldComponent key={field.get('id')} field={field} />
         ))}
       </Form>
     );
@@ -59,20 +64,20 @@ class CollectionsContentPageEdit extends Component {
 }
 
 CollectionsContentPageEdit.propTypes = {
+  ...PropTypes.form,
   _: PropTypes.func.isRequired,
   collection: PropTypes.map.isRequired,
-  form: PropTypes.form.isRequired,
   path: PropTypes.string.isRequired,
-  // handleCreateCollection: PropTypes.func,
-  // handleUpdateCollection: PropTypes.func,
+  handleCreateContent: PropTypes.func,
+  handleUpdateContent: PropTypes.func,
   isNew: PropTypes.bool,
   item: PropTypes.map,
   pushState: PropTypes.func,
 };
 
 CollectionsContentPageEdit.defaultProps = {
-  // handleCreateCollection: noop,
-  // handleUpdateCollection: noop,
+  handleCreateContent: noop,
+  handleUpdateContent: noop,
   isNew: true,
   item: Map(),
   pushState: noop,
@@ -86,29 +91,26 @@ const mapStateToProps = (
     },
   },
 ) => ({
-  item: getCollection(state, id),
+  item: getContent(state, id),
   isNew: !id,
 });
 
-const mapDispatchToProps = dispatch => ({
-  pushState: path => dispatch(push(path)),
-  handleCreateCollection: data => dispatch(createCollection(data)),
-  handleUpdateCollection: id => data => dispatch(updateCollection(id, data)),
-});
-
-const mapPropsToFields = ({ item = {} }) =>
-  mapValues(item.toJS(), value => Form.createFormField({ value }));
+const mapDispatchToProps = {
+  pushState: push,
+  handleCreateContent: createContent,
+  handleUpdateContent: updateContent,
+};
 
 export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps,
   ),
+  withForm('content'),
   withLoading({
-    type: 'collections',
-    action: ({ id }) => id && fetchCollection(id),
+    type: ['contentList', 'contentItem'],
+    action: ({ id }) => id && fetchContent(id),
   }),
   withPermissions(),
   withTranslate,
-  Form.create({ mapPropsToFields }),
 )(CollectionsContentPageEdit);

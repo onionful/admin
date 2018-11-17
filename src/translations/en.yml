@@ -50,7 +50,7 @@ spaces:
     edit: Edit existing space
 
 components:
-  inputWithId:
+  identifier:
     idTooltip: Type a capital letter to separate
     noAutoGenerator: Auto-generating disabled - unlock to edit
 

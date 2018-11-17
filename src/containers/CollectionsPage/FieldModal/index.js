@@ -1,9 +1,11 @@
-import { Button, Form, Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { FieldTypeIcon } from 'components';
-import { types } from 'config/index';
-import { withTranslate } from 'helpers/index';
-import { entries, forEach, isEmpty, mapValues, noop, upperFirst } from 'lodash';
-import { Component, compose, PropTypes, React, styled } from 'utils/create';
+import { types } from 'config';
+import { withForm, withTranslate } from 'helpers';
+import { Map } from 'immutable';
+import { entries, upperFirst } from 'lodash';
+import { Field, formValueSelector } from 'redux-form/lib/immutable';
+import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
 import FieldType from './FieldType';
 
 const StyledButton = styled(Button)({
@@ -26,81 +28,26 @@ const Description = styled.div({
 });
 
 class FieldModal extends Component {
-  state = {
-    field: {},
-    type: undefined,
-    id: undefined,
-    errors: null,
-    visible: false,
-  };
-
-  getChildContext() {
-    const { _, collection } = this.props;
-    const { field } = this.state;
-    const conflictMessage = _('errors.nameTaken');
-
-    return {
-      collection,
-      idValidator: key => (rule, value, cb) => {
-        const reserved = []
-          .concat(...collection.keySeq(), ...collection.get('fields').map(f => f.get('id')))
-          .filter(v => v && v !== field[key]);
-
-        cb(...(reserved.includes(value) ? [conflictMessage] : []));
-      },
-    };
-  }
-
-  handleBack = () => {
-    this.setState({ type: undefined });
-  };
-
-  handleCancel = () => {
-    this.setState({ visible: false });
-  };
-
-  handleSubmit = () => {
-    const { onSubmit, form } = this.props;
-    const { type } = this.state;
-
-    form.validateFields((errors, values) => {
-      if (errors) {
-        this.setState({ errors });
-      } else {
-        this.setState({ errors, visible: false }, () => onSubmit({ ...values, type }));
-      }
-    });
-  };
-
   handleTypeSelected = type => {
-    this.setState({ type });
-  };
+    const { change } = this.props;
 
-  show = (field = {}) => {
-    const { form } = this.props;
-
-    this.setState({ field, type: field.type, id: field.id, visible: true });
-
-    const values = Object.assign(mapValues(form.getFieldsValue(), noop), field);
-    forEach(values, (initialValue, key) => form.getFieldDecorator(key, { initialValue }));
-    form.resetFields();
+    change('type', type);
   };
 
   render() {
-    const { _, form } = this.props;
-    const { field, type, id, errors, visible } = this.state;
+    const { _, handleSubmit, field, onCancel, onSubmit, type, visible } = this.props;
 
-    const showBackButton = type && isEmpty(field);
+    const showBackButton = type && field.isEmpty();
 
     return (
       <Modal
         footer={[
           showBackButton && (
-            <BackButton key="back" type="dashed" onClick={this.handleBack}>
+            <BackButton key="back" type="dashed" onClick={() => this.handleTypeSelected(null)}>
               {_('global.back')}
             </BackButton>
           ),
-          <Button key="cancel" htmlType="button" onClick={this.handleCancel}>
+          <Button key="cancel" htmlType="button" onClick={onCancel}>
             {_('global.cancel')}
           </Button>,
           <Button
@@ -108,16 +55,20 @@ class FieldModal extends Component {
             disabled={!type}
             htmlType="submit"
             type="primary"
-            onClick={this.handleSubmit}
+            onClick={handleSubmit(onSubmit)}
           >
             {_('global.save')}
           </Button>,
         ]}
         title={_('collections.addField', { type })}
         visible={visible}
-        onCancel={this.handleCancel}
+        onCancel={onCancel}
       >
-        {!type &&
+        <Field component="input" name="type" type="hidden" value={type} />
+
+        {type ? (
+          <FieldType field={field} type={type} />
+        ) : (
           entries(types)
             .filter(([, { singleton }]) => !singleton)
             .map(([fieldType]) => (
@@ -128,12 +79,7 @@ class FieldModal extends Component {
                   <small>{_(`collections.types.${fieldType}`)}</small>
                 </Description>
               </StyledButton>
-            ))}
-
-        {type && (
-          <Form hideRequiredMark>
-            <FieldType errors={errors} form={form} id={id} type={type} />
-          </Form>
+            ))
         )}
       </Modal>
     );
@@ -141,18 +87,31 @@ class FieldModal extends Component {
 }
 
 FieldModal.propTypes = {
+  ...PropTypes.form,
   _: PropTypes.func.isRequired,
-  collection: PropTypes.map.isRequired,
-  form: PropTypes.form.isRequired,
+  onCancel: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  visible: PropTypes.bool.isRequired,
+  field: PropTypes.map,
+  fieldName: PropTypes.string,
+  type: PropTypes.string,
 };
 
-FieldModal.childContextTypes = {
-  collection: PropTypes.map,
-  idValidator: PropTypes.func,
+FieldModal.defaultProps = {
+  field: Map(),
+  fieldName: null,
+  type: null,
 };
+
+const selector = formValueSelector('fieldModal');
+
+const mapStateToProps = (state, { field }) => ({
+  initialValues: field,
+  type: selector(state, 'type'),
+});
 
 export default compose(
+  connect(mapStateToProps),
   withTranslate,
-  Form.create(),
+  withForm('fieldModal', { enableReinitialize: true }),
 )(FieldModal);

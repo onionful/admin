@@ -13,7 +13,7 @@ const Stench = styled.div({
   whiteSpace: 'pre',
 
   '&:after': {
-    content: '~\\A~',
+    content: '"~\\A~"',
     display: 'inline-block',
     transform: 'rotate(90deg)',
   },

@@ -2,7 +2,7 @@ import { Table } from 'antd';
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { colors } from 'utils';
-import { Component, css, PropTypes, React, styled } from 'utils/create';
+import { css, PropTypes, React, styled } from 'utils/create';
 
 const StyledTable = styled(Table)({
   '& table': {
@@ -19,7 +19,7 @@ const BodyRow = ({
   isOver,
   connectDragSource,
   connectDropTarget,
-  moveRow,
+  onSort,
   dragRow,
   clientOffset,
   sourceClientOffset,
@@ -53,11 +53,11 @@ const BodyRow = ({
 const DraggableBodyRow = DropTarget(
   'row',
   {
-    drop: ({ index, moveRow }, monitor) => {
+    drop: ({ index, onSort }, monitor) => {
       const dragIndex = monitor.getItem().index;
 
       if (dragIndex !== index) {
-        moveRow(dragIndex, index);
+        onSort(dragIndex, index);
         monitor.getItem().index = index; // eslint-disable-line no-param-reassign
       }
     },
@@ -76,42 +76,13 @@ const DraggableBodyRow = DropTarget(
   }))(BodyRow),
 );
 
-class DraggableTable extends Component {
-  static getDerivedStateFromProps(props) {
-    const { dataSource } = props;
-
-    return { dataSource };
-  }
-
-  state = {
-    dataSource: [],
-  };
-
-  moveRow = (from, to) => {
-    const { dataSource } = this.state;
-    const { onSort } = this.props;
-
-    dataSource.splice(to, 0, ...dataSource.splice(from, 1));
-
-    this.setState({ dataSource }, () => onSort(dataSource));
-  };
-
-  render() {
-    const { dataSource } = this.state;
-
-    return (
-      <StyledTable
-        {...this.props}
-        components={{ body: { row: DraggableBodyRow } }}
-        dataSource={dataSource}
-        onRow={(record, index) => ({
-          index,
-          moveRow: this.moveRow,
-        })}
-      />
-    );
-  }
-}
+const DraggableTable = ({ onSort, ...props }) => (
+  <StyledTable
+    {...props}
+    components={{ body: { row: DraggableBodyRow } }}
+    onRow={(record, index) => ({ index, onSort })}
+  />
+);
 
 DraggableTable.propTypes = {
   onSort: PropTypes.func.isRequired,

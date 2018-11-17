@@ -1,9 +1,9 @@
-import { Form, Select, Spin } from 'antd';
-import { debounce } from 'lodash';
-import { findUsers } from 'reducers/users/actions';
-import { Component, PropTypes, React } from 'utils/create';
-
-// const UserName = styled.span({ marginLeft: '0.5rem' });
+import { Select, Spin } from 'antd';
+import { UserLabel } from 'components';
+import { fromJS, List } from 'immutable';
+import { debounce, noop } from 'lodash';
+import { fetchLabels, findUsers } from 'reducers/users/actions';
+import { Component, connect, PropTypes, React } from 'utils/create';
 
 class UsersSelect extends Component {
   constructor(...args) {
@@ -18,7 +18,11 @@ class UsersSelect extends Component {
     fetching: false,
   };
 
-  handleChange = () => {
+  handleChange = values => {
+    const { onChange } = this.props;
+
+    onChange(fromJS(values.map(({ key }) => key)));
+
     this.setState({
       data: [],
       fetching: false,
@@ -39,51 +43,58 @@ class UsersSelect extends Component {
         return;
       }
 
-      this.setState({
-        fetching: false,
-        data: users.map(user => ({
-          text: user.name,
-          value: user.user_id,
-          picture: user.picture,
-        })),
-      });
+      const { handleFetchLabels } = this.props;
+      handleFetchLabels(users.map(user => user.user_id)).then(() =>
+        this.setState({
+          fetching: false,
+          data: users.map(user => ({ ...user, id: user.user_id })),
+        }),
+      );
     });
   };
 
   render() {
-    const { form, id, label } = this.props;
+    const { value } = this.props;
     const { fetching, data } = this.state;
 
     return (
-      <Form.Item label={label}>
-        {form.getFieldDecorator(id)(
-          <Select
-            labelInValue
-            filterOption={false}
-            mode="multiple"
-            notFoundContent={fetching ? <Spin size="small" /> : null}
-            placeholder="Select users"
-            onChange={this.handleChange}
-            onSearch={this.handleSearch}
-          >
-            {data.map(d => (
-              <Select.Option key={d.value}>
-                {d.text}
-                {/* <Avatar size="small" src={d.picture} /> */}
-                {/* <UserName>{d.text}</UserName> */}
-              </Select.Option>
-            ))}
-          </Select>,
-        )}
-      </Form.Item>
+      <Select
+        labelInValue
+        filterOption={false}
+        mode="multiple"
+        notFoundContent={fetching ? <Spin size="small" /> : null}
+        placeholder="Select users"
+        value={value.toArray().map(id => ({ key: id, label: <UserLabel id={id} /> }))}
+        onChange={this.handleChange}
+        onSearch={this.handleSearch}
+      >
+        {data.map(({ id }) => (
+          <Select.Option key={id}>
+            <UserLabel id={id} />
+          </Select.Option>
+        ))}
+      </Select>
     );
   }
 }
 
 UsersSelect.propTypes = {
-  form: PropTypes.form.isRequired,
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  handleFetchLabels: PropTypes.func,
+  onChange: PropTypes.func,
+  value: PropTypes.list,
 };
 
-export default UsersSelect;
+UsersSelect.defaultProps = {
+  handleFetchLabels: noop,
+  onChange: noop,
+  value: List(),
+};
+
+const mapDispatchToProps = {
+  handleFetchLabels: fetchLabels,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(UsersSelect);

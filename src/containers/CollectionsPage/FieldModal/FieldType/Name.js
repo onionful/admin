@@ -1,22 +1,11 @@
-import { InputWithId } from 'components/Form';
+import { Identifier } from 'components/Form';
 import { withTranslate } from 'helpers';
-import { camelCase } from 'lodash';
+import { Fields } from 'redux-form/immutable';
 import { compose, PropTypes, React } from 'utils/create';
 
-const Name = ({ _, type, form }) => (
-  <InputWithId
-    form={form}
-    idKey="id"
-    idLabel={_('collections.attributes.id')}
-    normalize={camelCase}
-    valueKey={type}
-    valueLabel={_(`collections.attributes.${type}`)}
-  />
-);
+const Name = ({ type }) => <Fields component={Identifier} names={[type, 'id']} />;
 
 Name.propTypes = {
-  _: PropTypes.func.isRequired,
-  form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
 };
 

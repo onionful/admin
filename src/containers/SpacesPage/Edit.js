@@ -1,64 +1,53 @@
-import { Button, Form, Input, message } from 'antd';
+import { Button, Input, message } from 'antd';
 import { SectionHeader } from 'components';
-import { InputWithId, UsersSelect } from 'components/Form';
+import { Identifier, UsersSelect } from 'components/Form';
 import { push } from 'connected-react-router';
-import { withLoading, withPermissions, withTranslate } from 'helpers';
+import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
-import { mapValues, noop } from 'lodash';
+import { noop } from 'lodash';
 import { createSpace, fetchSpace, getSpace, updateSpace } from 'reducers/spaces/actions';
+import { fetchLabels } from 'reducers/users/actions';
+import { Field, Fields, Form } from 'redux-form/immutable';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class SpacesPageEdit extends Component {
+  componentDidMount() {
+    const { handleFetchLabels, item } = this.props;
+    const { owners = [], users = [] } = item.toJS();
+    handleFetchLabels(owners, users);
+  }
+
   handleCancelClick = () => {
     const { pushState, path } = this.props;
 
     pushState(path);
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-
-    const {
-      _,
-      form,
-      isNew,
-      item,
-      handleCreateSpace,
-      handleUpdateSpace,
-      path,
-      pushState,
-    } = this.props;
-
-    form.validateFields((err, values) => {
-      if (!err) {
-        const handler = isNew ? handleCreateSpace : handleUpdateSpace(item.get('id'));
-        Object.assign(values, { owners: values.owners.map(({ key }) => key) });
-        handler(values).then(() => {
-          message.success(_(`messages.spaces.${isNew ? 'created' : 'updated'}`));
-          pushState(`${path}/edit/${values.id}`);
-        });
-      }
+  handleSubmit = values => {
+    const { _, isNew, item, handleCreateSpace, handleUpdateSpace, path, pushState } = this.props;
+    (isNew ? handleCreateSpace(values) : handleUpdateSpace(item.get('id'), values)).then(() => {
+      message.success(_(`messages.spaces.${isNew ? 'created' : 'updated'}`));
+      pushState(`${path}/edit/${values.get('id')}`);
     });
   };
 
   render() {
-    const { _, id, isNew, item, form } = this.props;
+    const { _, isNew, item, dirty, handleSubmit } = this.props;
+    const { createField } = this.context;
 
-    if (id && !item.get('id')) {
-      // throw new Error(_('errors.collectionNotFound'));
+    if (!isNew && item.isEmpty()) {
+      throw new Error(_('errors.collectionNotFound'));
     }
 
-    const touched = form.isFieldsTouched();
-
     return (
-      <Form layout="vertical" onSubmit={this.handleSubmit}>
+      <Form layout="vertical" onSubmit={handleSubmit(this.handleSubmit)}>
         <SectionHeader
           action={
             <Button.Group>
               <Button htmlType="button" icon="rollback" onClick={this.handleCancelClick}>
-                {_(`global.${touched ? 'cancel' : 'back'}`)}
+                {_(`global.${dirty ? 'cancel' : 'back'}`)}
               </Button>
-              <Button disabled={!touched} htmlType="submit" icon="save" type="primary">
+              <Button disabled={!dirty} htmlType="submit" icon="save" type="primary">
                 {_('global.save')}
               </Button>
             </Button.Group>
@@ -67,32 +56,21 @@ class SpacesPageEdit extends Component {
           title={_(`spaces.title.${isNew ? 'create' : 'edit'}`, item)}
         />
 
-        <InputWithId
-          autoGenerateId={isNew}
-          form={form}
-          idKey="id"
-          idLabel={_('global.id')}
-          valueKey="name"
-          valueLabel={_('global.name')}
-        />
-
-        <Form.Item label={_('global.url')}>
-          {form.getFieldDecorator('url', { rules: [{ type: 'url' }] })(<Input />)}
-        </Form.Item>
-
-        <UsersSelect form={form} id="owners" label={_('global.owners')} />
+        <Fields autoGenerateId={isNew} component={Identifier} names={['name', 'id']} />
+        <Field component={createField(Input)} label={_('global.url')} name="url" type="url" />
+        <Field component={createField(UsersSelect)} label={_('global.owners')} name="owners" />
       </Form>
     );
   }
 }
 
 SpacesPageEdit.propTypes = {
+  ...PropTypes.form,
   _: PropTypes.func.isRequired,
-  form: PropTypes.form.isRequired,
   path: PropTypes.string.isRequired,
   handleCreateSpace: PropTypes.func,
+  handleFetchLabels: PropTypes.func,
   handleUpdateSpace: PropTypes.func,
-  id: PropTypes.string,
   isNew: PropTypes.bool,
   item: PropTypes.map,
   pushState: PropTypes.func,
@@ -100,11 +78,15 @@ SpacesPageEdit.propTypes = {
 
 SpacesPageEdit.defaultProps = {
   handleCreateSpace: noop,
+  handleFetchLabels: noop,
   handleUpdateSpace: noop,
-  id: null,
   isNew: true,
   item: Map(),
   pushState: noop,
+};
+
+SpacesPageEdit.contextTypes = {
+  createField: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (
@@ -114,20 +96,23 @@ const mapStateToProps = (
       params: { id },
     },
   },
-) => ({
-  isNew: !id,
-  id,
-  item: getSpace(state, id),
-});
+) => {
+  const item = getSpace(state, id);
+  return {
+    id,
+    item,
+    isNew: !id,
+    initialValues: item,
+  };
+};
 
-const mapDispatchToProps = dispatch => ({
-  pushState: path => dispatch(push(path)),
-  handleCreateSpace: data => dispatch(createSpace(data)),
-  handleUpdateSpace: id => data => dispatch(updateSpace(id, data)),
-});
-
-const mapPropsToFields = ({ item = {} }) =>
-  mapValues(item.toJS(), value => Form.createFormField({ value }));
+const mapDispatchToProps = {
+  pushState: push,
+  handleCreateSpace: createSpace,
+  handleFetchSpace: fetchSpace,
+  handleUpdateSpace: updateSpace,
+  handleFetchLabels: fetchLabels,
+};
 
 export default compose(
   connect(
@@ -135,10 +120,10 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'spaces',
-    action: ({ id }) => id && fetchSpace(id),
+    type: ['spacesList', 'spacesItem'],
+    action: ({ id, handleFetchSpace }) => id && handleFetchSpace(id),
   }),
   withPermissions(),
   withTranslate,
-  Form.create({ mapPropsToFields }),
+  withForm('spaces'),
 )(SpacesPageEdit);

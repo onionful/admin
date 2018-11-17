@@ -133,7 +133,7 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'collections',
+    type: 'collectionsList',
     action: () => fetchCollections(),
   }),
   withPermissions(),

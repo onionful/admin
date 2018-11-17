@@ -5,6 +5,8 @@ import { combineReducers } from 'redux-immutable';
 import auth from './auth';
 import collections from './collections';
 import content from './content';
+import errors from './errors';
+import loading from './loading';
 import spaces from './spaces';
 import users from './users';
 
@@ -16,6 +18,8 @@ export default history =>
     auth,
     collections,
     content,
+    errors,
+    loading,
     spaces,
     users,
   });

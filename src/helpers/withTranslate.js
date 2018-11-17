@@ -23,7 +23,7 @@ export default WrappedComponent => {
       getTranslate(state.get('localize'))(id, data instanceof Map ? data.toJS() : data, options),
   });
 
-  const WithTranslateComposed = compose(
+  return compose(
     connect(
       mapStateToProps,
       null,
@@ -32,6 +32,4 @@ export default WrappedComponent => {
     ),
     withLocalize,
   )(WithTranslate);
-
-  return React.forwardRef((props, ref) => <WithTranslateComposed {...props} forwardedRef={ref} />);
 };

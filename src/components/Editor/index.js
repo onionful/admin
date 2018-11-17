@@ -3,7 +3,6 @@ import { EditorState, RichUtils } from 'draft-js';
 import createBlockBreakoutPlugin from 'draft-js-block-breakout-plugin';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import EditorX from 'draft-js-plugins-editor';
-/* eslint-disable */
 import { Component, React } from 'utils/create';
 
 const options = {
@@ -35,7 +34,6 @@ class Editor extends Component {
   };
 
   onChange = editorState => {
-    // console.log('change', stateToMarkdown(editorState.getCurrentContent()));
     this.setState({ editorState });
   };
 
@@ -46,8 +44,8 @@ class Editor extends Component {
       <EditorX
         editorState={editorState}
         handleKeyCommand={this.handleKeyCommand}
-        onChange={this.onChange}
         plugins={[blockBreakoutPlugin]}
+        onChange={this.onChange}
       />
     );
   }

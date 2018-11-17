@@ -35,5 +35,5 @@ export const deleteCollection = id =>
 export const getCollections = state => state.getIn(['collections', 'data']);
 
 export const getCollection = (state, id) =>
-  state.getIn(['collections', 'data']).find(item => item.get('id') === id) ||
+  state.getIn(['collections', 'data', id]) ||
   fromJS({ fields: [{ id: 'id', name: 'ID', type: 'identifier' }] });

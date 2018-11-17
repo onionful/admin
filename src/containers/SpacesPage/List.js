@@ -136,7 +136,7 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'collections',
+    type: 'spacesList',
     action: () => fetchSpaces(),
   }),
   withPermissions(),

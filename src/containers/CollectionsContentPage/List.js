@@ -108,7 +108,7 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'collections',
+    type: 'collectionsList',
     action: () => fetchCollection('aktualnosci'),
   }),
   withPermissions(),

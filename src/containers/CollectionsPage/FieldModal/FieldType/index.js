@@ -5,21 +5,15 @@ import * as components from './components';
 
 const getAttribute = type => components[type] || Throw(`Unknown attribute: ${type}`);
 
-const FieldType = ({ form, errors, type, id }) =>
+const FieldType = ({ type }) =>
   (types[type] || Throw(`Unknown type: ${type}`)).attributes.map(attr => {
     const Instance = getAttribute(attr);
 
-    return <Instance key={[type, id, attr].join()} errors={errors || {}} form={form} type={attr} />;
+    return <Instance key={[type, attr].join()} type={attr} />;
   });
 
 FieldType.propTypes = {
-  form: PropTypes.form.isRequired,
   type: PropTypes.string.isRequired,
-  id: PropTypes.string,
-};
-
-FieldType.defaultProps = {
-  id: undefined,
 };
 
 export default FieldType;

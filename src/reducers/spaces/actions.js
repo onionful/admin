@@ -25,6 +25,7 @@ export const fetchSpaces = params => ({
 export const updateSpace = (id, data) => ({
   type: types.SPACES_UPDATE,
   payload: api.put(`/spaces/${id}`, data),
+  meta: { id },
 });
 
 export const setSpace = space => ({
