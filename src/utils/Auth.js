@@ -19,18 +19,19 @@ export default class Auth {
     localStorage.removeItem('expires_at');
   };
 
-  handleAuthentication = cb => {
-    this.auth0.parseHash((err, authResult) => {
-      if (err) {
-        cb(err);
-      } else if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
-        cb(null, authResult);
-      } else {
-        cb(new Error('Unexpected format of authResult'));
-      }
-    });
-  };
+  handleAuthentication = () =>
+    new Promise((resolve, reject) =>
+      this.auth0.parseHash((err, authResult) => {
+        if (err) {
+          reject(err);
+        } else if (authResult && authResult.accessToken && authResult.idToken) {
+          this.setSession(authResult);
+          resolve(authResult);
+        } else {
+          reject(new Error('Unexpected format of authResult'));
+        }
+      }),
+    );
 
   isAuthenticated = () => {
     const expiresAt = JSON.parse(localStorage.getItem('expires_at'));

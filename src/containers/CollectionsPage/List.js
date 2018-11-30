@@ -122,10 +122,10 @@ const mapStateToProps = state => ({
   data: getCollections(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  handleDeleteCollection: id => dispatch(deleteCollection(id)),
-  handlePush: path => dispatch(push(path)),
-});
+const mapDispatchToProps = {
+  handleDeleteCollection: deleteCollection,
+  handlePush: push,
+};
 
 export default compose(
   connect(
@@ -134,7 +134,7 @@ export default compose(
   ),
   withLoading({
     type: 'collectionsList',
-    action: () => fetchCollections(),
+    action: fetchCollections,
   }),
   withPermissions(),
   withTranslate,

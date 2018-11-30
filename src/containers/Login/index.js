@@ -1,14 +1,17 @@
-import { Button, Col, Icon, Row } from 'antd';
+import { Button, Icon, Spin } from 'antd';
 import { Logo } from 'components';
 import { noop } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { login } from 'reducers/auth/actions';
-import { PropTypes, React, styled } from 'utils/create';
+import { authenticate, login } from 'reducers/auth/actions';
+import { Component, PropTypes, React, styled } from 'utils/create';
 
-const StyledRow = styled(Row)({
-  height: '100vh',
-  textAlign: 'center',
+const StyledRow = styled.section({
+  display: 'flex',
+  flexDirection: 'column',
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
   backgroundColor: '#001529',
 });
 
@@ -19,27 +22,55 @@ const StyledLogo = styled(Logo)({
   maxWidth: '10rem',
 });
 
-const Login = ({ handleLogin, isAuthenticated }) =>
-  isAuthenticated ? (
-    <Redirect to="/" />
-  ) : (
-    <StyledRow align="middle" justify="center" type="flex">
-      <Col>
+class Login extends Component {
+  componentDidMount() {
+    const {
+      handleAuthenticate,
+      location: { hash },
+    } = this.props;
+
+    if (hash) {
+      handleAuthenticate(hash);
+    }
+  }
+
+  render() {
+    const {
+      handleLogin,
+      isAuthenticated,
+      location: { hash },
+    } = this.props;
+    return isAuthenticated ? (
+      <Redirect to="/" />
+    ) : (
+      <StyledRow>
         <StyledLogo />
-        <Button ghost onClick={handleLogin}>
-          Login
-          <Icon type="login" />
-        </Button>
-      </Col>
-    </StyledRow>
-  );
+        {hash ? (
+          <Spin />
+        ) : (
+          <Button ghost onClick={handleLogin}>
+            Login
+            <Icon type="login" />
+          </Button>
+        )}
+      </StyledRow>
+    );
+  }
+}
 
 Login.propTypes = {
+  location: PropTypes.shape({
+    hash: PropTypes.string.isRequired,
+  }).isRequired,
+  handleAuthenticate: PropTypes.func,
+
   handleLogin: PropTypes.func,
   isAuthenticated: PropTypes.bool,
 };
 
 Login.defaultProps = {
+  handleAuthenticate: noop,
+
   handleLogin: noop,
   isAuthenticated: false,
 };
@@ -48,9 +79,10 @@ const mapStateToProps = state => ({
   isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
 });
 
-const mapDispatchToProps = dispatch => ({
-  handleLogin: login(dispatch),
-});
+const mapDispatchToProps = {
+  handleAuthenticate: authenticate,
+  handleLogin: login,
+};
 
 export default connect(
   mapStateToProps,

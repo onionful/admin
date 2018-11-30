@@ -17,9 +17,9 @@ SpacesPage.propTypes = {
   match: PropTypes.match.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  handlePush: path => dispatch(push(path)),
-});
+const mapDispatchToProps = {
+  handlePush: push,
+};
 
 export default compose(
   connect(

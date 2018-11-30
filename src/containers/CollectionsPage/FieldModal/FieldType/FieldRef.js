@@ -48,7 +48,9 @@ FieldRef.contextTypes = {
 
 const selector = formValueSelector('collections');
 
-const mapDispatchToProps = state => ({ fields: selector(state, 'fields') });
+const mapDispatchToProps = state => ({
+  fields: selector(state, 'fields'),
+});
 
 export default compose(
   connect(mapDispatchToProps),

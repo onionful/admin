@@ -125,10 +125,10 @@ const mapStateToProps = state => ({
   data: getSpaces(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  handleDeleteSpace: id => dispatch(deleteSpace(id)),
-  handlePush: path => dispatch(push(path)),
-});
+const mapDispatchToProps = {
+  handleDeleteSpace: deleteSpace,
+  handlePush: push,
+};
 
 export default compose(
   connect(
@@ -137,7 +137,7 @@ export default compose(
   ),
   withLoading({
     type: 'spacesList',
-    action: () => fetchSpaces(),
+    action: fetchSpaces,
   }),
   withPermissions(),
   withTranslate,

@@ -6,19 +6,15 @@ export { default as colors } from './colors';
 export { default as media } from './media';
 export { default as permissions } from './permissions';
 
-const apiHandler = Space =>
-  axios.create({
-    baseURL: config.api.endpoint,
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('id_token')}`,
-      Space,
-    },
-  });
+export const api = axios.create({
+  baseURL: config.api.endpoint,
+});
 
-export const spaceApi = callback => (dispatch, getState) =>
-  dispatch(callback(apiHandler(getState().getIn(['spaces', 'current']))));
-
-export const api = apiHandler();
+api.interceptors.request.use(request => {
+  request.headers.Authorization = `Bearer ${localStorage.getItem('id_token')}`;
+  request.headers.Space = localStorage.getItem('space');
+  return request;
+});
 
 export const Throw = message => () => {
   throw new Error(message);

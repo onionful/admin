@@ -10,7 +10,7 @@ import {
   SpacesPage,
   UsersPage,
 } from 'containers';
-import { withTranslate } from 'helpers';
+import { withLoading, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
@@ -69,68 +69,41 @@ class App extends React.Component {
     this.setState({ error, errorInfo });
   }
 
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  componentDidUpdate(prevProps) {
-    const { isAuthenticated } = this.props;
-
-    if (isAuthenticated !== prevProps.isAuthenticated) {
-      this.fetchData();
-    }
-  }
-
-  onCollapse = collapsed => {
+  handleCollapse = collapsed => {
     this.setState({ collapsed });
   };
 
-  onProfileClick = () => {
-    const { pushState } = this.props;
-    pushState('/profile');
+  handleErrorDismiss = () => {
+    const { handlePush } = this.props;
+
+    handlePush('/');
+    this.setState({ error: null, errorInfo: null });
   };
 
-  onMenuClick = ({ key }) => {
-    const { pushState, handleLogout } = this.props;
+  handleProfileClick = () => {
+    const { handlePush } = this.props;
+    handlePush('/profile');
+  };
+
+  handleMenuClick = ({ key }) => {
+    const { handlePush, handleLogout } = this.props;
 
     switch (key) {
       case 'logout':
         return handleLogout();
       default:
-        return pushState(`/${key}`);
+        return handlePush(`/${key}`);
     }
   };
 
-  onSpaceChange = space => {
+  handleSpaceChange = space => {
     const { handleSetSpace } = this.props;
 
     handleSetSpace(space);
   };
 
-  fetchData = () => {
-    const { isAuthenticated, handleGetProfile } = this.props;
-
-    if (isAuthenticated) {
-      handleGetProfile().catch(error =>
-        this.setState({
-          error,
-          errorInfo: { componentStack: JSON.stringify((error.response || {}).data, null, 2) },
-        }),
-      );
-    }
-  };
-
   render() {
-    const {
-      _,
-      hasPermission,
-      isAuthenticated,
-      isProfileLoading,
-      profile,
-      space,
-      spaces,
-      collections,
-    } = this.props;
+    const { _, hasPermission, isAuthenticated, profile, space, spaces, collections } = this.props;
     const { collapsed, error, errorInfo } = this.state;
 
     if (!isAuthenticated) {
@@ -175,86 +148,88 @@ class App extends React.Component {
     ];
 
     return (
-      <Spin spinning={isProfileLoading}>
-        <Layout style={{ minHeight: '100vh', maxWidth: media.xl }}>
-          <Sider collapsible breakpoint="lg" collapsed={collapsed} onCollapse={this.onCollapse}>
-            <StyledLogo collapsed={collapsed} />
+      <Layout style={{ minHeight: '100vh', maxWidth: media.xl }}>
+        <Sider collapsible breakpoint="lg" collapsed={collapsed} onCollapse={this.handleCollapse}>
+          <StyledLogo collapsed={collapsed} />
 
-            {profile && (
-              <Tooltip placement="right" title={profileName} trigger={collapsed ? 'hover' : ''}>
-                <UserInfo onClick={this.onProfileClick}>
-                  <Avatar size="large" src={profile.get('picture')} />
-                  {!collapsed && <div>{profileName}</div>}
-                </UserInfo>
-              </Tooltip>
-            )}
-
-            <Spin spinning={spaces.isEmpty()}>
-              <SpaceSelect
-                showSearch
-                filterOption={(input, option) =>
-                  option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                }
-                optionFilterProp="children"
-                placeholder={_('global.selectSpace')}
-                value={space}
-                onChange={this.onSpaceChange}
-              >
-                {spaces.toList().map(item => (
-                  <Select.Option key={item.get('id')} value={item.get('id')}>
-                    {item.get('name')}
-                  </Select.Option>
-                ))}
-              </SpaceSelect>
-
-              <Menu
-                defaultSelectedKeys={['4']}
-                mode="inline"
-                theme="dark"
-                onClick={this.onMenuClick}
-              >
-                {menuItems.map(group => (
-                  <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
-                    {group.items.filter(hasPermissions).map(item => (
-                      <Menu.Item key={item.key}>
-                        <Icon type={item.icon} />
-                        <span>{item.name || _(`menu.${item.key}`)}</span>
-                      </Menu.Item>
-                    ))}
-                  </Menu.ItemGroup>
-                ))}
-              </Menu>
-            </Spin>
-          </Sider>
-
-          {!isProfileLoading && !space && !error && <SpacesModal />}
-
-          {!isProfileLoading && (space || error) && (
-            <Layout>
-              <Container>
-                {error ? (
-                  <ErrorPage error={error} errorInfo={errorInfo} />
-                ) : (
-                  <Content>
-                    <Switch>
-                      <Route exact component={HomePage} path="/" />
-                      {menuItems.map(section =>
-                        section.items
-                          // .filter(({ component }) => component)
-                          .map(({ key, render, component }) => (
-                            <Route component={component} path={`/${key}`} render={render} />
-                          )),
-                      )}
-                      <Route component={NotFoundPage} />
-                    </Switch>
-                  </Content>
-                )}
-              </Container>
-              <Footer style={{ textAlign: 'center' }}>{_('global.copyrights')}</Footer>
-            </Layout>
+          {profile && (
+            <Tooltip placement="right" title={profileName} trigger={collapsed ? 'hover' : ''}>
+              <UserInfo onClick={this.handleProfileClick}>
+                <Avatar size="large" src={profile.get('picture')} />
+                {!collapsed && <div>{profileName}</div>}
+              </UserInfo>
+            </Tooltip>
           )}
-        </Layout>
-      </Spin>
+
+          <Spin spinning={spaces.isEmpty()}>
+            <SpaceSelect
+              showSearch
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              optionFilterProp="children"
+              placeholder={_('global.selectSpace')}
+              value={space}
+              onChange={this.handleSpaceChange}
+            >
+              {spaces.toList().map(item => (
+                <Select.Option key={item.get('id')} value={item.get('id')}>
+                  {item.get('name')}
+                </Select.Option>
+              ))}
+            </SpaceSelect>
+
+            <Menu
+              defaultSelectedKeys={['4']}
+              mode="inline"
+              theme="dark"
+              onClick={this.handleMenuClick}
+            >
+              {menuItems.map(group => (
+                <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
+                  {group.items.filter(hasPermissions).map(item => (
+                    <Menu.Item key={item.key}>
+                      <Icon type={item.icon} />
+                      <span>{item.name || _(`menu.${item.key}`)}</span>
+                    </Menu.Item>
+                  ))}
+                </Menu.ItemGroup>
+              ))}
+            </Menu>
+          </Spin>
+        </Sider>
+
+        {!space && !error && <SpacesModal />}
+
+        {(space || error) && (
+          <Layout>
+            <Container>
+              {error ? (
+                <ErrorPage
+                  error={error}
+                  errorInfo={errorInfo}
+                  onDismiss={this.handleErrorDismiss}
+                />
+              ) : (
+                <Content>
+                  <Switch>
+                    <Route exact component={HomePage} path="/" />
+                    {menuItems.map(section =>
+                      section.items
+                        // .filter(({ component }) => component)
+                        .map(({ key, render, component }) => (
+                          <Route component={component} path={`/${key}`} render={render} />
+                        )),
+                    )}
+                    <Route component={NotFoundPage} />
+                  </Switch>
+                </Content>
+              )}
+            </Container>
+            <Footer style={{ textAlign: 'center' }}>{_('global.copyrights')}</Footer>
+          </Layout>
+        )}
+      </Layout>
     );
   }
 }
@@ -262,53 +237,51 @@ class App extends React.Component {
 App.propTypes = {
   _: PropTypes.func.isRequired,
   collections: PropTypes.map,
-  handleGetProfile: PropTypes.func,
   handleLogout: PropTypes.func,
+  handlePush: PropTypes.func,
   handleSetSpace: PropTypes.func,
   hasPermission: PropTypes.func,
   isAuthenticated: PropTypes.bool,
-  isProfileLoading: PropTypes.bool,
   profile: PropTypes.map,
-  pushState: PropTypes.func,
   space: PropTypes.string,
   spaces: PropTypes.map,
 };
 
 App.defaultProps = {
   collections: Map(),
-  handleGetProfile: noop,
   handleLogout: noop,
+  handlePush: noop,
   handleSetSpace: noop,
   hasPermission: noop,
   isAuthenticated: false,
-  isProfileLoading: true,
   profile: Map(),
-  pushState: noop,
   space: null,
   spaces: Map(),
 };
 
 const mapStateToProps = state => ({
   isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
-  isProfileLoading: state.getIn(['auth', 'isLoading']),
   profile: getProfile(state),
   space: getCurrentSpace(state),
   spaces: getSpaces(state),
   collections: getCollections(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  handleGetProfile: () => dispatch(fetchProfile()),
-  handleLogout: logout(dispatch),
-  handleSetSpace: space => dispatch(setSpace(space)),
-  pushState: path => dispatch(push(path)),
-});
+const mapDispatchToProps = {
+  handleLogout: logout,
+  handlePush: push,
+  handleSetSpace: setSpace,
+};
 
 export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps,
   ),
+  withLoading({
+    type: 'profileGet',
+    action: fetchProfile,
+  }),
   withRouter,
   withTranslate,
 )(App);

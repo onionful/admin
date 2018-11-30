@@ -4,7 +4,8 @@ import IPropTypes from 'react-immutable-proptypes';
 import RRPropTypes from 'react-router-prop-types';
 import { propTypes as RFPropTypes } from 'redux-form/immutable';
 
-export { default as styled, css } from 'react-emotion';
+export { default as styled } from '@emotion/styled';
+export { css } from '@emotion/core';
 export { compose } from 'redux';
 export { connect } from 'react-redux';
 export { React, Component };

@@ -7,47 +7,31 @@ const auth = new Auth();
 
 const initialState = fromJS({
   isAuthenticated: auth.isAuthenticated(),
-  isLoading: true,
   profile: null,
-  error: null,
 });
 
 export default typeToReducer(
   {
-    [types.LOGIN_REQUEST]: state =>
-      state.merge({
-        isLoading: true,
-        error: null,
-      }),
-    [types.LOGIN_SUCCESS]: state =>
-      state.merge({
-        isLoading: false,
-        isAuthenticated: true,
-      }),
-    [types.LOGIN_FAILURE]: (state, { error }) =>
-      state.merge({
-        isLoading: false,
-        isAuthenticated: false,
-        error,
-      }),
+    [types.LOGIN_PENDING]: state => {
+      auth.login();
+      return state;
+    },
+    [types.LOGIN_SUCCESS]: state => state.merge({ isAuthenticated: true }),
+    [types.LOGIN_REJECTED]: state => state.merge({ isAuthenticated: false }),
 
-    [types.LOGOUT_SUCCESS]: state =>
-      state.merge({
+    [types.LOGOUT_SUCCESS]: state => {
+      auth.logout();
+      return state.merge({
         isAuthenticated: false,
         profile: null,
-      }),
+      });
+    },
 
     [types.PROFILE_GET]: {
-      PENDING: state => state.merge({ isLoading: true, error: null }),
-      REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
-      FULFILLED: (state, { payload: { data } }) =>
-        state.merge({ isLoading: false, error: null }).set('profile', fromJS(data)),
+      FULFILLED: (state, { payload: { data } }) => state.set('profile', fromJS(data)),
     },
     [types.PROFILE_UPDATE]: {
-      PENDING: state => state.merge({ isLoading: true, error: null }),
-      REJECTED: (state, { error }) => state.merge({ isLoading: false, error }),
-      FULFILLED: (state, { payload }) =>
-        state.merge({ isLoading: false, error: null }).set('profile', fromJS(payload)),
+      FULFILLED: (state, { payload }) => state.set('profile', fromJS(payload)),
     },
   },
   initialState,

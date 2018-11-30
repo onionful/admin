@@ -1,4 +1,3 @@
-export { default as Authorize } from './Authorize';
 export { default as CollectionsPage } from './CollectionsPage';
 export { default as CollectionsContentPage } from './CollectionsContentPage';
 export { default as ErrorPage } from './ErrorPage';

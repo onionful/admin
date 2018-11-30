@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import { Logo } from 'components';
 import { colors } from 'utils';
 import { PropTypes, React, styled } from 'utils/create';
@@ -25,13 +26,14 @@ const Stack = styled.pre({
   opacity: 0.5,
 });
 
-const ErrorPage = styled(({ className, error, errorInfo: { componentStack } }) => (
+const ErrorPage = styled(({ className, error, errorInfo: { componentStack }, onDismiss }) => (
   <div className={className}>
     <Stench />
     <StyledLogo fill={colors.rottenOnion} />
     <h1>Yuck!</h1>
     <strong>{`${error}`}</strong>
     <Stack>{componentStack}</Stack>
+    <Button icon="close" shape="circle" onClick={onDismiss} />
   </div>
 ))({
   display: 'flex',
@@ -43,6 +45,7 @@ const ErrorPage = styled(({ className, error, errorInfo: { componentStack } }) =
 
 ErrorPage.propTypes = {
   error: PropTypes.instanceOf(Error).isRequired,
+  onDismiss: PropTypes.func.isRequired,
   errorInfo: PropTypes.shape({
     componentStack: PropTypes.string,
   }),

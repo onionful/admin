@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { ConnectedRouter } from 'connected-react-router/immutable';
 import { Authorize, Login } from 'containers';
 import App from 'containers/App';
@@ -14,6 +15,10 @@ injectGlobal`
   body {
     background: #eceef1 url('/stripes.svg')
   }
+  #root {
+    min-height: 100%;
+    display: flex;
+  }
 `;
 
 const store = createStore();
@@ -23,8 +28,7 @@ render(
     <LocalizeProvider>
       <ConnectedRouter history={history}>
         <Switch>
-          <Route exact component={Login} path="/login" />
-          <Route exact component={Authorize} path="/auth" />
+          <Route exact component={Login} path="/(auth|login)" />
           <Route component={App} path="/" />
         </Switch>
       </ConnectedRouter>

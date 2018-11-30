@@ -28,10 +28,14 @@ export const updateSpace = (id, data) => ({
   meta: { id },
 });
 
-export const setSpace = space => ({
-  type: types.SET_SPACE,
-  payload: space,
-});
+export const setSpace = space => {
+  localStorage.setItem('space', space);
+
+  return {
+    type: types.SET_SPACE,
+    payload: space,
+  };
+};
 
 export const getSpace = (state, id) => state.getIn(['spaces', 'data', id]) || Map();
 

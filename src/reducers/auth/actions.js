@@ -5,46 +5,38 @@ import * as types from './types';
 
 const auth = new Auth();
 
-const loginRequest = () => ({
-  type: types.LOGIN_REQUEST,
+export const login = () => ({
+  type: types.LOGIN_PENDING,
 });
 
-const loginSuccess = () => ({
-  type: types.LOGIN_SUCCESS,
-});
-
-const loginFailure = error => ({
-  type: types.LOGIN_FAILURE,
-  error,
-});
-
-export const login = dispatch => () => {
-  dispatch(loginRequest());
-  auth.login();
-};
-
-export const handleAuthentication = dispatch => hash => {
-  if (/access_token|id_token|error/.test(hash)) {
-    auth.handleAuthentication((err, data) => {
-      if (err) {
-        dispatch(loginFailure(`${err.error}: ${err.errorDescription}`));
-        dispatch(push('/handleLogin'));
-      } else {
-        dispatch(loginSuccess(data));
-        dispatch(push('/'));
-      }
+export const authenticate = hash => dispatch => {
+  const fail = error => {
+    dispatch({
+      type: types.LOGIN_REJECTED,
+      error,
     });
+    dispatch(push('/handleLogin'));
+  };
+
+  if (!/access_token|id_token|error/.test(hash)) {
+    return fail('access_token is not valid');
   }
+
+  return auth
+    .handleAuthentication()
+    .then(response => {
+      dispatch({
+        type: types.LOGIN_SUCCESS,
+        payload: response,
+      });
+      dispatch(push('/'));
+    })
+    .catch(fail);
 };
 
-const logoutSuccess = () => ({
+export const logout = () => ({
   type: types.LOGOUT_SUCCESS,
 });
-
-export const logout = dispatch => () => {
-  auth.handleLogout();
-  dispatch(logoutSuccess());
-};
 
 export const fetchProfile = () => ({
   type: types.PROFILE_GET,

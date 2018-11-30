@@ -171,9 +171,9 @@ const mapStateToProps = state => ({
   isLoading: state.getIn(['users', 'isLoading']),
 });
 
-const mapDispatchToProps = dispatch => ({
-  handleFetchUsers: params => dispatch(fetchUsers(params)),
-});
+const mapDispatchToProps = {
+  handleFetchUsers: fetchUsers,
+};
 
 export default compose(
   connect(
