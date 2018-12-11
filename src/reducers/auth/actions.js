@@ -1,6 +1,7 @@
-import { push } from 'connected-react-router';
+import { Map } from 'immutable';
 import { getProfile } from 'reducers/auth/index';
 import { api, Auth } from 'utils';
+import { push } from 'utils/create';
 import * as types from './types';
 
 const auth = new Auth();
@@ -45,7 +46,7 @@ export const fetchProfile = () => ({
 
 export const updateProfile = metadata => (dispatch, getState) => {
   const profile = getProfile(getState());
-  const current = profile.get('user_metadata');
+  const current = profile.get('user_metadata', Map());
   const updated = current.merge(metadata);
 
   const payload = current.equals(updated)
