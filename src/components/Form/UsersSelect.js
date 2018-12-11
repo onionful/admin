@@ -1,9 +1,10 @@
 import { Select, Spin } from 'antd';
 import { UserLabel } from 'components';
+import { withTranslate } from 'helpers';
 import { fromJS, List } from 'immutable';
 import { debounce, noop } from 'lodash';
 import { fetchLabels, findUsers } from 'reducers/users/actions';
-import { Component, connect, PropTypes, React } from 'utils/create';
+import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class UsersSelect extends Component {
   constructor(...args) {
@@ -54,7 +55,7 @@ class UsersSelect extends Component {
   };
 
   render() {
-    const { value } = this.props;
+    const { _, value } = this.props;
     const { fetching, data } = this.state;
 
     return (
@@ -63,7 +64,7 @@ class UsersSelect extends Component {
         filterOption={false}
         mode="multiple"
         notFoundContent={fetching ? <Spin size="small" /> : null}
-        placeholder="Select users"
+        placeholder={_('global.selectUsers')}
         value={value.toArray().map(id => ({ key: id, label: <UserLabel id={id} /> }))}
         onChange={this.handleChange}
         onSearch={this.handleSearch}
@@ -79,6 +80,7 @@ class UsersSelect extends Component {
 }
 
 UsersSelect.propTypes = {
+  _: PropTypes.func.isRequired,
   handleFetchLabels: PropTypes.func,
   onChange: PropTypes.func,
   value: PropTypes.list,
@@ -94,7 +96,10 @@ const mapDispatchToProps = {
   handleFetchLabels: fetchLabels,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps,
+export default compose(
+  connect(
+    null,
+    mapDispatchToProps,
+  ),
+  withTranslate,
 )(UsersSelect);

@@ -49,6 +49,11 @@ spaces:
     create: Create new space
     edit: Edit existing space
 
+spacesModal:
+  noData: No space is available
+  select: Select space
+  create: Create new space
+
 components:
   identifier:
     idTooltip: Type a capital letter to separate
@@ -80,7 +85,7 @@ global:
   owners: Owners
   deleteQuestion: Are you sure?
   save: Save
-  selectSpace: Select space
+  selectUsers: Select users
   title: Title
   update: Update
   updatedAt: Updated at

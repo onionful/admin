@@ -1,6 +1,5 @@
-import { Avatar, Icon, Layout, Menu, Select, Spin, Tooltip } from 'antd';
+import { Avatar, Icon, Layout, Menu, Select, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
-import { push } from 'connected-react-router';
 import {
   CollectionsContentPage,
   CollectionsPage,
@@ -19,9 +18,7 @@ import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCollections } from 'reducers/collections/actions';
 import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
 import { colors, media, permissions } from 'utils';
-import { compose, connect, PropTypes, React, styled } from 'utils/create';
-
-const { Sider, Footer } = Layout;
+import { compose, connect, PropTypes, push, React, styled } from 'utils/create';
 
 const Container = styled(Layout.Content)({
   position: 'relative',
@@ -58,15 +55,17 @@ const SpaceSelect = styled(Select)({
 });
 
 class App extends React.Component {
-  state = {
-    collapsed: false,
-    error: null,
-    errorInfo: null,
-  };
+  constructor(...args) {
+    super(...args);
 
-  // eslint-disable-next-line react/sort-comp
-  componentDidCatch(error, errorInfo) {
-    this.setState({ error, errorInfo });
+    const { space } = this.props;
+
+    this.state = {
+      collapsed: false,
+      error: null,
+      errorInfo: null,
+      spacesModalVisible: !space,
+    };
   }
 
   handleCollapse = collapsed => {
@@ -76,12 +75,12 @@ class App extends React.Component {
   handleErrorDismiss = () => {
     const { handlePush } = this.props;
 
-    handlePush('/');
-    this.setState({ error: null, errorInfo: null });
+    this.setState({ error: null, errorInfo: null }, () => handlePush('/'));
   };
 
   handleProfileClick = () => {
     const { handlePush } = this.props;
+
     handlePush('/profile');
   };
 
@@ -102,9 +101,24 @@ class App extends React.Component {
     handleSetSpace(space);
   };
 
+  handleSpaceCreate = () => {
+    const { handlePush } = this.props;
+    this.setState({ spacesModalVisible: false }, () => handlePush('/spaces/create'));
+  };
+
+  handleSetSpace = space => {
+    const { handleSetSpace } = this.props;
+
+    this.setState({ spacesModalVisible: false }, () => handleSetSpace(space));
+  };
+
+  componentDidCatch(error, errorInfo) {
+    this.setState({ error, errorInfo });
+  }
+
   render() {
     const { _, hasPermission, isAuthenticated, profile, space, spaces, collections } = this.props;
-    const { collapsed, error, errorInfo } = this.state;
+    const { collapsed, error, errorInfo, spacesModalVisible } = this.state;
 
     if (!isAuthenticated) {
       return <Redirect to="/login" />;
@@ -134,7 +148,7 @@ class App extends React.Component {
       {
         key: 'system',
         items: [
-          { key: 'spaces', icon: 'book', component: SpacesPage },
+          { key: 'spaces', icon: 'rocket', component: SpacesPage },
           {
             key: 'users',
             icon: 'user',
@@ -149,7 +163,12 @@ class App extends React.Component {
 
     return (
       <Layout style={{ minHeight: '100vh', maxWidth: media.xl }}>
-        <Sider collapsible breakpoint="lg" collapsed={collapsed} onCollapse={this.handleCollapse}>
+        <Layout.Sider
+          collapsible
+          breakpoint="lg"
+          collapsed={collapsed}
+          onCollapse={this.handleCollapse}
+        >
           <StyledLogo collapsed={collapsed} />
 
           {profile && (
@@ -161,47 +180,49 @@ class App extends React.Component {
             </Tooltip>
           )}
 
-          <Spin spinning={spaces.isEmpty()}>
-            <SpaceSelect
-              showSearch
-              filterOption={(input, option) =>
-                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-              optionFilterProp="children"
-              placeholder={_('global.selectSpace')}
-              value={space}
-              onChange={this.handleSpaceChange}
-            >
-              {spaces.toList().map(item => (
-                <Select.Option key={item.get('id')} value={item.get('id')}>
-                  {item.get('name')}
-                </Select.Option>
-              ))}
-            </SpaceSelect>
+          <SpaceSelect
+            showSearch
+            filterOption={(input, option) =>
+              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            }
+            optionFilterProp="children"
+            placeholder={_('global.selectSpace')}
+            value={space}
+            onChange={this.handleSpaceChange}
+          >
+            {spaces.toList().map(item => (
+              <Select.Option key={item.get('id')} value={item.get('id')}>
+                {item.get('name')}
+              </Select.Option>
+            ))}
+          </SpaceSelect>
 
-            <Menu
-              defaultSelectedKeys={['4']}
-              mode="inline"
-              theme="dark"
-              onClick={this.handleMenuClick}
-            >
-              {menuItems.map(group => (
-                <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
-                  {group.items.filter(hasPermissions).map(item => (
-                    <Menu.Item key={item.key}>
-                      <Icon type={item.icon} />
-                      <span>{item.name || _(`menu.${item.key}`)}</span>
-                    </Menu.Item>
-                  ))}
-                </Menu.ItemGroup>
-              ))}
-            </Menu>
-          </Spin>
-        </Sider>
+          <Menu
+            defaultSelectedKeys={['4']}
+            mode="inline"
+            theme="dark"
+            onClick={this.handleMenuClick}
+          >
+            {menuItems.map(group => (
+              <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
+                {group.items.filter(hasPermissions).map(item => (
+                  <Menu.Item key={item.key}>
+                    <Icon type={item.icon} />
+                    <span>{item.name || _(`menu.${item.key}`)}</span>
+                  </Menu.Item>
+                ))}
+              </Menu.ItemGroup>
+            ))}
+          </Menu>
+        </Layout.Sider>
 
-        {!space && !error && <SpacesModal />}
+        <SpacesModal
+          visible={spacesModalVisible}
+          onCreate={this.handleSpaceCreate}
+          onSetSpace={this.handleSetSpace}
+        />
 
-        {(space || error) && (
+        {(!spacesModalVisible || error) && (
           <Layout>
             <Container>
               {error ? (
@@ -215,18 +236,16 @@ class App extends React.Component {
                   <Switch>
                     <Route exact component={HomePage} path="/" />
                     {menuItems.map(section =>
-                      section.items
-                        // .filter(({ component }) => component)
-                        .map(({ key, render, component }) => (
-                          <Route component={component} path={`/${key}`} render={render} />
-                        )),
+                      section.items.map(({ key, render, component }) => (
+                        <Route component={component} path={`/${key}`} render={render} />
+                      )),
                     )}
                     <Route component={NotFoundPage} />
                   </Switch>
                 </Content>
               )}
             </Container>
-            <Footer style={{ textAlign: 'center' }}>{_('global.copyrights')}</Footer>
+            <Layout.Footer style={{ textAlign: 'center' }}>{_('global.copyrights')}</Layout.Footer>
           </Layout>
         )}
       </Layout>

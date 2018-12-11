@@ -1,10 +1,10 @@
-import { List, Modal } from 'antd';
+import { Button, List, Modal } from 'antd';
 import Logo from 'components/Logo';
-import { noop } from 'lodash';
+import { withLoading, withTranslate } from 'helpers';
 import { Map } from 'immutable';
-import { fetchSpaces, setSpace } from 'reducers/spaces/actions';
+import { fetchSpaces } from 'reducers/spaces/actions';
 import { colors } from 'utils';
-import { Component, connect, PropTypes, React, styled } from 'utils/create';
+import { compose, connect, PropTypes, React, styled } from 'utils/create';
 
 const StyledLogo = styled(Logo)({
   display: 'block',
@@ -30,73 +30,66 @@ const Item = styled(List.Item)({
   },
 });
 
-class SpacesModal extends Component {
-  componentDidMount() {
-    const { handleFetchSpaces } = this.props;
-    handleFetchSpaces().then(() => {
-      const { handleSetSpace, spaces } = this.props;
-      if (spaces.size === 1) {
-        handleSetSpace(spaces.first().get('id'));
-      }
-    });
-  }
+const EmptyText = styled.span({ color: colors.white });
 
-  onItemClick = value => {
-    const { handleSetSpace } = this.props;
-    handleSetSpace(value);
-  };
+const CreateSpace = styled(Button)({
+  display: 'block',
+  margin: '1rem auto',
+  opacity: 0.1,
 
-  render() {
-    const { isLoading, spaces } = this.props;
+  '&:hover': {
+    opacity: 1,
+  },
+});
 
-    return (
-      <Modal
-        visible
-        bodyStyle={{ backgroundColor: colors.background, color: colors.white }}
-        closable={false}
-        footer={null}
-      >
-        <StyledLogo />
-        <Header>Select your current space</Header>
-        <List
-          bordered
-          dataSource={spaces.toList()}
-          loading={isLoading}
-          renderItem={item => (
-            <Item onClick={() => this.onItemClick(item.get('id'))}>{item.get('name')}</Item>
-          )}
-        />
-      </Modal>
-    );
-  }
-}
+const SpacesModal = ({ _, isLoading, onCreate, onSetSpace, spaces, visible }) => (
+  <Modal
+    bodyStyle={{ backgroundColor: colors.background, color: colors.white }}
+    closable={false}
+    footer={null}
+    visible={visible}
+  >
+    <StyledLogo />
+    <Header>{_('spacesModal.select')}</Header>
+    <List
+      bordered
+      dataSource={spaces.toList()}
+      loading={isLoading}
+      locale={{ emptyText: <EmptyText>{_('spacesModal.noData')}</EmptyText> }}
+      renderItem={item => (
+        <Item onClick={() => onSetSpace(item.get('id'))}>{item.get('name')}</Item>
+      )}
+    />
+    <CreateSpace ghost icon="rocket" onClick={onCreate}>
+      {_('spacesModal.create')}
+    </CreateSpace>
+  </Modal>
+);
 
 SpacesModal.propTypes = {
-  handleFetchSpaces: PropTypes.func,
-  handleSetSpace: PropTypes.func,
-  isLoading: PropTypes.bool,
+  _: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  onCreate: PropTypes.func.isRequired,
+  onSetSpace: PropTypes.func.isRequired,
+  visible: PropTypes.bool.isRequired,
   spaces: PropTypes.map,
 };
 
 SpacesModal.defaultProps = {
-  handleFetchSpaces: noop,
-  handleSetSpace: noop,
-  isLoading: true,
   spaces: Map(),
 };
 
 const mapStateToProps = state => ({
   space: state.getIn(['spaces', 'current']),
   spaces: state.getIn(['spaces', 'data']),
-  isLoading: state.getIn(['spaces', 'isLoading']),
 });
 
-const mapDispatchToProps = dispatch => ({
-  handleFetchSpaces: params => dispatch(fetchSpaces(params)),
-  handleSetSpace: space => dispatch(setSpace(space)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
+export default compose(
+  connect(mapStateToProps),
+  withLoading({
+    type: 'spacesList',
+    action: () => fetchSpaces(),
+    showSpinner: false,
+  }),
+  withTranslate,
 )(SpacesModal);
