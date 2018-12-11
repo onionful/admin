@@ -6,6 +6,7 @@ import { propTypes as RFPropTypes } from 'redux-form/immutable';
 
 export { default as styled } from '@emotion/styled';
 export { css } from '@emotion/core';
+export { push } from 'connected-react-router';
 export { compose } from 'redux';
 export { connect } from 'react-redux';
 export { React, Component };

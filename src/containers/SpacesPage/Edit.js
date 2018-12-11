@@ -1,14 +1,19 @@
 import { Button, Input, message } from 'antd';
 import { SectionHeader } from 'components';
 import { Identifier, UsersSelect } from 'components/Form';
-import { push } from 'connected-react-router';
 import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { createSpace, fetchSpace, getSpace, updateSpace } from 'reducers/spaces/actions';
+import {
+  createSpace,
+  fetchSpace,
+  getSpace,
+  getSpaceTemplate,
+  updateSpace,
+} from 'reducers/spaces/actions';
 import { fetchLabels } from 'reducers/users/actions';
 import { Field, Fields, Form } from 'redux-form/immutable';
-import { Component, compose, connect, PropTypes, React } from 'utils/create';
+import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 
 class SpacesPageEdit extends Component {
   componentDidMount() {
@@ -89,19 +94,13 @@ SpacesPageEdit.contextTypes = {
   createField: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (
-  state,
-  {
-    match: {
-      params: { id },
-    },
-  },
-) => {
-  const item = getSpace(state, id);
+const mapStateToProps = (state, { match: { params } }) => {
+  const item = params.id ? getSpace(state, params.id) : getSpaceTemplate(state);
+
   return {
-    id,
+    id: params.id,
+    isNew: !params.id,
     item,
-    isNew: !id,
     initialValues: item,
   };
 };
@@ -109,7 +108,6 @@ const mapStateToProps = (
 const mapDispatchToProps = {
   pushState: push,
   handleCreateSpace: createSpace,
-  handleFetchSpace: fetchSpace,
   handleUpdateSpace: updateSpace,
   handleFetchLabels: fetchLabels,
 };
@@ -121,7 +119,8 @@ export default compose(
   ),
   withLoading({
     type: ['spacesList', 'spacesItem'],
-    action: ({ id, handleFetchSpace }) => id && handleFetchSpace(id),
+    action: ({ id }) => fetchSpace(id),
+    condition: ({ id }) => !!id,
   }),
   withPermissions(),
   withTranslate,

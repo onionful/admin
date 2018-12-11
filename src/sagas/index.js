@@ -17,9 +17,7 @@ function* refreshCollections() {
 
 function* initializeSpace({
   payload: {
-    data: {
-      user_metadata: { space },
-    },
+    data: { user_metadata: { space } = {} },
   },
 }) {
   yield put(setSpace(space));

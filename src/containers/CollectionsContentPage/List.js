@@ -1,11 +1,10 @@
 import { Button, Table } from 'antd';
 import { SectionHeader } from 'components/index';
-import { push } from 'connected-react-router';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { fetchCollection } from 'reducers/collections/actions';
-import { Component, compose, connect, PropTypes, React } from 'utils/create';
+import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 
 class CollectionsContentPageList extends Component {
   onCreateClick = () => {
