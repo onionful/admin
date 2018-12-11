@@ -9,19 +9,26 @@ const Container = styled.section({
   flex: 1,
 });
 
-export default ({ type, action }) => WrappedComponent => {
+export default ({
+  type,
+  action,
+  condition = () => true,
+  showSpinner = true,
+}) => WrappedComponent => {
   class withLoading extends Component {
     constructor(...args) {
       super(...args);
 
-      const { handleAction } = this.props;
-      handleAction(this.props);
+      const { handleAction, ...props } = this.props;
+      if (condition(props)) {
+        handleAction(props);
+      }
     }
 
     render() {
       const { isLoading } = this.props;
 
-      return isLoading ? (
+      return isLoading && showSpinner ? (
         <Container>
           <Spin />
         </Container>
@@ -41,8 +48,8 @@ export default ({ type, action }) => WrappedComponent => {
     isLoading: true,
   };
 
-  const mapStateToProps = state => ({
-    isLoading: [].concat(type).some(key => state.getIn(['loading', key], true)),
+  const mapStateToProps = (state, props) => ({
+    isLoading: condition(props) && [].concat(type).some(key => state.getIn(['loading', key], true)),
   });
 
   const mapDispatchToProps = {
