@@ -63,7 +63,13 @@ class SpacesPageEdit extends Component {
 
         <Fields autoGenerateId={isNew} component={Identifier} names={['name', 'id']} />
         <Field component={createField(Input)} label={_('global.url')} name="url" type="url" />
-        <Field component={createField(UsersSelect)} label={_('global.owners')} name="owners" />
+        <Field
+          currentUserRequired
+          component={createField(UsersSelect)}
+          format={null}
+          label={_('global.owners')}
+          name="owners"
+        />
       </Form>
     );
   }

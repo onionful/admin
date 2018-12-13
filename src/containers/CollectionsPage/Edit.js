@@ -102,19 +102,12 @@ CollectionsPageEdit.contextTypes = {
   createField: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (
-  state,
-  {
-    match: {
-      params: { id },
-    },
-  },
-) => {
-  const item = getCollection(state, id);
+const mapStateToProps = (state, { match: { params } }) => {
+  const item = getCollection(state, params.id);
   return {
-    id,
+    id: params.id,
     item,
-    isNew: !id,
+    isNew: !params.id,
     initialValues: item,
   };
 };

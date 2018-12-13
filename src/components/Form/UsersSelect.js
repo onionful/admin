@@ -3,6 +3,7 @@ import { UserLabel } from 'components';
 import { withTranslate } from 'helpers';
 import { fromJS, List } from 'immutable';
 import { debounce, noop } from 'lodash';
+import { getId } from 'reducers/auth';
 import { fetchLabels, findUsers } from 'reducers/users/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
@@ -20,7 +21,11 @@ class UsersSelect extends Component {
   };
 
   handleChange = values => {
-    const { onChange } = this.props;
+    const { currentUser, currentUserRequired, onChange } = this.props;
+
+    if (currentUserRequired && values.findIndex(({ key }) => key === currentUser) === -1) {
+      values.unshift({ key: currentUser, label: <UserLabel id={currentUser} /> });
+    }
 
     onChange(fromJS(values.map(({ key }) => key)));
 
@@ -81,16 +86,24 @@ class UsersSelect extends Component {
 
 UsersSelect.propTypes = {
   _: PropTypes.func.isRequired,
+  currentUser: PropTypes.string,
+  currentUserRequired: PropTypes.bool,
   handleFetchLabels: PropTypes.func,
   onChange: PropTypes.func,
   value: PropTypes.list,
 };
 
 UsersSelect.defaultProps = {
+  currentUser: null,
+  currentUserRequired: false,
   handleFetchLabels: noop,
   onChange: noop,
   value: List(),
 };
+
+const mapStateToProps = state => ({
+  currentUser: getId(state),
+});
 
 const mapDispatchToProps = {
   handleFetchLabels: fetchLabels,
@@ -98,7 +111,7 @@ const mapDispatchToProps = {
 
 export default compose(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
   ),
   withTranslate,
