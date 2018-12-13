@@ -3,6 +3,7 @@ import { noop } from 'lodash';
 import { getTranslate, withLocalize } from 'react-localize-redux';
 import { compose, connect, getDisplayName, PropTypes, React } from 'utils/create';
 
+// TODO check if ref is still required
 export default WrappedComponent => {
   const WithTranslate = ({ forwardedRef, ...props }) => (
     <WrappedComponent {...props} ref={forwardedRef} />
@@ -28,7 +29,7 @@ export default WrappedComponent => {
       mapStateToProps,
       null,
       null,
-      { withRef: true },
+      { forwardRef: true },
     ),
     withLocalize,
   )(WithTranslate);
