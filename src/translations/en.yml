@@ -106,3 +106,4 @@ messages:
     created: Space has been created
     updated: Space has been updated
     deleted: Space has been deleted
+    currentUserRequired: You cannot remove yourself from the list

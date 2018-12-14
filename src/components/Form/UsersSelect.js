@@ -1,4 +1,4 @@
-import { Select, Spin } from 'antd';
+import { message, Select, Spin } from 'antd';
 import { UserLabel } from 'components';
 import { withTranslate } from 'helpers';
 import { fromJS, List } from 'immutable';
@@ -8,6 +8,11 @@ import { fetchLabels, findUsers } from 'reducers/users/actions';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class UsersSelect extends Component {
+  state = {
+    data: [],
+    fetching: false,
+  };
+
   constructor(...args) {
     super(...args);
 
@@ -15,15 +20,18 @@ class UsersSelect extends Component {
     this.handleSearch = debounce(this.handleSearch, 500);
   }
 
-  state = {
-    data: [],
-    fetching: false,
-  };
+  componentDidMount() {
+    const { value } = this.props;
+    if (value.isEmpty()) {
+      this.handleChange();
+    }
+  }
 
-  handleChange = values => {
-    const { currentUser, currentUserRequired, onChange } = this.props;
+  handleChange = async (values = []) => {
+    const { currentUser, currentUserRequired, handleFetchLabels, onChange } = this.props;
 
     if (currentUserRequired && values.findIndex(({ key }) => key === currentUser) === -1) {
+      await handleFetchLabels(currentUser);
       values.unshift({ key: currentUser, label: <UserLabel id={currentUser} /> });
     }
 
@@ -33,6 +41,13 @@ class UsersSelect extends Component {
       data: [],
       fetching: false,
     });
+  };
+
+  handleDeselect = ({ key }) => {
+    const { _, currentUser, currentUserRequired } = this.props;
+    if (currentUserRequired && key === currentUser) {
+      message.warning(_('messages.spaces.currentUserRequired'));
+    }
   };
 
   handleSearch = value => {
@@ -72,6 +87,7 @@ class UsersSelect extends Component {
         placeholder={_('global.selectUsers')}
         value={value.toArray().map(id => ({ key: id, label: <UserLabel id={id} /> }))}
         onChange={this.handleChange}
+        onDeselect={this.handleDeselect}
         onSearch={this.handleSearch}
       >
         {data.map(({ id }) => (

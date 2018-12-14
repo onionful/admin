@@ -1,5 +1,4 @@
-import { fromJS, Map } from 'immutable';
-import { getId } from 'reducers/auth';
+import { Map } from 'immutable';
 import { api } from 'utils';
 import * as types from './types';
 
@@ -39,11 +38,6 @@ export const setSpace = space => {
 };
 
 export const getSpace = (state, id) => state.getIn(['spaces', 'data', id]) || Map();
-
-export const getSpaceTemplate = state =>
-  fromJS({
-    owners: [getId(state)],
-  });
 
 export const getSpaces = state => state.getIn(['spaces', 'data']);
 
