@@ -12,7 +12,7 @@ import {
 import { withLoading, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Link, Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCollections } from 'reducers/collections/actions';
@@ -76,12 +76,6 @@ class App extends React.Component {
     const { handlePush } = this.props;
 
     this.setState({ error: null, errorInfo: null }, () => handlePush('/'));
-  };
-
-  handleProfileClick = () => {
-    const { handlePush } = this.props;
-
-    handlePush('/profile');
   };
 
   handleMenuClick = ({ key }) => {
@@ -169,14 +163,18 @@ class App extends React.Component {
           collapsed={collapsed}
           onCollapse={this.handleCollapse}
         >
-          <StyledLogo collapsed={collapsed} />
+          <Link to="/">
+            <StyledLogo collapsed={collapsed} />
+          </Link>
 
           {profile && (
             <Tooltip placement="right" title={profileName} trigger={collapsed ? 'hover' : ''}>
-              <UserInfo onClick={this.handleProfileClick}>
-                <Avatar size="large" src={profile.get('picture')} />
-                {!collapsed && <div>{profileName}</div>}
-              </UserInfo>
+              <Link to="/profile">
+                <UserInfo>
+                  <Avatar size="large" src={profile.get('picture')} />
+                  {!collapsed && <div>{profileName}</div>}
+                </UserInfo>
+              </Link>
             </Tooltip>
           )}
 
