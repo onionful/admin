@@ -108,7 +108,8 @@ export default compose(
   withForm('content'),
   withLoading({
     type: ['contentList', 'contentItem'],
-    action: ({ id }) => id && fetchContent(id),
+    action: ({ id }) => fetchContent(id),
+    condition: ({ id }) => !!id,
   }),
   withPermissions(),
   withTranslate,

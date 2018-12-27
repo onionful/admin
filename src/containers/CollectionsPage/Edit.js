@@ -114,7 +114,6 @@ const mapStateToProps = (state, { match: { params } }) => {
 
 const mapDispatchToProps = {
   pushState: push,
-  handleFetchCollection: fetchCollection,
   handleCreateCollection: createCollection,
   handleUpdateCollection: updateCollection,
 };
@@ -126,7 +125,8 @@ export default compose(
   ),
   withLoading({
     type: ['collectionsList', 'collectionsItem'],
-    action: ({ id, handleFetchCollection }) => id && handleFetchCollection(id),
+    action: ({ id }) => fetchCollection(id),
+    condition: ({ id }) => !!id,
   }),
   withPermissions(),
   withTranslate,

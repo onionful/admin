@@ -43,5 +43,5 @@ export const getSpaces = state => state.getIn(['spaces', 'data']);
 
 export const getCurrentSpace = state => {
   const current = state.getIn(['spaces', 'current']);
-  return state.hasIn(['spaces', 'data', current]) ? current : null;
+  return state.getIn(['spaces', 'data', current]) || Map();
 };

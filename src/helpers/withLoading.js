@@ -52,9 +52,9 @@ export default ({
     isLoading: condition(props) && [].concat(type).some(key => state.getIn(['loading', key], true)),
   });
 
-  const mapDispatchToProps = {
-    handleAction: action,
-  };
+  const mapDispatchToProps = dispatch => ({
+    handleAction: () => Promise.all([].concat(action).map(act => dispatch(act()))),
+  });
 
   return connect(
     mapStateToProps,

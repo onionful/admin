@@ -1,8 +1,7 @@
 import { Button, List, Modal } from 'antd';
-import Logo from 'components/Logo';
-import { withLoading, withTranslate } from 'helpers';
+import { Logo } from 'components';
+import { withTranslate } from 'helpers';
 import { Map } from 'immutable';
-import { fetchSpaces } from 'reducers/spaces/actions';
 import { colors } from 'utils';
 import { compose, connect, PropTypes, React, styled } from 'utils/create';
 
@@ -42,7 +41,7 @@ const CreateSpace = styled(Button)({
   },
 });
 
-const SpacesModal = ({ _, isLoading, onCreate, onSetSpace, spaces, visible }) => (
+const SpacesModal = ({ _, onCreate, onSetSpace, spaces, visible }) => (
   <Modal
     bodyStyle={{ backgroundColor: colors.background, color: colors.white }}
     closable={false}
@@ -54,7 +53,6 @@ const SpacesModal = ({ _, isLoading, onCreate, onSetSpace, spaces, visible }) =>
     <List
       bordered
       dataSource={spaces.toList()}
-      loading={isLoading}
       locale={{ emptyText: <EmptyText>{_('spacesModal.noData')}</EmptyText> }}
       renderItem={item => (
         <Item onClick={() => onSetSpace(item.get('id'))}>{item.get('name')}</Item>
@@ -68,7 +66,6 @@ const SpacesModal = ({ _, isLoading, onCreate, onSetSpace, spaces, visible }) =>
 
 SpacesModal.propTypes = {
   _: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
   onCreate: PropTypes.func.isRequired,
   onSetSpace: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
@@ -86,10 +83,5 @@ const mapStateToProps = state => ({
 
 export default compose(
   connect(mapStateToProps),
-  withLoading({
-    type: 'spacesList',
-    action: () => fetchSpaces(),
-    showSpinner: false,
-  }),
   withTranslate,
 )(SpacesModal);

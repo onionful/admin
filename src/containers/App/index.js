@@ -1,4 +1,4 @@
-import { Avatar, Icon, Layout, Menu, Select, Tooltip } from 'antd';
+import { Avatar, Icon, Layout, Menu, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import {
   CollectionsContentPage,
@@ -16,7 +16,7 @@ import { Link, Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCollections } from 'reducers/collections/actions';
-import { getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
+import { fetchSpaces, getCurrentSpace, setSpace } from 'reducers/spaces/actions';
 import { colors, media, permissions } from 'utils';
 import { compose, connect, PropTypes, push, React, styled } from 'utils/create';
 
@@ -39,8 +39,10 @@ const UserInfo = styled.div({
   cursor: 'pointer',
   backgroundColor: colors.background,
   padding: '1rem 0',
-  marginBottom: '1rem',
   textAlign: 'center',
+  transition: 'box-shadow 0.5s',
+
+  '&: hover': colors.lighterBackground,
 
   '& div': {
     color: colors.white,
@@ -49,22 +51,37 @@ const UserInfo = styled.div({
   },
 });
 
-const SpaceSelect = styled(Select)({
-  width: '100%',
+const SpaceInfo = styled.div({
+  cursor: 'pointer',
+  backgroundColor: colors.background,
+  borderTop: `1px solid ${colors.gray}`,
+  color: colors.white,
+  fontWeight: 'bold',
+  marginBottom: '1rem',
   padding: '1rem',
+  textAlign: 'center',
+  transition: 'box-shadow 0.5s, color 0.5s',
+
+  '&: hover': {
+    ...colors.lighterBackground,
+    color: colors.onion,
+  },
 });
 
 class App extends React.Component {
   constructor(...args) {
     super(...args);
 
-    const { space } = this.props;
+    const {
+      location: { pathname },
+      space,
+    } = this.props;
 
     this.state = {
       collapsed: false,
       error: null,
       errorInfo: null,
-      spacesModalVisible: !space,
+      spacesModalVisible: space.isEmpty() && pathname !== '/spaces/create',
     };
   }
 
@@ -89,10 +106,8 @@ class App extends React.Component {
     }
   };
 
-  handleSpaceChange = space => {
-    const { handleSetSpace } = this.props;
-
-    handleSetSpace(space);
+  handleSpaceClick = () => {
+    this.setState({ spacesModalVisible: true });
   };
 
   handleSpaceCreate = () => {
@@ -100,10 +115,10 @@ class App extends React.Component {
     this.setState({ spacesModalVisible: false }, () => handlePush('/spaces/create'));
   };
 
-  handleSetSpace = space => {
+  handleSetSpace = spaceId => {
     const { handleSetSpace } = this.props;
 
-    this.setState({ spacesModalVisible: false }, () => handleSetSpace(space));
+    this.setState({ spacesModalVisible: false }, () => handleSetSpace(spaceId));
   };
 
   componentDidCatch(error, errorInfo) {
@@ -111,7 +126,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { _, hasPermission, isAuthenticated, profile, space, spaces, collections } = this.props;
+    const { _, hasPermission, isAuthenticated, profile, space, collections } = this.props;
     const { collapsed, error, errorInfo, spacesModalVisible } = this.state;
 
     if (!isAuthenticated) {
@@ -136,6 +151,7 @@ class App extends React.Component {
             icon: 'file-add',
             component: CollectionsPage,
             permission: permissions.USERS_LIST,
+            disabled: space.isEmpty(),
           },
         ],
       },
@@ -175,25 +191,11 @@ class App extends React.Component {
                   {!collapsed && <div>{profileName}</div>}
                 </UserInfo>
               </Link>
+              {!space.isEmpty() && (
+                <SpaceInfo onClick={this.handleSpaceClick}>{space.get('name')}</SpaceInfo>
+              )}
             </Tooltip>
           )}
-
-          <SpaceSelect
-            showSearch
-            filterOption={(input, option) =>
-              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            optionFilterProp="children"
-            placeholder={_('global.selectSpace')}
-            value={space}
-            onChange={this.handleSpaceChange}
-          >
-            {spaces.toList().map(item => (
-              <Select.Option key={item.get('id')} value={item.get('id')}>
-                {item.get('name')}
-              </Select.Option>
-            ))}
-          </SpaceSelect>
 
           <Menu
             defaultSelectedKeys={['4']}
@@ -204,7 +206,7 @@ class App extends React.Component {
             {menuItems.map(group => (
               <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
                 {group.items.filter(hasPermissions).map(item => (
-                  <Menu.Item key={item.key}>
+                  <Menu.Item key={item.key} disabled={item.disabled}>
                     <Icon type={item.icon} />
                     <span>{item.name || _(`menu.${item.key}`)}</span>
                   </Menu.Item>
@@ -260,8 +262,7 @@ App.propTypes = {
   hasPermission: PropTypes.func,
   isAuthenticated: PropTypes.bool,
   profile: PropTypes.map,
-  space: PropTypes.string,
-  spaces: PropTypes.map,
+  space: PropTypes.map,
 };
 
 App.defaultProps = {
@@ -272,15 +273,13 @@ App.defaultProps = {
   hasPermission: noop,
   isAuthenticated: false,
   profile: Map(),
-  space: null,
-  spaces: Map(),
+  space: Map(),
 };
 
 const mapStateToProps = state => ({
   isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
   profile: getProfile(state),
   space: getCurrentSpace(state),
-  spaces: getSpaces(state),
   collections: getCollections(state),
 });
 
@@ -296,8 +295,8 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: 'profileGet',
-    action: fetchProfile,
+    type: ['profileGet', 'spacesList'],
+    action: [fetchProfile, fetchSpaces],
   }),
   withRouter,
   withTranslate,
