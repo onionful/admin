@@ -53,7 +53,7 @@ export default ({
   });
 
   const mapDispatchToProps = dispatch => ({
-    handleAction: () => Promise.all([].concat(action).map(act => dispatch(act()))),
+    handleAction: props => Promise.all([].concat(action).map(act => dispatch(act(props)))),
   });
 
   return connect(

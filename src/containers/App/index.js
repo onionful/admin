@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Avatar, Icon, Layout, Menu, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import {
@@ -16,8 +17,8 @@ import { Link, Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCollections } from 'reducers/collections/actions';
-import { fetchSpaces, getCurrentSpace, setSpace } from 'reducers/spaces/actions';
-import { colors, media, permissions } from 'utils';
+import { fetchSpaces, getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
+import { acronym, colors, media, permissions } from 'utils';
 import { compose, connect, PropTypes, push, React, styled } from 'utils/create';
 
 const Container = styled(Layout.Content)({
@@ -54,7 +55,7 @@ const UserInfo = styled.div({
 const SpaceInfo = styled.div({
   cursor: 'pointer',
   backgroundColor: colors.background,
-  borderTop: `1px solid ${colors.gray}`,
+  borderTop: `1px solid ${colors.black}`,
   color: colors.white,
   fontWeight: 'bold',
   marginBottom: '1rem',
@@ -72,15 +73,16 @@ class App extends React.Component {
   constructor(...args) {
     super(...args);
 
-    const {
-      location: { pathname },
-      space,
-    } = this.props;
-
     this.state = {
       collapsed: false,
       error: null,
       errorInfo: null,
+      spacesModalVisible: false,
+    };
+  }
+
+  static getDerivedStateFromProps({ location: { pathname }, space }) {
+    return {
       spacesModalVisible: space.isEmpty() && pathname !== '/spaces/create',
     };
   }
@@ -184,16 +186,20 @@ class App extends React.Component {
           </Link>
 
           {profile && (
-            <Tooltip placement="right" title={profileName} trigger={collapsed ? 'hover' : ''}>
-              <Link to="/profile">
+            <Link to="/profile">
+              <Tooltip placement="right" title={profileName} trigger={collapsed ? 'hover' : ''}>
                 <UserInfo>
                   <Avatar size="large" src={profile.get('picture')} />
                   {!collapsed && <div>{profileName}</div>}
                 </UserInfo>
-              </Link>
-              {!space.isEmpty() && (
-                <SpaceInfo onClick={this.handleSpaceClick}>{space.get('name')}</SpaceInfo>
-              )}
+              </Tooltip>
+            </Link>
+          )}
+          {!space.isEmpty() && (
+            <Tooltip placement="right" title={space.get('name')} trigger={collapsed ? 'hover' : ''}>
+              <SpaceInfo onClick={this.handleSpaceClick}>
+                {collapsed ? acronym(space.get('name')) : space.get('name')}
+              </SpaceInfo>
             </Tooltip>
           )}
 
@@ -263,6 +269,7 @@ App.propTypes = {
   isAuthenticated: PropTypes.bool,
   profile: PropTypes.map,
   space: PropTypes.map,
+  spaces: PropTypes.map,
 };
 
 App.defaultProps = {
@@ -274,12 +281,14 @@ App.defaultProps = {
   isAuthenticated: false,
   profile: Map(),
   space: Map(),
+  spaces: Map(),
 };
 
 const mapStateToProps = state => ({
   isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
   profile: getProfile(state),
   space: getCurrentSpace(state),
+  spaces: getSpaces(state),
   collections: getCollections(state),
 });
 
@@ -295,7 +304,7 @@ export default compose(
     mapDispatchToProps,
   ),
   withLoading({
-    type: ['profileGet', 'spacesList'],
+    type: ['app', 'profileGet'],
     action: [fetchProfile, fetchSpaces],
   }),
   withRouter,

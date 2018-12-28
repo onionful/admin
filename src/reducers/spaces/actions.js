@@ -17,9 +17,9 @@ export const fetchSpace = id => ({
   payload: api.get(`/spaces/${id}`),
 });
 
-export const fetchSpaces = params => ({
+export const fetchSpaces = () => ({
   type: types.SPACES_LIST,
-  payload: api.get('/spaces', { params }),
+  payload: api.get('/spaces'),
 });
 
 export const updateSpace = (id, data) => ({

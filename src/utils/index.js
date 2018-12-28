@@ -19,3 +19,5 @@ api.interceptors.request.use(request => {
 export const Throw = message => () => {
   throw new Error(message);
 };
+
+export const acronym = string => string.match(/\b(\w)/g).join('');
