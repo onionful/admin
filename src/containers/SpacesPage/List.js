@@ -1,5 +1,5 @@
 import { Button, message, Popconfirm, Table } from 'antd';
-import { SectionHeader } from 'components/index';
+import { SectionHeader, UserLabel } from 'components/index';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
@@ -58,6 +58,7 @@ class SpacesPageList extends Component {
       {
         title: _('global.owners'),
         dataIndex: 'owners',
+        render: value => value.map(id => <UserLabel key={id} id={id} />),
       },
       {
         title: _('global.users'),

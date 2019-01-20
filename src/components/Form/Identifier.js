@@ -93,7 +93,7 @@ class Identifier extends Component {
 
 Identifier.propTypes = {
   _: PropTypes.func.isRequired,
-  _fields: PropTypes.objectOf(PropTypes.string),
+  _fields: PropTypes.object, // eslint-disable-line
   autoGenerateId: PropTypes.bool,
   normalize: PropTypes.func,
 };

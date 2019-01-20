@@ -14,6 +14,7 @@ export const fetchLabels = (...args) => {
     payload: isEmpty(ids)
       ? Promise.resolve([])
       : api.get(`/users/labels/${ids.join()}`).then(({ data: { users } }) => users),
+    meta: { distinctLoading: ids },
   };
 };
 

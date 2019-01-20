@@ -49,7 +49,8 @@ export default ({
   };
 
   const mapStateToProps = (state, props) => ({
-    isLoading: condition(props) && [].concat(type).some(key => state.getIn(['loading', key], true)),
+    isLoading:
+      condition(props) && [].concat(type).some(key => state.getIn(['loading'].concat(key), true)),
   });
 
   const mapDispatchToProps = dispatch => ({
