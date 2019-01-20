@@ -1,5 +1,5 @@
 import { Map } from 'immutable';
-import { isEmpty, camelCase } from 'lodash';
+import { camelCase } from 'lodash';
 
 export default (state = Map(), { type, meta: { distinctLoading = false } = {} }) => {
   const matches = /(.*)_(PENDING|FULFILLED|REJECTED)/.exec(type);
@@ -11,7 +11,7 @@ export default (state = Map(), { type, meta: { distinctLoading = false } = {} })
   const [, requestName, requestState] = matches;
   const value = requestState === 'PENDING';
 
-  return isEmpty(distinctLoading)
+  return distinctLoading === false
     ? state.set(camelCase(requestName), value)
     : []
         .concat(distinctLoading)

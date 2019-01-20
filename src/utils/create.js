@@ -1,8 +1,13 @@
+/* eslint-disable */
 import RPropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IPropTypes from 'react-immutable-proptypes';
 import RRPropTypes from 'react-router-prop-types';
-import { propTypes as RFPropTypes } from 'redux-form/immutable';
+import {
+  fieldInputPropTypes,
+  fieldMetaPropTypes,
+  propTypes as RFPropTypes,
+} from 'redux-form/immutable';
 
 export { default as styled } from '@emotion/styled';
 export { css } from '@emotion/core';
@@ -16,6 +21,8 @@ export const PropTypes = {
   ...RPropTypes,
   ...RRPropTypes,
   form: RFPropTypes,
+  input: fieldInputPropTypes,
+  meta: fieldMetaPropTypes,
   fields: RPropTypes.arrayOf(
     RPropTypes.shape({
       id: RPropTypes.string.isRequired,

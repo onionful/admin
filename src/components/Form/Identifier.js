@@ -91,15 +91,26 @@ class Identifier extends Component {
   }
 }
 
+const FieldShape = PropTypes.shape({
+  name: PropTypes.string,
+  input: PropTypes.shape({
+    onChange: PropTypes.input.onChange,
+    value: PropTypes.input.value,
+  }),
+});
+
 Identifier.propTypes = {
   _: PropTypes.func.isRequired,
-  _fields: PropTypes.object, // eslint-disable-line
+  _fields: PropTypes.shape({
+    id: FieldShape,
+    value: FieldShape,
+  }),
   autoGenerateId: PropTypes.bool,
   normalize: PropTypes.func,
 };
 
 Identifier.defaultProps = {
-  _fields: {},
+  _fields: { id: { name: '', input: { value: '' } }, value: { name: '', input: { value: '' } } },
   autoGenerateId: true,
   normalize: kebabCase,
 };
