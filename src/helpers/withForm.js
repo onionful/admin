@@ -16,20 +16,27 @@ export default (form, formProps = {}) => WrappedComponent => {
     }) => {
       const hasError = touched && invalid;
 
-      return (
-        <Form.Item
-          hasFeedback={hasFeedback && hasError}
-          help={hasError && error}
-          label={label}
-          validateStatus={hasError ? 'error' : 'success'}
-        >
-          <FormComponent {...input} {...rest}>
-            {children}
-          </FormComponent>
-        </Form.Item>
-      );
-    },
-  );
+    return (
+      <Form.Item
+        hasFeedback={hasFeedback && hasError}
+        help={hasError && error}
+        label={label}
+        validateStatus={hasError ? 'error' : 'success'}
+      >
+        <FormComponent {...input} {...rest}>
+          {children}
+        </FormComponent>
+      </Form.Item>
+    );
+  };
+
+  FormComponentWrapper.propTypes = {
+    children: PropTypes.node,
+    hasFeedback: PropTypes.bool,
+    input: PropTypes.shape(PropTypes.input),
+    label: PropTypes.string,
+    meta: PropTypes.shape(PropTypes.meta),
+  };
 
   class withForm extends Component {
     getChildContext() {

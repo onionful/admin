@@ -131,14 +131,14 @@ const mapDispatchToProps = {
 };
 
 export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withPermissions(),
   withLoading({
     type: 'spacesList',
     action: fetchSpaces,
   }),
   withTranslate,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
 )(SpacesPageList);

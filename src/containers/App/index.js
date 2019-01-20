@@ -291,6 +291,10 @@ const mapDispatchToProps = {
 };
 
 export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   isAuthenticated,
   withLoading({
     type: ['app', 'profileGet'],
@@ -298,8 +302,4 @@ export default compose(
   }),
   withRouter,
   withTranslate,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
 )(App);
