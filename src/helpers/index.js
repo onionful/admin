@@ -1,3 +1,4 @@
+export { default as isAuthenticated } from './isAuthenticated';
 export { default as withForm } from './withForm';
 export { default as withLoading } from './withLoading';
 export { default as withPermissions } from './withPermissions';

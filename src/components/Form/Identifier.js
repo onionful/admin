@@ -93,11 +93,13 @@ class Identifier extends Component {
 
 Identifier.propTypes = {
   _: PropTypes.func.isRequired,
+  _fields: PropTypes.objectOf(PropTypes.string),
   autoGenerateId: PropTypes.bool,
   normalize: PropTypes.func,
 };
 
 Identifier.defaultProps = {
+  _fields: {},
   autoGenerateId: true,
   normalize: kebabCase,
 };

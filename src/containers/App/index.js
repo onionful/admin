@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Avatar, Icon, Layout, Menu, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import {
@@ -10,10 +9,10 @@ import {
   SpacesPage,
   UsersPage,
 } from 'containers';
-import { withLoading, withTranslate } from 'helpers';
+import { isAuthenticated, withLoading, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { Link, Redirect, Route, Switch, withRouter } from 'react-router-dom';
+import { Link, Route, Switch, withRouter } from 'react-router-dom';
 import { getProfile } from 'reducers/auth';
 import { fetchProfile, logout } from 'reducers/auth/actions';
 import { getCollections } from 'reducers/collections/actions';
@@ -128,12 +127,8 @@ class App extends React.Component {
   }
 
   render() {
-    const { _, hasPermission, isAuthenticated, profile, space, collections } = this.props;
+    const { _, hasPermission, profile, space, collections } = this.props;
     const { collapsed, error, errorInfo, spacesModalVisible } = this.state;
-
-    if (!isAuthenticated) {
-      return <Redirect to="/login" />;
-    }
 
     const hasPermissions = ({ permission }) => hasPermission(permission) || true;
     const profileName = profile ? profile.get('name') || profile.get('nickname') : '';
@@ -266,7 +261,6 @@ App.propTypes = {
   handlePush: PropTypes.func,
   handleSetSpace: PropTypes.func,
   hasPermission: PropTypes.func,
-  isAuthenticated: PropTypes.bool,
   profile: PropTypes.map,
   space: PropTypes.map,
   spaces: PropTypes.map,
@@ -278,14 +272,12 @@ App.defaultProps = {
   handlePush: noop,
   handleSetSpace: noop,
   hasPermission: noop,
-  isAuthenticated: false,
   profile: Map(),
   space: Map(),
   spaces: Map(),
 };
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
   profile: getProfile(state),
   space: getCurrentSpace(state),
   spaces: getSpaces(state),
@@ -299,14 +291,15 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
+  isAuthenticated,
   withLoading({
     type: ['app', 'profileGet'],
     action: [fetchProfile, fetchSpaces],
   }),
   withRouter,
   withTranslate,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
 )(App);

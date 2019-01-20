@@ -127,14 +127,14 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
+  withPermissions(),
   withLoading({
     type: 'collectionsList',
     action: fetchCollections,
   }),
-  withPermissions(),
   withTranslate,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
 )(CollectionsPageList);

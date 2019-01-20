@@ -119,16 +119,16 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
+  withPermissions(),
   withLoading({
     type: ['collectionsList', 'collectionsItem'],
     action: ({ id }) => fetchCollection(id),
     condition: ({ id }) => !!id,
   }),
-  withPermissions(),
   withTranslate,
   withForm('collections'),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
 )(CollectionsPageEdit);

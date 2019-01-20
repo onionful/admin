@@ -93,13 +93,11 @@ FieldModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   field: PropTypes.map,
-  fieldName: PropTypes.string,
   type: PropTypes.string,
 };
 
 FieldModal.defaultProps = {
   field: Map(),
-  fieldName: null,
   type: null,
 };
 

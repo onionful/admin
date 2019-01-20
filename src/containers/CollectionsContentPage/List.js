@@ -102,14 +102,14 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-  connect(
-    null,
-    mapDispatchToProps,
-  ),
+  withPermissions(),
   withLoading({
     type: 'collectionsList',
     action: () => fetchCollection('aktualnosci'),
   }),
-  withPermissions(),
   withTranslate,
+  connect(
+    null,
+    mapDispatchToProps,
+  ),
 )(CollectionsContentPageList);

@@ -101,16 +101,16 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
-  withForm('content'),
+  withPermissions(),
   withLoading({
     type: ['contentList', 'contentItem'],
     action: ({ id }) => fetchContent(id),
     condition: ({ id }) => !!id,
   }),
-  withPermissions(),
+  withForm('content'),
   withTranslate,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
 )(CollectionsContentPageEdit);

@@ -113,16 +113,16 @@ const mapDispatchToProps = {
 };
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
+  withPermissions(),
   withLoading({
     type: ['spacesList', 'spacesItem'],
     action: ({ id }) => fetchSpace(id),
     condition: ({ id }) => !!id,
   }),
-  withPermissions(),
   withTranslate,
   withForm('spaces'),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
 )(SpacesPageEdit);

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Form } from 'antd';
 import { memoize } from 'lodash';
 import { reduxForm } from 'redux-form/immutable';

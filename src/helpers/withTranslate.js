@@ -5,9 +5,7 @@ import { compose, connect, getDisplayName, PropTypes, React } from 'utils/create
 
 // TODO check if ref is still required
 export default WrappedComponent => {
-  const WithTranslate = ({ forwardedRef, ...props }) => (
-    <WrappedComponent {...props} ref={forwardedRef} />
-  );
+  const WithTranslate = props => <WrappedComponent {...props} />;
 
   WithTranslate.displayName = `WithTranslate(${getDisplayName(WrappedComponent)})`;
 
