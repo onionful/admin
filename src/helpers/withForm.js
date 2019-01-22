@@ -1,20 +1,18 @@
-/* eslint-disable */
 import { Form } from 'antd';
 import { memoize } from 'lodash';
 import { reduxForm } from 'redux-form/immutable';
 import { Component, PropTypes, React } from 'utils/create';
 
-export default (form, formProps = {}) => WrappedComponent => {
-  const createField = memoize(
-    FormComponent => ({
-      input: { onFocus, ...input },
-      meta: { touched, invalid, error },
-      children,
-      hasFeedback,
-      label,
-      ...rest
-    }) => {
-      const hasError = touched && invalid;
+const Field = FormComponent => {
+  const FormComponentWrapper = ({
+    input: { onFocus, ...input },
+    meta: { touched, invalid, error },
+    children,
+    hasFeedback,
+    label,
+    ...rest
+  }) => {
+    const hasError = touched && invalid;
 
     return (
       <Form.Item
@@ -38,9 +36,21 @@ export default (form, formProps = {}) => WrappedComponent => {
     meta: PropTypes.shape(PropTypes.meta),
   };
 
+  FormComponentWrapper.defaultProps = {
+    children: null,
+    hasFeedback: false,
+    input: {},
+    label: '',
+    meta: {},
+  };
+
+  return FormComponentWrapper;
+};
+
+export default (form, formProps = {}) => WrappedComponent => {
   class withForm extends Component {
     getChildContext() {
-      return { createField };
+      return { createField: memoize(Field) };
     }
 
     render() {

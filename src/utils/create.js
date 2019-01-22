@@ -1,4 +1,3 @@
-/* eslint-disable */
 import RPropTypes from 'prop-types';
 import React, { Component } from 'react';
 import IPropTypes from 'react-immutable-proptypes';

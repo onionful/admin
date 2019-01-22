@@ -4,7 +4,7 @@ import { types } from 'config';
 import { withForm, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { entries, upperFirst } from 'lodash';
-import { Field, formValueSelector } from 'redux-form/lib/immutable';
+import { Field, formValueSelector } from 'redux-form/immutable';
 import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
 import FieldType from './FieldType';
 
