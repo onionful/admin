@@ -3,7 +3,7 @@ import { SectionHeader } from 'components';
 import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { createContent, fetchContent, getContent, updateContent } from 'reducers/content/actions';
+import { createContent, fetchContent, getContent, updateContent } from 'reducers/content';
 import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 import FieldComponent from './FieldComponent';
 

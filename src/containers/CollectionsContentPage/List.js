@@ -3,7 +3,7 @@ import { SectionHeader } from 'components/index';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { List } from 'immutable';
 import { noop } from 'lodash';
-import { fetchCollection } from 'reducers/collections/actions';
+import { fetchCollection } from 'reducers/collections';
 import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 
 class CollectionsContentPageList extends Component {

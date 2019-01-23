@@ -1,8 +1,8 @@
 import { Avatar, Spin } from 'antd';
 import { Map } from 'immutable';
-import { fetchLabels, getUserLabel } from 'reducers/users/actions';
-import { connect, PropTypes, React, styled, Component } from 'utils/create';
 import { noop } from 'lodash';
+import { fetchLabels, getUserLabel } from 'reducers/users';
+import { Component, connect, PropTypes, React, styled } from 'utils/create';
 
 const Container = styled.span({
   display: 'flex',

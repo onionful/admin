@@ -1,9 +1,6 @@
-import { updateProfile } from 'reducers/auth/actions';
-import { PROFILE_GET } from 'reducers/auth/types';
-import { fetchCollections } from 'reducers/collections/actions';
-import { COLLECTIONS_DELETE, COLLECTIONS_UPDATE } from 'reducers/collections/types';
-import { setSpace } from 'reducers/spaces/actions';
-import { SET_SPACE, SPACES_LIST } from 'reducers/spaces/types';
+import { PROFILE_GET, updateProfile } from 'reducers/auth';
+import { COLLECTIONS_DELETE, COLLECTIONS_UPDATE, fetchCollections } from 'reducers/collections';
+import { SET_SPACE, setSpace, SPACES_LIST } from 'reducers/spaces';
 import { all, fork, put, take, takeEvery } from 'redux-saga/effects';
 
 const APP = 'APP';

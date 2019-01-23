@@ -4,7 +4,7 @@ import { withTranslate } from 'helpers';
 import { fromJS, List } from 'immutable';
 import { debounce, noop } from 'lodash';
 import { getId } from 'reducers/auth';
-import { findUsers } from 'reducers/users/actions';
+import { findUsers } from 'reducers/users';
 import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 class UsersSelect extends Component {

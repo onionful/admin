@@ -13,10 +13,9 @@ import { isAuthenticated, withLoading, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { Link, Route, Switch, withRouter } from 'react-router-dom';
-import { getProfile } from 'reducers/auth';
-import { fetchProfile, logout } from 'reducers/auth/actions';
-import { getCollections } from 'reducers/collections/actions';
-import { fetchSpaces, getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces/actions';
+import { fetchProfile, getProfile, logout } from 'reducers/auth';
+import { getCollections } from 'reducers/collections';
+import { fetchSpaces, getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces';
 import { acronym, colors, media, permissions } from 'utils';
 import { compose, connect, PropTypes, push, React, styled } from 'utils/create';
 

@@ -1,7 +1,7 @@
 import { Map } from 'immutable';
-import { getProfile } from 'reducers/auth/index';
 import { api, Auth } from 'utils';
 import { push } from 'utils/create';
+import { getProfile } from './selectors';
 import * as types from './types';
 
 const auth = new Auth();

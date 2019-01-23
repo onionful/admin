@@ -3,7 +3,7 @@ import { SectionHeader, UserLabel } from 'components/index';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { deleteSpace, fetchSpaces, getSpaces } from 'reducers/spaces/actions';
+import { deleteSpace, fetchSpaces, getSpaces } from 'reducers/spaces';
 import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 
 class SpacesPageList extends Component {

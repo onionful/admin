@@ -9,7 +9,7 @@ import {
   fetchCollection,
   getCollection,
   updateCollection,
-} from 'reducers/collections/actions';
+} from 'reducers/collections';
 import { Field, FieldArray, Fields } from 'redux-form/immutable';
 import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 import DraggableFieldsTable from './DraggableFieldsTable';

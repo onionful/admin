@@ -3,7 +3,7 @@ import { withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import moment from 'moment';
-import { fetchUsers } from 'reducers/users/actions';
+import { fetchUsers } from 'reducers/users';
 import { permissions } from 'utils';
 import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
 

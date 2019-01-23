@@ -3,7 +3,7 @@ import { Logo } from 'components';
 import { noop } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { authenticate, login } from 'reducers/auth/actions';
+import { authenticate, login } from 'reducers/auth';
 import { Component, PropTypes, React, styled } from 'utils/create';
 
 const StyledRow = styled.section({

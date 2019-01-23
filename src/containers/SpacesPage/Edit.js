@@ -4,8 +4,8 @@ import { Identifier, UsersSelect } from 'components/Form';
 import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { createSpace, fetchSpace, getSpace, updateSpace } from 'reducers/spaces/actions';
-import { fetchLabels } from 'reducers/users/actions';
+import { createSpace, fetchSpace, getSpace, updateSpace } from 'reducers/spaces';
+import { fetchLabels } from 'reducers/users';
 import { Field, Fields, Form } from 'redux-form/immutable';
 import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 

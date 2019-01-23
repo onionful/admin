@@ -1,6 +1,6 @@
 import { Spin } from 'antd';
-import { Component, connect, PropTypes, React, styled } from 'utils/create';
 import { noop } from 'lodash';
+import { Component, connect, PropTypes, React, styled } from 'utils/create';
 
 const Container = styled.section({
   display: 'flex',

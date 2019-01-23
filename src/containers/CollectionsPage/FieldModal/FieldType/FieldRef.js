@@ -2,9 +2,9 @@
 
 import { Select } from 'antd';
 import { withTranslate } from 'helpers';
-import { formValueSelector, Field } from 'redux-form/immutable';
-import { Component, compose, connect, PropTypes, React } from 'utils/create';
 import { List } from 'immutable';
+import { Field, formValueSelector } from 'redux-form/immutable';
+import { Component, compose, connect, PropTypes, React } from 'utils/create';
 
 const allowedRefTypes = ['string'];
 
