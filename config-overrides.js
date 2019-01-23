@@ -25,6 +25,11 @@ module.exports = override(
       '@menu-dark-item-active-bg': 'transparent',
     },
   }),
-  config => ({ ...config, plugins: config.plugins.concat(new HardSourceWebpackPlugin()) }),
+  config => ({
+    ...config,
+    plugins: config.plugins.concat(
+      new HardSourceWebpackPlugin({ environmentHash: { files: ['npm-shrinkwrap.json', '.env'] } }),
+    ),
+  }),
   rewireYAML,
 );
