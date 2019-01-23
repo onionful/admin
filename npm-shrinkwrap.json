@@ -2250,9 +2250,9 @@
       "dev": true
     },
     "auth0-js": {
-      "version": "9.9.0",
-      "resolved": "https://registry.npmjs.org/auth0-js/-/auth0-js-9.9.0.tgz",
-      "integrity": "sha512-WVGWXWoxkz3xwA/zJJucHwziIxAFSC7SGwSjejzl5Q8WgGf5qAbyRRkOyhYp73ZZRMrS0pCXqXt+28yF3nSJXw==",
+      "version": "9.9.1",
+      "resolved": "https://registry.npmjs.org/auth0-js/-/auth0-js-9.9.1.tgz",
+      "integrity": "sha512-75+BVjnGUTOiydhmJDTNNH0YW9R3/38rFFPbbMrkoZttJsTsBwLH/C5+y8dG/jjJ8Lc43xgBxi8Ak0lHK2+LcQ==",
       "requires": {
         "base64-js": "^1.2.0",
         "idtoken-verifier": "^1.2.0",
@@ -5782,7 +5782,7 @@
         },
         "load-json-file": {
           "version": "2.0.0",
-          "resolved": "https://registry.npmjs.org/load-json-file/-/load-json-file-2.0.0.tgz",
+          "resolved": "http://registry.npmjs.org/load-json-file/-/load-json-file-2.0.0.tgz",
           "integrity": "sha1-eUfkIUmvgNaWy/eXvKq8/h/inKg=",
           "dev": true,
           "requires": {

@@ -12,7 +12,7 @@
     "@emotion/core": "^10.0.6",
     "@emotion/styled": "^10.0.6",
     "antd": "^3.12.4",
-    "auth0-js": "^9.9.0",
+    "auth0-js": "^9.9.1",
     "axios": "^0.18.0",
     "connected-react-router": "^6.2.2",
     "draft-js": "^0.10.5",
