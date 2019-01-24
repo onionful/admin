@@ -7,3 +7,4 @@ export { default as Logo } from './Logo';
 export { default as SectionHeader } from './SectionHeader';
 export { default as SpacesModal } from './SpacesModal';
 export { default as UserLabel } from './UserLabel';
+export { default as UserLabelGroup } from './UserLabelGroup';

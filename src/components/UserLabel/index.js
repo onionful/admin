@@ -19,13 +19,13 @@ class UserLabel extends Component {
   }
 
   render() {
-    const { className, id, user } = this.props;
+    const { className, id, simple, user } = this.props;
 
     return (
       <Container className={className}>
         <Spin key={id} size="small" spinning={user.isEmpty()}>
           <Avatar size="small" src={user.get('picture')} />
-          {user.get('name') && <UserName>{user.get('name')}</UserName>}
+          {!simple && user.get('name') && <UserName>{user.get('name')}</UserName>}
         </Spin>
       </Container>
     );
@@ -37,6 +37,7 @@ UserLabel.propTypes = {
   className: PropTypes.string,
   handleFetchLabels: PropTypes.func,
   isLoading: PropTypes.bool,
+  simple: PropTypes.bool,
   user: PropTypes.map,
 };
 
@@ -44,6 +45,7 @@ UserLabel.defaultProps = {
   className: '',
   handleFetchLabels: noop,
   isLoading: false,
+  simple: false,
   user: Map(),
 };
 

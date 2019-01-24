@@ -1,14 +1,10 @@
 import { Button, message, Popconfirm, Table } from 'antd';
-import { Link, SectionHeader, UserLabel } from 'components';
+import { Link, SectionHeader, UserLabelGroup } from 'components';
 import { withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { deleteSpace, fetchSpaces, getSpaces } from 'reducers/spaces';
-import { Component, compose, connect, PropTypes, push, React, styled } from 'utils/create';
-
-const StyledUserLabel = styled(UserLabel)({
-  margin: '0.5rem 0',
-});
+import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 
 class SpacesPageList extends Component {
   onCreateClick = () => {
@@ -64,7 +60,7 @@ class SpacesPageList extends Component {
       {
         title: _('global.owners'),
         dataIndex: 'owners',
-        render: value => value.map(id => <StyledUserLabel key={id} id={id} />),
+        render: value => <UserLabelGroup ids={value} />,
       },
       {
         title: _('global.users'),
