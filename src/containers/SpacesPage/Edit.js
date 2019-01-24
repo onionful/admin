@@ -23,10 +23,21 @@ class SpacesPageEdit extends Component {
   };
 
   handleSubmit = values => {
-    const { _, isNew, item, handleCreateSpace, handleUpdateSpace, path, pushState } = this.props;
+    const {
+      _,
+      isNew,
+      item,
+      handleCreateSpace,
+      handleUpdateSpace,
+      initialize,
+      path,
+      pushState,
+    } = this.props;
+
     (isNew ? handleCreateSpace(values) : handleUpdateSpace(item.get('id'), values)).then(() => {
       message.success(_(`messages.spaces.${isNew ? 'created' : 'updated'}`));
       pushState(`${path}/edit/${values.get('id')}`);
+      initialize(values);
     });
   };
 
