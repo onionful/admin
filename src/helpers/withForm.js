@@ -3,7 +3,7 @@ import { memoize } from 'lodash';
 import { reduxForm } from 'redux-form/immutable';
 import { Component, PropTypes, React } from 'utils/create';
 
-const Field = FormComponent => {
+const Field = memoize(FormComponent => {
   const FormComponentWrapper = ({
     input: { onFocus, ...input },
     meta: { touched, invalid, error },
@@ -45,12 +45,12 @@ const Field = FormComponent => {
   };
 
   return FormComponentWrapper;
-};
+});
 
 export default (form, formProps = {}) => WrappedComponent => {
   class withForm extends Component {
     getChildContext() {
-      return { createField: memoize(Field) };
+      return { createField: Field };
     }
 
     render() {
