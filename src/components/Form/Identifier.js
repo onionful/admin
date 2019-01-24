@@ -29,6 +29,12 @@ class Identifier extends Component {
     _fields.id.input.onChange(normalize(value));
   };
 
+  handleValueBlur = ({ target: { value } }) => {
+    const { _fields } = this.props;
+
+    _fields.value.input.onChange(value.trim());
+  };
+
   handleValueChange = ({ target: { value } }) => {
     const { _fields, autoGenerateId, normalize } = this.props;
     const { locked } = this.state;
@@ -64,6 +70,7 @@ class Identifier extends Component {
             <Input
               {..._fields.value.input}
               name={_fields.value.name}
+              onBlur={this.handleValueBlur}
               onChange={this.handleValueChange}
             />
           </Form.Item>
