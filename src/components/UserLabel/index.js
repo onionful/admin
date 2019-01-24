@@ -19,10 +19,10 @@ class UserLabel extends Component {
   }
 
   render() {
-    const { id, user } = this.props;
+    const { className, id, user } = this.props;
 
     return (
-      <Container>
+      <Container className={className}>
         <Spin key={id} size="small" spinning={user.isEmpty()}>
           <Avatar size="small" src={user.get('picture')} />
           {user.get('name') && <UserName>{user.get('name')}</UserName>}
@@ -34,12 +34,14 @@ class UserLabel extends Component {
 
 UserLabel.propTypes = {
   id: PropTypes.string.isRequired,
+  className: PropTypes.string,
   handleFetchLabels: PropTypes.func,
   isLoading: PropTypes.bool,
   user: PropTypes.map,
 };
 
 UserLabel.defaultProps = {
+  className: '',
   handleFetchLabels: noop,
   isLoading: false,
   user: Map(),

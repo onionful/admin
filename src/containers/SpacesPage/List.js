@@ -1,10 +1,14 @@
 import { Button, message, Popconfirm, Table } from 'antd';
-import { SectionHeader, UserLabel } from 'components/index';
-import { withLoading, withPermissions, withTranslate } from 'helpers/index';
+import { Link, SectionHeader, UserLabel } from 'components';
+import { withLoading, withPermissions, withTranslate } from 'helpers';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { deleteSpace, fetchSpaces, getSpaces } from 'reducers/spaces';
-import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
+import { Component, compose, connect, PropTypes, push, React, styled } from 'utils/create';
+
+const StyledUserLabel = styled(UserLabel)({
+  margin: '0.5rem 0',
+});
 
 class SpacesPageList extends Component {
   onCreateClick = () => {
@@ -25,7 +29,7 @@ class SpacesPageList extends Component {
     } = this.props;
 
     handleDeleteSpace(id).then(() => {
-      message.success(_('messages.collections.deleted'));
+      message.success(_('messages.spaces.deleted'));
       handlePush(`${path}`);
     });
   };
@@ -44,21 +48,23 @@ class SpacesPageList extends Component {
 
     const columns = [
       {
+        title: _('global.name'),
+        dataIndex: 'name',
+        render: value => <strong>{value}</strong>,
+      },
+      {
         title: _('global.id'),
         dataIndex: 'id',
       },
       {
-        title: _('global.name'),
-        dataIndex: 'name',
-      },
-      {
         title: _('global.url'),
         dataIndex: 'url',
+        render: value => <Link to={value} />,
       },
       {
         title: _('global.owners'),
         dataIndex: 'owners',
-        render: value => value.map(id => <UserLabel key={id} id={id} />),
+        render: value => value.map(id => <StyledUserLabel key={id} id={id} />),
       },
       {
         title: _('global.users'),
@@ -74,8 +80,8 @@ class SpacesPageList extends Component {
               {_('global.create')}
             </Button>
           }
-          description={_('collections.description.list')}
-          title={_('collections.title.list')}
+          description={_('spaces.description.list')}
+          title={_('spaces.title.list')}
         />
 
         <Table
