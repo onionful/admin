@@ -19,53 +19,57 @@ import { fetchSpaces, getCurrentSpace, getSpaces, setSpace } from 'reducers/spac
 import { acronym, colors, media, permissions } from 'utils';
 import { compose, connect, PropTypes, push, React, styled } from 'utils/create';
 
-const Container = styled(Layout.Content)({
-  position: 'relative',
-  height: '100%',
-  padding: '20px',
-});
+const Container = styled(Layout.Content)`
+  position: relative;
+  height: 100%;
+  padding: 20px;
+`;
 
-const Content = styled.div({
-  background: '#fff',
-  padding: 24,
-});
+const Content = styled.div`
+  background: #fff;
+  padding: 24px;
+`;
 
-const StyledLogo = styled(Logo)(({ collapsed }) => ({
-  margin: !collapsed ? '3rem' : '1rem',
-}));
+const StyledLogo = styled(Logo)`
+  display: block;
+  margin: 2rem auto;
+  width: 50%;
+`;
 
-const UserInfo = styled.div({
-  cursor: 'pointer',
-  backgroundColor: colors.background,
-  padding: '1rem 0',
-  textAlign: 'center',
-  transition: 'box-shadow 0.5s',
+const UserInfo = styled.div`
+  cursor: pointer;
+  background-color: ${colors.background};
+  padding: 1rem 0;
+  text-align: center;
+  transition: box-shadow 0.5s;
 
-  '&: hover': colors.lighterBackground,
+  &:hover {
+    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);
+  }
 
-  '& div': {
-    color: colors.white,
-    paddingTop: '1rem',
-    opacity: 0.65,
+  div {
+    color: ${colors.white};
+    padding-top: 1rem;
+    opacity: 0.65;
+  }
+`;
+
+const SpaceInfo = styled.div`
+  cursor: pointer;
+  background-color: ${colors.background};
+  border-top: 1px solid ${colors.black};
+  color: ${colors.white};
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  text-align: center;
+  transition: box-shadow 0.5s, color 0.5s;
+
+  &:hover {
+    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);
+    color: ${colors.onion};
   },
-});
-
-const SpaceInfo = styled.div({
-  cursor: 'pointer',
-  backgroundColor: colors.background,
-  borderTop: `1px solid ${colors.black}`,
-  color: colors.white,
-  fontWeight: 'bold',
-  marginBottom: '1rem',
-  padding: '1rem',
-  textAlign: 'center',
-  transition: 'box-shadow 0.5s, color 0.5s',
-
-  '&: hover': {
-    ...colors.lighterBackground,
-    color: colors.onion,
-  },
-});
+`;
 
 class App extends React.Component {
   constructor(...args) {
@@ -176,7 +180,7 @@ class App extends React.Component {
           onCollapse={this.handleCollapse}
         >
           <Link to="/">
-            <StyledLogo collapsed={collapsed} />
+            <StyledLogo />
           </Link>
 
           {profile && (

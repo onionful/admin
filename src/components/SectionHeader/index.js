@@ -2,14 +2,14 @@ import { Col, Row } from 'antd';
 import { colors } from 'utils';
 import { PropTypes, React, styled } from 'utils/create';
 
-const Header = styled.h1({
-  margin: 0,
-});
+const Header = styled.h1`
+  margin: 0;
+`;
 
-const Description = styled.p({
-  fontStyle: 'italic',
-  color: colors.gray,
-});
+const Description = styled.p`
+  font-style: italic;
+  color: ${colors.gray};
+`;
 
 const SectionHeader = ({ title, description, action }) => (
   <Row align="middle" type="flex">

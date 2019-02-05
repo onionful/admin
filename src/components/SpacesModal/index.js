@@ -5,41 +5,43 @@ import { Map } from 'immutable';
 import { colors } from 'utils';
 import { compose, connect, PropTypes, React, styled } from 'utils/create';
 
-const StyledLogo = styled(Logo)({
-  display: 'block',
-  margin: '0 auto',
-  width: '10rem',
-});
+const StyledLogo = styled(Logo)`
+  display: block;
+  margin: 0 auto;
+  width: 10rem;
+`;
 
-const Header = styled.h1({
-  textAlign: 'center',
-  margin: '2rem',
-  color: colors.white,
-});
+const Header = styled.h1`
+  text-align: center;
+  margin: 2rem;
+  color: ${colors.white};
+`;
 
-const Item = styled(List.Item)({
-  cursor: 'pointer',
-  transition: 'all 0.3s ease',
-  color: colors.white,
-  fontSize: '1.2rem',
+const Item = styled(List.Item)`
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: ${colors.white};
+  font-size: 1.2rem;
 
-  '&:hover': {
-    background: colors.onion,
-    color: colors.black,
-  },
-});
+  &:hover {
+    background: ${colors.onion};
+    color: ${colors.black};
+  }
+`;
 
-const EmptyText = styled.span({ color: colors.white });
+const EmptyText = styled.span`
+  color: ${colors.white};
+`;
 
-const CreateSpace = styled(Button)({
-  display: 'block',
-  margin: '1rem auto',
-  opacity: 0.1,
+const CreateSpace = styled(Button)`
+  display: block;
+  margin: 1rem auto;
+  opacity: 0.1;
 
-  '&:hover': {
-    opacity: 1,
-  },
-});
+  &:hover {
+    opacity: 1;
+  }
+`;
 
 const SpacesModal = ({ _, onCreate, onSetSpace, spaces, visible }) => (
   <Modal

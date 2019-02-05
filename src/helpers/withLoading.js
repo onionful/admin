@@ -2,12 +2,12 @@ import { Spin } from 'antd';
 import { noop } from 'lodash';
 import { Component, connect, PropTypes, React, styled } from 'utils/create';
 
-const Container = styled.section({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flex: 1,
-});
+const Container = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
 
 export default ({
   type,

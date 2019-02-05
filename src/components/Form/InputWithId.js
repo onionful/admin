@@ -8,9 +8,9 @@ const NoAutoGenerateIcon = styled(({ className, tooltip }) => (
   <Tooltip title={tooltip}>
     <Icon className={className} type="disconnect" />
   </Tooltip>
-))({
-  marginRight: '1rem',
-});
+))`
+  margin-right: 1rem;
+`;
 
 class InputWithId extends Component {
   constructor(...args) {

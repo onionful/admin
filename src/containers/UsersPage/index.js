@@ -7,18 +7,18 @@ import { fetchUsers } from 'reducers/users';
 import { permissions } from 'utils';
 import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
 
-const SearchReset = styled(Icon)({
-  marginRight: '1rem',
-  cursor: 'pointer',
-});
+const SearchReset = styled(Icon)`
+  margin-right: 1rem;
+  cursor: pointer;
+`;
 
-const Search = styled(Input.Search)({
-  marginBottom: '1rem',
-});
+const Search = styled(Input.Search)`
+  margin-bottom: 1rem;
+`;
 
-const SearchQuery = styled.div({
-  marginBottom: '1rem',
-});
+const SearchQuery = styled.div`
+  margin-bottom: 1rem;
+`;
 
 class UsersPage extends Component {
   state = {

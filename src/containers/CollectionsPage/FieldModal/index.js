@@ -8,24 +8,24 @@ import { Field, formValueSelector } from 'redux-form/immutable';
 import { Component, compose, connect, PropTypes, React, styled } from 'utils/create';
 import FieldType from './FieldType';
 
-const StyledButton = styled(Button)({
-  display: 'flex',
-  margin: '.5rem 0',
-  padding: '.5rem',
-  height: 'auto',
-  width: '100%',
-});
+const StyledButton = styled(Button)`
+  display: flex;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  height: auto;
+  width: 100%;
+`;
 
-const BackButton = styled(Button)({
-  float: 'left',
-});
+const BackButton = styled(Button)`
+  float: left;
+`;
 
-const Description = styled.div({
-  display: 'flex',
-  flexDirection: 'column',
-  textAlign: 'left',
-  padding: '0 1rem',
-});
+const Description = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding: 0 1rem;
+`;
 
 class FieldModal extends Component {
   handleTypeSelected = type => {

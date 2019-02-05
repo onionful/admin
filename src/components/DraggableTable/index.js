@@ -4,16 +4,16 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { colors } from 'utils';
 import { css, PropTypes, React, styled } from 'utils/create';
 
-const StyledTable = styled(Table)({
-  '& table': {
-    borderCollapse: 'separate',
-    borderSpacing: 0,
-  },
-  '& td': {
-    borderTopSize: '1px !important',
-    borderBottomSize: '1px !important',
-  },
-});
+const StyledTable = styled(Table)`
+  & table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  & td {
+    border-top-width: 1px !important;
+    border-bottom-width: 1px !important;
+  }
+`;
 
 const BodyRow = ({
   isOver,

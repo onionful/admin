@@ -3,28 +3,28 @@ import { Logo } from 'components';
 import { colors } from 'utils';
 import { PropTypes, React, styled } from 'utils/create';
 
-const StyledLogo = styled(Logo)({
-  width: '10rem',
-});
+const StyledLogo = styled(Logo)`
+  width: 10rem;
+`;
 
-const Stench = styled.div({
-  color: colors.rottenOnion,
-  fontSize: '2rem',
-  marginBottom: '-2rem',
-  whiteSpace: 'pre',
+const Stench = styled.div`
+  color: ${colors.rottenOnion};
+  font-size: 2rem;
+  margin-bottom: -2rem;
+  white-space: pre;
 
-  '&:after': {
-    content: '"~\\A~"',
-    display: 'inline-block',
-    transform: 'rotate(90deg)',
+  &:after {
+    content: "~\\A~";
+    display: inline-block;
+    transform: rotate(90deg);
   },
-});
+`;
 
-const Stack = styled.pre({
-  maxHeight: '10rem',
-  overflowY: 'auto',
-  opacity: 0.5,
-});
+const Stack = styled.pre`
+  max-height: 10rem;
+  overflow-y: auto;
+  opacity: 0.5;
+`;
 
 const ErrorPage = styled(({ className, error, errorInfo: { componentStack }, onDismiss }) => (
   <div className={className}>
@@ -35,13 +35,13 @@ const ErrorPage = styled(({ className, error, errorInfo: { componentStack }, onD
     <Stack>{componentStack}</Stack>
     <Button icon="close" shape="circle" onClick={onDismiss} />
   </div>
-))({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  minHeight: '100%',
-});
+))`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+`;
 
 ErrorPage.propTypes = {
   error: PropTypes.instanceOf(Error).isRequired,

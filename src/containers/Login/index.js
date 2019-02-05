@@ -6,21 +6,21 @@ import { Redirect } from 'react-router-dom';
 import { authenticate, login } from 'reducers/auth';
 import { Component, PropTypes, React, styled } from 'utils/create';
 
-const StyledRow = styled.section({
-  display: 'flex',
-  flexDirection: 'column',
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#001529',
-});
+const StyledRow = styled.section`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: #001529;
+`;
 
-const StyledLogo = styled(Logo)({
-  display: 'block',
-  margin: '0 auto 3rem',
-  width: '100%',
-  maxWidth: '10rem',
-});
+const StyledLogo = styled(Logo)`
+  display: block;
+  margin: 0 auto 3rem;
+  width: 100%;
+  max-width: 10rem;
+`;
 
 class Login extends Component {
   componentDidMount() {

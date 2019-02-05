@@ -6,9 +6,9 @@ import { get } from 'lodash';
 import { fieldArrayFieldsPropTypes } from 'redux-form/immutable';
 import { Component, PropTypes, React, styled } from 'utils/create';
 
-const FieldName = styled.strong({
-  display: 'block',
-});
+const FieldName = styled.strong`
+  display: block;
+`;
 
 class DraggableFieldsTable extends Component {
   state = {

@@ -4,11 +4,13 @@ import { noop } from 'lodash';
 import { fetchLabels, getUserLabel } from 'reducers/users';
 import { Component, connect, PropTypes, React, styled } from 'utils/create';
 
-const Container = styled.span({
-  display: 'flex',
-});
+const Container = styled.span`
+  display: flex;
+`;
 
-const UserName = styled.span({ marginLeft: '0.5rem' });
+const UserName = styled.span`
+  margin-left: 0.5rem;
+`;
 
 class UserLabel extends Component {
   componentDidMount() {
