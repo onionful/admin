@@ -2,9 +2,10 @@ import { Button, Divider, Icon, Popconfirm } from 'antd';
 import { DraggableTable, FieldTypeIcon } from 'components';
 import FieldModal from 'containers/CollectionsPage/FieldModal';
 import { withTranslate } from 'helpers';
+import { List } from 'immutable';
 import { get } from 'lodash';
 import { fieldArrayFieldsPropTypes } from 'redux-form/immutable';
-import { Component, PropTypes, React, styled } from 'utils/create';
+import { Component, compose, PropTypes, React, styled } from 'utils/create';
 
 const FieldName = styled.strong`
   display: block;
@@ -41,7 +42,7 @@ class DraggableFieldsTable extends Component {
   render() {
     const { _, fields } = this.props;
     const { current, showModal } = this.state;
-    const dataSource = fields.map((name, index) => ({ name, field: fields.get(index) })).toArray();
+    const dataSource = List(fields.map((name, index) => ({ name, field: fields.get(index) })));
 
     return (
       <div>
@@ -103,7 +104,7 @@ class DraggableFieldsTable extends Component {
               ),
             },
           ]}
-          dataSource={dataSource}
+          dataSource={dataSource.toArray()}
           pagination={false}
           rowKey={({ name }) => name}
           showHeader={false}
@@ -119,4 +120,4 @@ DraggableFieldsTable.propTypes = {
   fields: PropTypes.shape(fieldArrayFieldsPropTypes).isRequired,
 };
 
-export default withTranslate(DraggableFieldsTable);
+export default compose(withTranslate)(DraggableFieldsTable);

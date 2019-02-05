@@ -104,6 +104,7 @@ CollectionsPageEdit.contextTypes = {
 
 const mapStateToProps = (state, { match: { params } }) => {
   const item = getCollection(state, params.id);
+
   return {
     id: params.id,
     item,
