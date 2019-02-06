@@ -23,7 +23,7 @@ const DraggableBodyRow = DropTarget(
 
       if (dragIndex !== index) {
         onSort(dragIndex, index);
-        monitor.getItem().index = index; // eslint-disable-line no-param-reassign
+        Object.assign(monitor.getItem(), { index });
       }
     },
   },
