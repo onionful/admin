@@ -1,8 +1,8 @@
 import { Table } from 'antd';
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { colors } from 'utils';
-import { css, PropTypes, React, styled } from 'utils/create';
+import { PropTypes, React, styled } from 'utils/create';
+import BodyRow from './BodyRow';
 
 const StyledTable = styled(Table)`
   & table {
@@ -14,41 +14,6 @@ const StyledTable = styled(Table)`
     border-bottom-width: 1px !important;
   }
 `;
-
-const BodyRow = ({
-  isOver,
-  connectDragSource,
-  connectDropTarget,
-  onSort,
-  dragRow,
-  clientOffset,
-  sourceClientOffset,
-  initialClientOffset,
-  style,
-  ...props
-}) => {
-  const edge = { top: false, bottom: false };
-  const border = value => `1px solid ${value ? `${colors.onion} !important` : 'transparent'}`;
-
-  if (isOver && initialClientOffset) {
-    const hoverMiddleY = (initialClientOffset.y - sourceClientOffset.y) / 2;
-    const hoverClientY = clientOffset.y - sourceClientOffset.y;
-    edge.bottom = dragRow.index < props.index && hoverClientY > hoverMiddleY;
-    edge.top = dragRow.index > props.index && hoverClientY < hoverMiddleY;
-  }
-
-  const className = css({
-    ...style,
-    cursor: 'move',
-
-    '& td': {
-      borderTop: border(edge.top),
-      borderBottom: border(edge.bottom),
-    },
-  });
-
-  return connectDragSource(connectDropTarget(<tr {...props} className={className} />));
-};
 
 const DraggableBodyRow = DropTarget(
   'row',
