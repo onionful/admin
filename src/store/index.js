@@ -15,7 +15,7 @@ export const history = createBrowserHistory();
 export default () => {
   const initialState = fromJS({});
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [thunk, routerMiddleware(history), promiseMiddleware(), sagaMiddleware];
+  const middlewares = [thunk, routerMiddleware(history), promiseMiddleware, sagaMiddleware];
 
   const enhancers = [];
   if (process.env.NODE_ENV === 'development') {
