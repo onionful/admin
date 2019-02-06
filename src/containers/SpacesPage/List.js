@@ -55,7 +55,7 @@ class SpacesPageList extends Component {
       {
         title: _('global.url'),
         dataIndex: 'url',
-        render: value => <Link to={value} />,
+        render: value => <Link to={value}>{value.replace(/(^\w+:|^)\/\//, '')}</Link>,
       },
       {
         title: _('global.owners'),
