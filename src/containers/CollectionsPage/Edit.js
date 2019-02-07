@@ -126,10 +126,10 @@ export default compose(
   ),
   withPermissions(),
   withLoading({
-    type: ['collectionsList', 'collectionsItem'],
+    type: 'collectionsItem',
     action: ({ id }) => fetchCollection(id),
     condition: ({ id }) => !!id,
   }),
   withTranslate,
-  withForm('collections'),
+  withForm('collections', { enableReinitialize: true }),
 )(CollectionsPageEdit);
