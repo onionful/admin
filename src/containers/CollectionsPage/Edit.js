@@ -130,6 +130,6 @@ export default compose(
     action: ({ id }) => fetchCollection(id),
     condition: ({ id }) => !!id,
   }),
-  withTranslate,
   withForm('collections', { enableReinitialize: true }),
+  withTranslate,
 )(CollectionsPageEdit);

@@ -5,10 +5,15 @@ import { withTranslate } from 'helpers';
 import { List } from 'immutable';
 import { get } from 'lodash';
 import { fieldArrayFieldsPropTypes } from 'redux-form/immutable';
+import { Throw } from 'utils';
 import { Component, compose, PropTypes, React, styled } from 'utils/create';
 
 const FieldName = styled.strong`
   display: block;
+`;
+
+const Details = styled.div`
+  opacity: 0.5;
 `;
 
 class DraggableFieldsTable extends Component {
@@ -37,6 +42,27 @@ class DraggableFieldsTable extends Component {
     }
 
     this.setState({ showModal: false });
+  };
+
+  renderFieldDetails = field => {
+    const { _, fields } = this.props;
+    const type = field.get('type');
+    const details = {
+      identifier: () => {
+        const fieldRef = fields.getAll().find(v => v.get('id') === field.get('fieldRef'));
+
+        return (
+          <div>
+            {_('collections.attributes.fieldRef')}:{' '}
+            {fieldRef ? fieldRef.get('name') : _('global.none')}
+          </div>
+        );
+      },
+      string: () => null,
+      text: () => null,
+    };
+
+    return <Details>{(details[type] || Throw(`Unknown type: ${type}`))()}</Details>;
   };
 
   render() {
@@ -79,6 +105,10 @@ class DraggableFieldsTable extends Component {
               ),
             },
             {
+              key: 'details',
+              render: ({ field }) => this.renderFieldDetails(field),
+            },
+            {
               align: 'center',
               key: 'actions',
               width: 100,
@@ -89,17 +119,16 @@ class DraggableFieldsTable extends Component {
                     icon="edit"
                     onClick={() => this.handleModalShow(index)}
                   />
-                  <Popconfirm
-                    title={_('global.deleteQuestion')}
-                    onConfirm={() => fields.remove(index)}
-                  >
-                    <Button
-                      disabled={field.get('id') === 'id'}
-                      htmlType="button"
-                      icon="delete"
-                      type="danger"
-                    />
-                  </Popconfirm>
+                  {field.get('id') === 'id' ? (
+                    <Button disabled htmlType="button" icon="delete" />
+                  ) : (
+                    <Popconfirm
+                      title={_('global.deleteQuestion')}
+                      onConfirm={() => fields.remove(index)}
+                    >
+                      <Button htmlType="button" icon="delete" type="danger" />
+                    </Popconfirm>
+                  )}
                 </Button.Group>
               ),
             },

@@ -62,9 +62,12 @@ Identifier.contextTypes = {
 };
 
 const selector = formValueSelector('content');
-const mapStateToProps = (state, { field }) => ({
-  refValue: selector(state, field.get('fieldRef')),
-});
+
+const mapStateToProps = (state, { field }) => {
+  return {
+    refValue: selector(state, field.get('fieldRef')),
+  };
+};
 
 const mapDispatchToProps = {
   handleChange: change,

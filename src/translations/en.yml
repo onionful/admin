@@ -1,8 +1,8 @@
 collections:
   title:
     list: Collections
-    create: Create collection
-    edit: Edit collection - ${name}
+    create: New collection
+    edit: ${name}
   description:
     list: Create and update your collections
     create: Create new type of your collection
@@ -33,11 +33,13 @@ collections:
 
 collection:
   title:
-    list: ${name} - items list
-    create: ${name} - create item
+    list: ${name}
+    create: New item
+    edit: ${name}
   description:
     list: Create and update your "${name}" collection's items
     create: Create new item inside your "${name}" collection
+    edit: Edit exisiting item
 
 spaces:
   title:

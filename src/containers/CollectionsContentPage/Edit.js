@@ -50,8 +50,8 @@ class CollectionsContentPageEdit extends Component {
               </Button>
             </Button.Group>
           }
-          description={_(`collection.description.${isNew ? 'create' : 'edit'}`)}
-          title={_(`collection.title.${isNew ? 'create' : 'edit'}`, item)}
+          description={_(`collection.description.${isNew ? 'create' : 'edit'}`, collection)}
+          title={_(`collection.title.${isNew ? 'create' : 'edit'}`, collection)}
         />
 
         {collection.get('fields').map(field => (
