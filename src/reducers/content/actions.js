@@ -1,31 +1,33 @@
 import { api } from 'utils';
 import * as types from './types';
 
-export const fetchContent = id => ({
-  type: types.CONTENT_ITEM,
-  payload: api.get(`/content/${id}`),
+export const fetchContent = (collection, id) => ({
+  type: types.CONTENT_GET,
+  payload: api.get(`/content/${collection}/${id}`),
+  meta: { collection, id },
 });
 
-export const fetchContentList = params => ({
+export const fetchContentList = (collection, params) => ({
   type: types.CONTENT_LIST,
-  payload: api.get('/content', params),
+  payload: api.get(`/content/${collection}`, params),
+  meta: { collection },
 });
 
-export const createContent = data => ({
+export const createContent = (collection, data) => ({
   type: types.CONTENT_CREATE,
-  payload: api.post('/content', data),
+  payload: api.post(`/content/${collection}`, data),
 });
 
-export const updateContent = (id, data) => ({
+export const updateContent = (collection, id, data) => ({
   type: types.CONTENT_UPDATE,
-  payload: api.put(`/content/${id}`, data),
+  payload: api.put(`/content/${collection}/${id}`, data),
 });
 
-export const deleteContent = id => ({
+export const deleteContent = (collection, id) => ({
   type: types.CONTENT_DELETE,
-  payload: api.delete(`/content/${id}`),
+  payload: api.delete(`/content/${collection}/${id}`),
 });
 
-export const getContentList = state => state.getIn(['content', 'data']);
+export const getContentList = (state, collection) => state.getIn(['content', collection]);
 
-export const getContent = (state, id) => state.getIn(['content', 'data', id]);
+export const getContent = (state, collection, id) => state.getIn(['content', collection, id]);

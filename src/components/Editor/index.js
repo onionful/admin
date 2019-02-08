@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { EditorState, RichUtils } from 'draft-js';
 
 import createBlockBreakoutPlugin from 'draft-js-block-breakout-plugin';
@@ -39,6 +40,9 @@ class Editor extends Component {
 
   render() {
     const { editorState } = this.state;
+    const { value } = this.props;
+
+    console.log('value', value);
 
     return (
       <EditorX

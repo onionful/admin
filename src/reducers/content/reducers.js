@@ -2,14 +2,17 @@ import { fromJS } from 'immutable';
 import typeToReducer from 'type-to-reducer';
 import * as types from './types';
 
-const initialState = fromJS({
-  data: [],
-});
+const initialState = fromJS({});
 
 export default typeToReducer(
   {
     [types.CONTENT_LIST]: {
-      FULFILLED: (state, { payload: { data } }) => state.merge({ data: fromJS(data) }),
+      FULFILLED: (state, { payload: { data }, meta: { collection } }) =>
+        state.merge({ [collection]: fromJS(data) }),
+    },
+    [types.CONTENT_GET]: {
+      FULFILLED: (state, { payload: { data }, meta: { collection, id } }) =>
+        state.merge({ [collection]: { [id]: fromJS(data) } }),
     },
   },
   initialState,

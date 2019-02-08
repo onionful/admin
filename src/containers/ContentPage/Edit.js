@@ -17,14 +17,19 @@ class ContentPageEdit extends Component {
   handleSubmit = values => {
     const {
       _,
-      isNew,
-      item,
+      collection,
       handleCreateContent,
       handleUpdateContent,
+      isNew,
+      item,
       path,
       pushState,
     } = this.props;
-    (isNew ? handleCreateContent(values) : handleUpdateContent(item.get('id'), values)).then(() => {
+
+    (isNew
+      ? handleCreateContent(collection.get('id'), values)
+      : handleUpdateContent(collection.get('id'), item.get('id'), values)
+    ).then(() => {
       message.success(_(`messages.content.${isNew ? 'created' : 'updated'}`));
       pushState(`${path}/edit/${values.get('id')}`);
     });
@@ -82,17 +87,16 @@ ContentPageEdit.defaultProps = {
   pushState: noop,
 };
 
-const mapStateToProps = (
-  state,
-  {
-    match: {
-      params: { id },
-    },
-  },
-) => ({
-  item: getContent(state, id),
-  isNew: !id,
-});
+const mapStateToProps = (state, { collection, match: { params } }) => {
+  const item = getContent(state, collection.get('id'), params.id);
+
+  return {
+    id: params.id,
+    item,
+    isNew: !params.id,
+    initialValues: item,
+  };
+};
 
 const mapDispatchToProps = {
   pushState: push,
@@ -107,10 +111,10 @@ export default compose(
   ),
   withPermissions(),
   withLoading({
-    type: ['contentList', 'contentItem'],
-    action: ({ id }) => fetchContent(id),
+    type: 'contentGet',
+    action: ({ collection, id }) => fetchContent(collection.get('id'), id),
     condition: ({ id }) => !!id,
   }),
-  withForm('content'),
+  withForm('content', { enableReinitialize: true }),
   withTranslate,
 )(ContentPageEdit);

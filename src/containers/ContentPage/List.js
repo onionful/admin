@@ -3,7 +3,7 @@ import { SectionHeader } from 'components/index';
 import { withLoading, withPermissions, withTranslate } from 'helpers/index';
 import { List } from 'immutable';
 import { noop } from 'lodash';
-import { fetchCollection } from 'reducers/collections';
+import { fetchContentList, getContentList } from 'reducers/content';
 import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 
 class ContentPageList extends Component {
@@ -35,16 +35,7 @@ class ContentPageList extends Component {
       },
       {
         title: _('global.name'),
-        dataIndex: 'name',
-      },
-      {
-        title: _('global.description'),
-        dataIndex: 'description',
-      },
-      {
-        title: _('global.fields'),
-        dataIndex: 'fields',
-        render: value => value.length,
+        dataIndex: 'title', // TODO: title key may not be available
       },
     ];
 
@@ -97,19 +88,23 @@ ContentPageList.defaultProps = {
   handlePush: noop,
 };
 
+const mapStateToProps = (state, { collection }) => ({
+  data: getContentList(state, collection.get('id')),
+});
+
 const mapDispatchToProps = {
   handlePush: push,
 };
 
 export default compose(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
   ),
   withPermissions(),
   withLoading({
-    type: 'collectionsList',
-    action: () => fetchCollection('aktualnosci'),
+    type: 'contentList',
+    action: ({ collection }) => fetchContentList(collection.get('id')),
   }),
   withTranslate,
 )(ContentPageList);
