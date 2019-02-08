@@ -4,7 +4,7 @@ import { compose, connect, PropTypes, push, React } from 'utils/create';
 import CollectionsContentPageEdit from './Edit';
 import CollectionsContentPageList from './List';
 
-const CollectionsContentPage = ({ collection, match: { path } }) => (
+const ContentPage = ({ collection, match: { path } }) => (
   <Switch>
     <Route
       exact
@@ -24,7 +24,7 @@ const CollectionsContentPage = ({ collection, match: { path } }) => (
   </Switch>
 );
 
-CollectionsContentPage.propTypes = {
+ContentPage.propTypes = {
   collection: PropTypes.map.isRequired,
   match: PropTypes.match.isRequired,
 };
@@ -40,4 +40,4 @@ export default compose(
   ),
   withPermissions(),
   withRouter,
-)(CollectionsContentPage);
+)(ContentPage);

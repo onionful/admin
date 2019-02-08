@@ -1,7 +1,7 @@
 import { Avatar, Icon, Layout, Menu, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import {
-  CollectionsContentPage,
+  ContentPage,
   CollectionsPage,
   ErrorPage,
   HomePage,
@@ -144,7 +144,7 @@ class App extends React.Component {
             key: `collection/${collection.get('id')}`,
             icon: 'file',
             name: collection.get('name'),
-            render: props => <CollectionsContentPage {...props} collection={collection} />,
+            render: props => <ContentPage {...props} collection={collection} />,
           })),
           {
             key: 'collections',

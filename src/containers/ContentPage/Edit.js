@@ -7,7 +7,7 @@ import { createContent, fetchContent, getContent, updateContent } from 'reducers
 import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 import FieldComponent from './FieldComponent';
 
-class CollectionsContentPageEdit extends Component {
+class ContentPageEdit extends Component {
   handleCancelClick = () => {
     const { pushState, path } = this.props;
 
@@ -62,7 +62,7 @@ class CollectionsContentPageEdit extends Component {
   }
 }
 
-CollectionsContentPageEdit.propTypes = {
+ContentPageEdit.propTypes = {
   ...PropTypes.form,
   _: PropTypes.func.isRequired,
   collection: PropTypes.map.isRequired,
@@ -74,7 +74,7 @@ CollectionsContentPageEdit.propTypes = {
   pushState: PropTypes.func,
 };
 
-CollectionsContentPageEdit.defaultProps = {
+ContentPageEdit.defaultProps = {
   handleCreateContent: noop,
   handleUpdateContent: noop,
   isNew: true,
@@ -113,4 +113,4 @@ export default compose(
   }),
   withForm('content'),
   withTranslate,
-)(CollectionsContentPageEdit);
+)(ContentPageEdit);

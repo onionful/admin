@@ -6,7 +6,7 @@ import { noop } from 'lodash';
 import { fetchCollection } from 'reducers/collections';
 import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
 
-class CollectionsContentPageList extends Component {
+class ContentPageList extends Component {
   onCreateClick = () => {
     const {
       handlePush,
@@ -84,7 +84,7 @@ class CollectionsContentPageList extends Component {
   }
 }
 
-CollectionsContentPageList.propTypes = {
+ContentPageList.propTypes = {
   _: PropTypes.func.isRequired,
   collection: PropTypes.map.isRequired,
   match: PropTypes.match.isRequired,
@@ -92,7 +92,7 @@ CollectionsContentPageList.propTypes = {
   handlePush: PropTypes.func,
 };
 
-CollectionsContentPageList.defaultProps = {
+ContentPageList.defaultProps = {
   data: List(),
   handlePush: noop,
 };
@@ -112,4 +112,4 @@ export default compose(
     action: () => fetchCollection('aktualnosci'),
   }),
   withTranslate,
-)(CollectionsContentPageList);
+)(ContentPageList);
