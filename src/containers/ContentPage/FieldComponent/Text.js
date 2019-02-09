@@ -1,4 +1,3 @@
-import { Input } from 'antd';
 import { Editor } from 'components';
 import { withTranslate } from 'helpers';
 import { compose } from 'redux';
@@ -8,7 +7,7 @@ import { PropTypes, React } from 'utils/create';
 const Text = ({ field }, { createField }) => (
   <Field
     autosize
-    component={createField(field.get('editor') ? Editor : Input.TextArea)}
+    component={createField(Editor)}
     label={field.get('name')}
     name={field.get('id')}
   />
