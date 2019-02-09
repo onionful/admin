@@ -126,7 +126,7 @@ export default compose(
   ),
   withPermissions(),
   withLoading({
-    type: 'collectionsItem',
+    type: 'collectionsGet',
     action: ({ id }) => fetchCollection(id),
     condition: ({ id }) => !!id,
   }),

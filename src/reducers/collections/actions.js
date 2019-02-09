@@ -3,7 +3,7 @@ import { api } from 'utils';
 import * as types from './types';
 
 export const fetchCollection = id => ({
-  type: types.COLLECTIONS_ITEM,
+  type: types.COLLECTIONS_GET,
   payload: api.get(`/collections/${id}`),
 });
 

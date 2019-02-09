@@ -14,6 +14,14 @@ export default typeToReducer(
       FULFILLED: (state, { payload: { data }, meta: { collection, id } }) =>
         state.merge({ [collection]: { [id]: fromJS(data) } }),
     },
+    [types.CONTENT_CREATE]: {
+      FULFILLED: (state, { payload: { data }, meta: { collection } }) =>
+        state.setIn([collection, data.id], fromJS(data)),
+    },
+    [types.CONTENT_UPDATE]: {
+      FULFILLED: (state, { payload: { data }, meta: { collection, id } }) =>
+        state.setIn([collection, id], fromJS(data)),
+    },
   },
   initialState,
 );

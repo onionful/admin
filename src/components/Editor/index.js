@@ -1,56 +1,54 @@
 /* eslint-disable */
-import { EditorState, RichUtils } from 'draft-js';
+import { fromJS, isImmutable } from 'immutable';
+import Delta from 'quill-delta';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { Component, React, styled } from 'utils/create';
 
-import createBlockBreakoutPlugin from 'draft-js-block-breakout-plugin';
-import { stateFromMarkdown } from 'draft-js-import-markdown';
-import EditorX from 'draft-js-plugins-editor';
-import { Component, React } from 'utils/create';
+// https://github.com/jpuri/react-draft-wysiwyg
+// https://github.com/sstur/react-rte/
 
-const options = {
-  breakoutBlockType: 'unordered-list-item',
-  breakoutBlocks: ['header-one', 'header-two'],
-};
-const blockBreakoutPlugin = createBlockBreakoutPlugin(options);
-
-const markdown = `
-  Slate is flexible enough to add **decorators** that can format text based on its content.
-  For example, this editor has **Markdown** preview decorators on it, to make it _dead_ simple to
-  make an editor with built-in Markdown previewing.
-  ## Try it out!
-  Try it out for yourself!
-`;
+const EditorWrapper = styled.div``;
 
 class Editor extends Component {
-  state = {
-    editorState: EditorState.createWithContent(stateFromMarkdown(markdown)),
-  };
-
-  handleKeyCommand = (command, editorState) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
-    if (newState) {
-      this.onChange(newState);
-      return 'handled';
-    }
-    return 'not-handled';
-  };
-
-  onChange = editorState => {
-    this.setState({ editorState });
-  };
-
-  render() {
-    const { editorState } = this.state;
-    const { value } = this.props;
+  handleChange = (text, delta, source, editor) => {
+    const { onChange, value } = this.props;
 
     console.log('value', value);
+    console.log('value2', fromJS({ ops: editor.getContents().ops }));
+
+    onChange(fromJS({ ops: editor.getContents().ops }));
+
+    // this.setState({ text: editor.getContents() });
+  };
+
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    const value = isImmutable(nextProps.value)
+      ? new Delta(nextProps.value.toJS())
+      : nextProps.value;
+
+    return this.editor
+      .getEditor()
+      .getContents()
+      .diff(value)
+      .length();
+  }
+
+  render() {
+    const { value } = this.props;
+
+    const v = isImmutable(value) ? value.toJS() : value;
 
     return (
-      <EditorX
-        editorState={editorState}
-        handleKeyCommand={this.handleKeyCommand}
-        plugins={[blockBreakoutPlugin]}
-        onChange={this.onChange}
-      />
+      <EditorWrapper>
+        <ReactQuill
+          bounds=".css-ixpkms"
+          defaultValue={v}
+          ref={editor => (this.editor = editor)}
+          value={v}
+          onChange={this.handleChange}
+        />
+      </EditorWrapper>
     );
   }
 }

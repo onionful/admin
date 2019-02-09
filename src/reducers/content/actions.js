@@ -16,16 +16,19 @@ export const fetchContentList = (collection, params) => ({
 export const createContent = (collection, data) => ({
   type: types.CONTENT_CREATE,
   payload: api.post(`/content/${collection}`, data),
+  meta: { collection },
 });
 
 export const updateContent = (collection, id, data) => ({
   type: types.CONTENT_UPDATE,
   payload: api.put(`/content/${collection}/${id}`, data),
+  meta: { collection, id },
 });
 
 export const deleteContent = (collection, id) => ({
   type: types.CONTENT_DELETE,
   payload: api.delete(`/content/${collection}/${id}`),
+  meta: { collection, id },
 });
 
 export const getContentList = (state, collection) => state.getIn(['content', collection]);
