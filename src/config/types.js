@@ -10,12 +10,12 @@ export default {
   string: {
     icon: 'font',
     color: '#ffb500',
-    attributes: [...common],
+    attributes: [...common, 'multiline'],
   },
   text: {
     icon: 'align-left',
     color: '#ff9200',
-    attributes: [...common, 'editor'],
+    attributes: [...common],
   },
   number: {
     icon: 'hashtag',

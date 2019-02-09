@@ -25,7 +25,7 @@ collections:
     required: Required
     unique: Unique
     range: Range
-    editor: Show content editor
+    multiline: Multiline text
     numberFormat: Number format
     multiple: Multiple images
     identifier: Generate identifier

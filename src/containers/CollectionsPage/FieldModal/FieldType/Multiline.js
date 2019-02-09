@@ -4,7 +4,7 @@ import { Field } from 'redux-form/immutable';
 import { compose, PropTypes, React } from 'utils/create';
 
 const Editor = ({ _, type }, { createField }) => (
-  <Field defaultChecked component={createField(Checkbox)} name={type}>
+  <Field component={createField(Checkbox)} name={type}>
     {_(`collections.attributes.${type}`)}
   </Field>
 );
