@@ -259,6 +259,7 @@ class App extends React.Component {
 
 App.propTypes = {
   _: PropTypes.func.isRequired,
+  location: PropTypes.location.isRequired,
   collections: PropTypes.map,
   handleLogout: PropTypes.func,
   handlePush: PropTypes.func,
