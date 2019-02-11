@@ -1,56 +1,46 @@
-/* eslint-disable */
-import { fromJS, isImmutable } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import Delta from 'quill-delta';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Component, React, styled } from 'utils/create';
-
-// https://github.com/jpuri/react-draft-wysiwyg
-// https://github.com/sstur/react-rte/
+import { Component, PropTypes, React, styled } from 'utils/create';
 
 const EditorWrapper = styled.div``;
 
 class Editor extends Component {
-  handleChange = (text, delta, source, editor) => {
-    const { onChange, value } = this.props;
-
-    console.log('value', value);
-    console.log('value2', fromJS({ ops: editor.getContents().ops }));
-
-    onChange(fromJS({ ops: editor.getContents().ops }));
-
-    // this.setState({ text: editor.getContents() });
-  };
-
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    const value = isImmutable(nextProps.value)
-      ? new Delta(nextProps.value.toJS())
-      : nextProps.value;
-
+  shouldComponentUpdate({ value }) {
     return this.editor
       .getEditor()
       .getContents()
-      .diff(value)
+      .diff(new Delta(value.toJS()))
       .length();
   }
+
+  handleChange = (text, delta, source, editor) => {
+    const { onChange } = this.props;
+    onChange(fromJS({ ops: editor.getContents().ops }));
+  };
 
   render() {
     const { value } = this.props;
 
-    const v = isImmutable(value) ? value.toJS() : value;
-
     return (
       <EditorWrapper>
         <ReactQuill
+          ref={editor => {
+            this.editor = editor;
+          }}
           bounds=".css-ixpkms"
-          defaultValue={v}
-          ref={editor => (this.editor = editor)}
-          value={v}
+          value={(value || Map()).toJS()}
           onChange={this.handleChange}
         />
       </EditorWrapper>
     );
   }
 }
+
+Editor.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.oneOfType([PropTypes.map, PropTypes.string]).isRequired,
+};
 
 export default Editor;

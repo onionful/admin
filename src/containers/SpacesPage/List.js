@@ -65,6 +65,7 @@ class SpacesPageList extends Component {
       {
         title: _('global.users'),
         dataIndex: 'users',
+        render: value => <UserLabelGroup ids={value} />,
       },
     ];
 

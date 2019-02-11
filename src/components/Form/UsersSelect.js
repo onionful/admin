@@ -21,8 +21,9 @@ class UsersSelect extends Component {
   }
 
   componentDidMount() {
-    const { value } = this.props;
-    if (value.isEmpty()) {
+    const { currentUserRequired, value } = this.props;
+
+    if (currentUserRequired && value.isEmpty()) {
       this.handleChange();
     }
   }

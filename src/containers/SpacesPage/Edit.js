@@ -71,10 +71,10 @@ class SpacesPageEdit extends Component {
         <Field
           currentUserRequired
           component={createField(UsersSelect)}
-          format={null}
           label={_('global.owners')}
           name="owners"
         />
+        <Field component={createField(UsersSelect)} label={_('global.users')} name="users" />
       </Form>
     );
   }

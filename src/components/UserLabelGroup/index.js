@@ -29,7 +29,11 @@ const UserLabelGroup = ({ ids }) => (
 );
 
 UserLabelGroup.propTypes = {
-  ids: PropTypes.arrayOf(PropTypes.string).isRequired,
+  ids: PropTypes.arrayOf(PropTypes.string),
+};
+
+UserLabelGroup.defaultProps = {
+  ids: [],
 };
 
 export default UserLabelGroup;

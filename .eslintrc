@@ -6,9 +6,6 @@
     "browser": true,
     "es6": true
   },
-  "parserOptions": {
-    "sourceType": "module"
-  },
   "rules": {
     "emotion/syntax-preference": [1, "string"],
     "import/prefer-default-export": 0,

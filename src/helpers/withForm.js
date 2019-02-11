@@ -1,5 +1,5 @@
 import { Form } from 'antd';
-import { memoize } from 'lodash';
+import { isEmpty, memoize } from 'lodash';
 import { reduxForm } from 'redux-form/immutable';
 import { Component, PropTypes, React } from 'utils/create';
 
@@ -13,6 +13,7 @@ const Field = memoize(FormComponent => {
     ...rest
   }) => {
     const hasError = touched && invalid;
+    const value = isEmpty(input.value) ? undefined : input.value;
 
     return (
       <Form.Item
@@ -21,7 +22,7 @@ const Field = memoize(FormComponent => {
         label={label}
         validateStatus={hasError ? 'error' : 'success'}
       >
-        <FormComponent {...input} {...rest}>
+        <FormComponent {...input} {...rest} value={value}>
           {children}
         </FormComponent>
       </Form.Item>
