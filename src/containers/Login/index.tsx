@@ -4,7 +4,7 @@ import { noop } from 'lodash';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { authenticate, login } from 'reducers/auth';
-import { Component, PropTypes, React, styled } from 'utils/create';
+import { Component, React, styled } from 'utils/create';
 
 const StyledRow = styled.section`
   display: flex;
@@ -22,7 +22,20 @@ const StyledLogo = styled(Logo)`
   max-width: 10rem;
 `;
 
-class Login extends Component {
+interface Props {
+  location: any;
+  handleAuthenticate(hash: string): void;
+  handleLogin(): void;
+  isAuthenticated(): void;
+}
+
+class Login extends Component<Props> {
+  static defaultProps = {
+    handleAuthenticate: noop,
+    handleLogin: noop,
+    isAuthenticated: false,
+  };
+
   componentDidMount() {
     const {
       handleAuthenticate,
@@ -58,24 +71,7 @@ class Login extends Component {
   }
 }
 
-Login.propTypes = {
-  location: PropTypes.shape({
-    hash: PropTypes.string.isRequired,
-  }).isRequired,
-  handleAuthenticate: PropTypes.func,
-
-  handleLogin: PropTypes.func,
-  isAuthenticated: PropTypes.bool,
-};
-
-Login.defaultProps = {
-  handleAuthenticate: noop,
-
-  handleLogin: noop,
-  isAuthenticated: false,
-};
-
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
 });
 
