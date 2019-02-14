@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import createStore, { history } from 'store';
 import { css, React } from 'utils/create';
-import registerServiceWorker from './registerServiceWorker';
+import * as serviceWorker from './serviceWorker';
 
 const globalStyles = css`
   body {
@@ -38,4 +38,4 @@ render(
   document.getElementById('root'),
 );
 
-registerServiceWorker();
+serviceWorker.unregister();

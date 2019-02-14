@@ -11,7 +11,7 @@
     "import/prefer-default-export": 0,
     "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "jsx-a11y/href-no-hash": 0,
-    "react/jsx-filename-extension": [2, { "extensions": [".js"] }],
+    "react/jsx-filename-extension": [2, { "extensions": [".js", ".ts", ".tsx"] }],
     "react/jsx-sort-default-props": 1,
     "react/jsx-sort-props": [
       1,
@@ -22,7 +22,8 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "moduleDirectory": ["node_modules", "src"]
+        "moduleDirectory": ["node_modules", "src"],
+        "extensions": [".js", ".ts", ".tsx"]
       }
     },
     "react": {
