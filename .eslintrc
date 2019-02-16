@@ -1,7 +1,7 @@
 {
   "extends": ["airbnb", "prettier", "prettier/react", "prettier/standard"],
   "parser": "babel-eslint",
-  "plugins": ["prettier", "emotion"],
+  "plugins": ["prettier", "emotion", "react-hooks"],
   "env": {
     "browser": true,
     "es6": true
@@ -17,7 +17,8 @@
       1,
       { "shorthandFirst": true, "callbacksLast": true, "reservedFirst": true }
     ],
-    "react/sort-prop-types": [1, { "requiredFirst": true }]
+    "react/sort-prop-types": [1, { "requiredFirst": true }],
+    "react-hooks/rules-of-hooks": "error"
   },
   "settings": {
     "import/resolver": {
