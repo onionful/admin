@@ -1,7 +1,7 @@
 import { Button, Modal } from 'antd';
 import { FieldTypeIcon } from 'components';
 import { types } from 'config';
-import { withForm, withTranslate } from 'helpers';
+import { withForm, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { entries, upperFirst } from 'lodash';
 import { Field, formValueSelector } from 'redux-form/immutable';

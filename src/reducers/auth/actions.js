@@ -1,39 +1,7 @@
 import { Map } from 'immutable';
-import { api, Auth } from 'utils';
-import { push } from 'utils/create';
+import { api } from 'utils';
 import { getProfile } from './selectors';
 import * as types from './types';
-
-const auth = new Auth();
-
-export const login = () => ({
-  type: types.LOGIN_PENDING,
-});
-
-export const authenticate = hash => dispatch => {
-  const fail = error => {
-    dispatch({
-      type: types.LOGIN_REJECTED,
-      error,
-    });
-    dispatch(push('/handleLogin'));
-  };
-
-  if (!/access_token|id_token|error/.test(hash)) {
-    return fail('access_token is not valid');
-  }
-
-  return auth
-    .handleAuthentication()
-    .then(response => {
-      dispatch({
-        type: types.LOGIN_SUCCESS,
-        payload: response,
-      });
-      dispatch(push('/'));
-    })
-    .catch(fail);
-};
 
 export const logout = () => ({
   type: types.LOGOUT_SUCCESS,

@@ -1,6 +1,6 @@
 import { Button, Form, message } from 'antd';
 import { SectionHeader } from 'components';
-import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
+import { withForm, withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { createContent, fetchContent, getContent, updateContent } from 'reducers/content';

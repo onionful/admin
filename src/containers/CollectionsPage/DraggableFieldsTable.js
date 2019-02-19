@@ -1,7 +1,7 @@
 import { Button, Divider, Icon, Popconfirm } from 'antd';
 import { DraggableTable, FieldTypeIcon } from 'components';
 import FieldModal from 'containers/CollectionsPage/FieldModal';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { get } from 'lodash';
 import { fieldArrayFieldsPropTypes } from 'redux-form/immutable';

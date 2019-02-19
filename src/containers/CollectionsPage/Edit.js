@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from 'antd';
 import { SectionHeader } from 'components';
 import { Identifier } from 'components/Form';
-import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
+import { withForm, withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import {

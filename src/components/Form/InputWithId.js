@@ -1,6 +1,6 @@
 import { Col, Form, Icon, Input, Row, Tooltip } from 'antd';
 import { Lock } from 'components';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { isEmpty, kebabCase, noop } from 'lodash';
 import { Component, compose, PropTypes, React, styled } from 'utils/create';
 

@@ -1,17 +1,20 @@
+/* eslint-disable */
 import { Avatar, Icon, Layout, Menu, Tooltip } from 'antd';
 import { Logo, SpacesModal } from 'components';
 import {
-  ContentPage,
   CollectionsPage,
+  ContentPage,
   ErrorPage,
   HomePage,
   NotFoundPage,
   SpacesPage,
   UsersPage,
 } from 'containers';
-import { isAuthenticated, withLoading, withTranslate } from 'helpers';
+import { withAuthCheck, withErrorHandler, withLoading, withTranslate } from 'hocs';
+import { useAuth } from 'hooks';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
+import { useState } from 'react';
 import { Link, Route, Switch, withRouter } from 'react-router-dom';
 import { fetchProfile, getProfile, logout } from 'reducers/auth';
 import { getCollections } from 'reducers/collections';
@@ -71,191 +74,149 @@ const SpaceInfo = styled.div`
   },
 `;
 
-class App extends React.Component {
-  constructor(...args) {
-    super(...args);
+const App = ({ _, error, errorInfo, handlePush, handleSetSpace, profile, space, collections }) => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [spacesModalVisible, setSpacesModalVisible] = useState(false);
+  const { logout } = useAuth();
 
-    this.state = {
-      collapsed: false,
-      error: null,
-      errorInfo: null,
-      spacesModalVisible: false,
-    };
-  }
-
-  static getDerivedStateFromProps({ location: { pathname }, space }) {
-    return {
-      spacesModalVisible: space.isEmpty() && pathname !== '/spaces/create',
-    };
-  }
-
-  handleCollapse = collapsed => {
-    this.setState({ collapsed });
-  };
-
-  handleErrorDismiss = () => {
-    const { handlePush } = this.props;
-
-    this.setState({ error: null, errorInfo: null }, () => handlePush('/'));
-  };
-
-  handleMenuClick = ({ key }) => {
-    const { handlePush, handleLogout } = this.props;
-
+  const handleMenuClick = ({ key }) => {
     switch (key) {
       case 'logout':
-        return handleLogout();
+        logout();
+        return handlePush('/login');
       default:
         return handlePush(`/${key}`);
     }
   };
+  const handleErrorDismiss = () => {};
 
-  handleSpaceClick = () => {
-    this.setState({ spacesModalVisible: true });
-  };
+  // const hasPermissions = ({ permission }) => hasPermission(permission) || true;
+  const profileName = profile ? profile.get('name') || profile.get('nickname') : '';
 
-  handleSpaceCreate = () => {
-    const { handlePush } = this.props;
-    this.setState({ spacesModalVisible: false }, () => handlePush('/spaces/create'));
-  };
+  const menuItems = [
+    {
+      key: 'collection',
+      items: collections
+        .toList()
+        .map(collection => ({
+          key: `collection/${collection.get('id')}`,
+          icon: 'file',
+          name: collection.get('name'),
+          render: props => <ContentPage {...props} collection={collection} />,
+        }))
+        .toArray()
+        .concat({
+          key: 'collections',
+          icon: 'file-add',
+          component: CollectionsPage,
+          permission: permissions.USERS_LIST,
+          disabled: !!space,
+        }),
+    },
+    {
+      key: 'system',
+      items: [
+        { key: 'spaces', icon: 'rocket', component: SpacesPage },
+        {
+          key: 'users',
+          icon: 'user',
+          component: UsersPage,
+          permission: permissions.USERS_LIST,
+        },
+        { key: 'settings', icon: 'setting' },
+        { key: 'logout', icon: 'logout' },
+      ],
+    },
+  ];
 
-  handleSetSpace = spaceId => {
-    const { handleSetSpace } = this.props;
+  return (
+    <Layout style={{ minHeight: '100vh', maxWidth: media.xl }}>
+      <Layout.Sider collapsible breakpoint="lg" collapsed={collapsed} onCollapse={setCollapsed}>
+        <Link to="/">
+          <StyledLogo />
+        </Link>
 
-    this.setState({ spacesModalVisible: false }, () => handleSetSpace(spaceId));
-  };
-
-  componentDidCatch(error, errorInfo) {
-    this.setState({ error, errorInfo });
-  }
-
-  render() {
-    const { _, hasPermission, profile, space, collections } = this.props;
-    const { collapsed, error, errorInfo, spacesModalVisible } = this.state;
-
-    const hasPermissions = ({ permission }) => hasPermission(permission) || true;
-    const profileName = profile ? profile.get('name') || profile.get('nickname') : '';
-
-    const menuItems = [
-      {
-        key: 'collection',
-        items: [
-          ...collections.toList().map(collection => ({
-            key: `collection/${collection.get('id')}`,
-            icon: 'file',
-            name: collection.get('name'),
-            render: props => <ContentPage {...props} collection={collection} />,
-          })),
-          {
-            key: 'collections',
-            icon: 'file-add',
-            component: CollectionsPage,
-            permission: permissions.USERS_LIST,
-            disabled: space.isEmpty(),
-          },
-        ],
-      },
-      {
-        key: 'system',
-        items: [
-          { key: 'spaces', icon: 'rocket', component: SpacesPage },
-          {
-            key: 'users',
-            icon: 'user',
-            component: UsersPage,
-            permission: permissions.USERS_LIST,
-          },
-          { key: 'settings', icon: 'setting' },
-          { key: 'logout', icon: 'logout' },
-        ],
-      },
-    ];
-
-    return (
-      <Layout style={{ minHeight: '100vh', maxWidth: media.xl }}>
-        <Layout.Sider
-          collapsible
-          breakpoint="lg"
-          collapsed={collapsed}
-          onCollapse={this.handleCollapse}
-        >
-          <Link to="/">
-            <StyledLogo />
-          </Link>
-
-          {profile && (
-            <Link to="/profile">
-              <Tooltip placement="right" title={profileName} trigger={collapsed ? 'hover' : ''}>
-                <UserInfo>
-                  <Avatar size="large" src={profile.get('picture')} />
-                  {!collapsed && <div>{profileName}</div>}
-                </UserInfo>
-              </Tooltip>
-            </Link>
-          )}
-          {!space.isEmpty() && (
-            <Tooltip placement="right" title={space.get('name')} trigger={collapsed ? 'hover' : ''}>
-              <SpaceInfo onClick={this.handleSpaceClick}>
-                {collapsed ? acronym(space.get('name')) : space.get('name')}
-              </SpaceInfo>
+        {profile && (
+          <Link to="/profile">
+            <Tooltip
+              placement="right"
+              title={profileName}
+              trigger={collapsed ? 'hover' : undefined}
+            >
+              <UserInfo>
+                <Avatar size="large" src={profile.get('picture')} />
+                {!collapsed && <div>{profileName}</div>}
+              </UserInfo>
             </Tooltip>
-          )}
-
-          <Menu
-            defaultSelectedKeys={['4']}
-            mode="inline"
-            theme="dark"
-            onClick={this.handleMenuClick}
-          >
-            {menuItems.map(group => (
-              <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
-                {group.items.filter(hasPermissions).map(item => (
-                  <Menu.Item key={item.key} disabled={item.disabled}>
-                    <Icon type={item.icon} />
-                    <span>{item.name || _(`menu.${item.key}`)}</span>
-                  </Menu.Item>
-                ))}
-              </Menu.ItemGroup>
-            ))}
-          </Menu>
-        </Layout.Sider>
-
-        <SpacesModal
-          visible={spacesModalVisible}
-          onCreate={this.handleSpaceCreate}
-          onSetSpace={this.handleSetSpace}
-        />
-
-        {(!spacesModalVisible || error) && (
-          <Layout>
-            <Container>
-              {error ? (
-                <ErrorPage
-                  error={error}
-                  errorInfo={errorInfo}
-                  onDismiss={this.handleErrorDismiss}
-                />
-              ) : (
-                <Content>
-                  <Switch>
-                    <Route exact component={HomePage} path="/" />
-                    {menuItems.map(section =>
-                      section.items.map(({ key, render, component }) => (
-                        <Route component={component} path={`/${key}`} render={render} />
-                      )),
-                    )}
-                    <Route component={NotFoundPage} />
-                  </Switch>
-                </Content>
-              )}
-            </Container>
-            <Layout.Footer style={{ textAlign: 'center' }}>{_('global.copyrights')}</Layout.Footer>
-          </Layout>
+          </Link>
         )}
-      </Layout>
-    );
-  }
-}
+
+        {space && (
+          <Tooltip
+            placement="right"
+            title={space.get('name')}
+            trigger={collapsed ? 'hover' : undefined}
+          >
+            <SpaceInfo onClick={() => setSpacesModalVisible(true)}>
+              {collapsed ? acronym(space.get('name')) : space.get('name')}
+            </SpaceInfo>
+          </Tooltip>
+        )}
+
+        <Menu defaultSelectedKeys={['4']} mode="inline" theme="dark" onClick={handleMenuClick}>
+          {menuItems.map(group => (
+            <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
+              {/*{group.items.filter(hasPermissions)}*/}
+              {group.items.map(item => (
+                <Menu.Item key={item.key} disabled={item.disabled}>
+                  <Icon type={item.icon} />
+                  <span>{item.name || _(`menu.${item.key}`) || ''}</span>
+                </Menu.Item>
+              ))}
+            </Menu.ItemGroup>
+          ))}
+        </Menu>
+      </Layout.Sider>
+
+      <SpacesModal
+        visible={spacesModalVisible}
+        onCreate={() => {
+          setSpacesModalVisible(false);
+          handlePush('/spaces/create');
+        }}
+        onSetSpace={spaceId => {
+          setSpacesModalVisible(false);
+          handleSetSpace(spaceId);
+        }}
+      />
+
+      {(!spacesModalVisible || error) && (
+        <Layout>
+          <Container>
+            {error ? (
+              <ErrorPage error={error} errorInfo={errorInfo} onDismiss={handleErrorDismiss} />
+            ) : (
+              <Content>
+                <Switch>
+                  <Route exact component={HomePage} path="/" />
+                  {menuItems.map(section =>
+                    section.items.map(({ key, render, component }) => (
+                      <Route component={component} path={`/${key}`} render={render} />
+                    )),
+                  )}
+                  <Route component={NotFoundPage} />
+                </Switch>
+              </Content>
+            )}
+          </Container>
+          <Layout.Footer style={{ textAlign: 'center' }}>
+            {_('global.copyrights') || ''}
+          </Layout.Footer>
+        </Layout>
+      )}
+    </Layout>
+  );
+};
 
 App.propTypes = {
   _: PropTypes.func.isRequired,
@@ -271,14 +232,12 @@ App.propTypes = {
 };
 
 App.defaultProps = {
+  _: noop,
   collections: Map(),
-  handleLogout: noop,
   handlePush: noop,
-  handleSetSpace: noop,
-  hasPermission: noop,
-  profile: Map(),
-  space: Map(),
-  spaces: Map(),
+  // hasPermission: noop,
+  // profile: Map(),
+  // space: Map(),
 };
 
 const mapStateToProps = state => ({
@@ -289,7 +248,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  handleLogout: logout,
   handlePush: push,
   handleSetSpace: setSpace,
 };
@@ -299,7 +257,8 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  isAuthenticated,
+  withAuthCheck,
+  withErrorHandler,
   withLoading({
     type: ['app', 'profileGet'],
     action: [fetchProfile, fetchSpaces],

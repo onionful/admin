@@ -1,6 +1,6 @@
 import { Button, Table } from 'antd';
 import { SectionHeader } from 'components/index';
-import { withLoading, withPermissions, withTranslate } from 'helpers/index';
+import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { fetchContentList, getContentList } from 'reducers/content';

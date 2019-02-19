@@ -11,15 +11,7 @@ export default class Auth {
     scope: 'openid profile email',
   });
 
-  login = () => this.auth0.authorize();
-
-  logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('expires_at');
-  };
-
-  handleAuthentication = () =>
+  authenticate = () =>
     new Promise((resolve, reject) =>
       this.auth0.parseHash((err, authResult) => {
         if (err) {
@@ -33,9 +25,14 @@ export default class Auth {
       }),
     );
 
-  isAuthenticated = () => {
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return new Date().getTime() < expiresAt;
+  isAuthenticated = () => new Date().getTime() < JSON.parse(localStorage.getItem('expires_at'));
+
+  login = () => this.auth0.authorize();
+
+  logout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('expires_at');
   };
 
   setSession = authResult => {

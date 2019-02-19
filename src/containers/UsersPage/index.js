@@ -1,5 +1,5 @@
 import { Avatar, Icon, Input, Table } from 'antd';
-import { withPermissions, withTranslate } from 'helpers';
+import { withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import moment from 'moment';

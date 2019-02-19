@@ -1,10 +1,9 @@
-import { Button, Icon, Spin } from 'antd';
+import { Button, Icon } from 'antd';
 import { Logo } from 'components';
-import { noop } from 'lodash';
-import { connect } from 'react-redux';
+import { withTranslate } from 'hocs';
+import { useAuth } from 'hooks';
 import { Redirect } from 'react-router-dom';
-import { authenticate, login } from 'reducers/auth';
-import { Component, PropTypes, React, styled } from 'utils/create';
+import { PropTypes, compose, React, styled } from 'utils/create';
 
 const StyledRow = styled.section`
   display: flex;
@@ -22,69 +21,24 @@ const StyledLogo = styled(Logo)`
   max-width: 10rem;
 `;
 
-class Login extends Component {
-  componentDidMount() {
-    const {
-      handleAuthenticate,
-      location: { hash },
-    } = this.props;
+const Login = ({ _ }) => {
+  const { isAuthenticated, login } = useAuth();
 
-    if (hash) {
-      handleAuthenticate(hash);
-    }
-  }
-
-  render() {
-    const {
-      handleLogin,
-      isAuthenticated,
-      location: { hash },
-    } = this.props;
-    return isAuthenticated ? (
-      <Redirect to="/" />
-    ) : (
-      <StyledRow>
-        <StyledLogo />
-        {hash ? (
-          <Spin />
-        ) : (
-          <Button ghost onClick={handleLogin}>
-            Login
-            <Icon type="login" />
-          </Button>
-        )}
-      </StyledRow>
-    );
-  }
-}
+  return isAuthenticated ? (
+    <Redirect to="/" />
+  ) : (
+    <StyledRow>
+      <StyledLogo />
+      <Button ghost htmlType="button" onClick={login}>
+        {_('global.login')}
+        <Icon type="login" />
+      </Button>
+    </StyledRow>
+  );
+};
 
 Login.propTypes = {
-  location: PropTypes.shape({
-    hash: PropTypes.string.isRequired,
-  }).isRequired,
-  handleAuthenticate: PropTypes.func,
-
-  handleLogin: PropTypes.func,
-  isAuthenticated: PropTypes.bool,
+  _: PropTypes.func.isRequired,
 };
 
-Login.defaultProps = {
-  handleAuthenticate: noop,
-
-  handleLogin: noop,
-  isAuthenticated: false,
-};
-
-const mapStateToProps = state => ({
-  isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
-});
-
-const mapDispatchToProps = {
-  handleAuthenticate: authenticate,
-  handleLogin: login,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Login);
+export default compose(withTranslate)(Login);

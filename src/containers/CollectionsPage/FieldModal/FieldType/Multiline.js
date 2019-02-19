@@ -1,5 +1,5 @@
 import { Checkbox } from 'antd';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { Field } from 'redux-form/immutable';
 import { compose, PropTypes, React } from 'utils/create';
 

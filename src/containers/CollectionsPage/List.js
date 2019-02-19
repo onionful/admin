@@ -1,6 +1,6 @@
 import { Button, message, Popconfirm, Table } from 'antd';
 import { SectionHeader } from 'components/index';
-import { withLoading, withPermissions, withTranslate } from 'helpers/index';
+import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { deleteCollection, fetchCollections, getCollections } from 'reducers/collections';

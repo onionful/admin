@@ -1,6 +1,6 @@
 import { Button, message, Popconfirm, Table } from 'antd';
 import { Link, SectionHeader, UserLabelGroup } from 'components';
-import { withLoading, withPermissions, withTranslate } from 'helpers';
+import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { deleteSpace, fetchSpaces, getSpaces } from 'reducers/spaces';

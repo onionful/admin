@@ -1,6 +1,6 @@
 import { Button, List, Modal } from 'antd';
 import { Logo } from 'components';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { colors } from 'utils';
 import { compose, connect, PropTypes, React, styled } from 'utils/create';

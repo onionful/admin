@@ -1,6 +1,6 @@
 import { message, Select, Spin } from 'antd';
 import { UserLabel } from 'components';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { fromJS, List } from 'immutable';
 import { debounce, noop } from 'lodash';
 import { getId } from 'reducers/auth';

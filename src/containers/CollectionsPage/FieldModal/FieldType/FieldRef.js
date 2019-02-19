@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { change, Field, formValueSelector } from 'redux-form/immutable';
