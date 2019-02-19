@@ -1870,9 +1870,9 @@
       }
     },
     "antd": {
-      "version": "3.13.4",
-      "resolved": "https://registry.npmjs.org/antd/-/antd-3.13.4.tgz",
-      "integrity": "sha512-tdnL+XKneuCoigOrQhHxUt2IediQUt4lQVePLMGUmGyPRCwK7ozirAHSsDG2ciK8L9TIG0cxMIn5SuQsDGTH7w==",
+      "version": "3.13.5",
+      "resolved": "https://registry.npmjs.org/antd/-/antd-3.13.5.tgz",
+      "integrity": "sha512-B4tLDoFnI0GaYXOmCMLr7q4dE4msFRzVEkqTAKD2HYXOBLWCTwGUZsp6s1dCI8sdpwnvaabnsO4NtZSWD9i9JA==",
       "requires": {
         "@ant-design/icons": "~1.1.16",
         "@ant-design/icons-react": "~1.1.2",
@@ -6089,7 +6089,7 @@
       "dependencies": {
         "immutable": {
           "version": "3.7.6",
-          "resolved": "http://registry.npmjs.org/immutable/-/immutable-3.7.6.tgz",
+          "resolved": "https://registry.npmjs.org/immutable/-/immutable-3.7.6.tgz",
           "integrity": "sha1-E7TTyxK++hVIKib+Gy665kAHHks="
         }
       }
