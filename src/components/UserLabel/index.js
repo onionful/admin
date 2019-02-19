@@ -1,8 +1,9 @@
 import { Avatar, Spin } from 'antd';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
+import { useEffect } from 'react';
 import { fetchLabels, getUserLabel } from 'reducers/users';
-import { Component, connect, PropTypes, React, styled } from 'utils/create';
+import { connect, PropTypes, React, styled } from 'utils/create';
 
 const Container = styled.span`
   display: flex;
@@ -12,27 +13,22 @@ const UserName = styled.span`
   margin-left: 0.5rem;
 `;
 
-class UserLabel extends Component {
-  componentDidMount() {
-    const { handleFetchLabels, id, isLoading, user } = this.props;
+const UserLabel = ({ className, handleFetchLabels, id, isLoading, simple, user }) => {
+  useEffect(() => {
     if (!isLoading && user.isEmpty()) {
       handleFetchLabels(id);
     }
-  }
+  }, [id]);
 
-  render() {
-    const { className, id, simple, user } = this.props;
-
-    return (
-      <Container className={className}>
-        <Spin key={id} size="small" spinning={user.isEmpty()}>
-          <Avatar size="small" src={user.get('picture')} />
-          {!simple && user.get('name') && <UserName>{user.get('name')}</UserName>}
-        </Spin>
-      </Container>
-    );
-  }
-}
+  return (
+    <Container className={className}>
+      <Spin key={id} size="small" spinning={user.isEmpty()}>
+        <Avatar size="small" src={user.get('picture')} />
+        {!simple && user.get('name') && <UserName>{user.get('name')}</UserName>}
+      </Spin>
+    </Container>
+  );
+};
 
 UserLabel.propTypes = {
   id: PropTypes.string.isRequired,
