@@ -6,14 +6,22 @@ const {
   useEslintRc,
 } = require('customize-cra');
 const rewireYAML = require('react-app-rewire-yaml');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+
+const PRODUCTION = process.env.NODE_ENV === 'production';
 
 module.exports = override(
   useEslintRc(),
   addBabelPlugin(['babel-plugin-emotion', { sourceMap: true, autoLabel: true }]),
   fixBabelImports('babel-plugin-import', {
     libraryName: 'antd',
-    style: true,
+    libraryDirectory: 'es',
+    style: 'css',
+  }),
+  fixBabelImports('lodash', {
+    libraryDirectory: '',
+    camel2DashComponentName: false,
   }),
   addLessLoader({
     javascriptEnabled: true,
@@ -27,9 +35,10 @@ module.exports = override(
   }),
   config => ({
     ...config,
-    plugins: config.plugins.concat(
+    plugins: config.plugins.concat([
       new HardSourceWebpackPlugin({ environmentHash: { files: ['npm-shrinkwrap.json', '.env'] } }),
-    ),
+      ...(PRODUCTION ? [new BundleAnalyzerPlugin()] : []),
+    ]),
   }),
   rewireYAML,
 );
