@@ -4,76 +4,63 @@ import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { fetchContentList, getContentList } from 'reducers/content';
-import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push, React } from 'utils/create';
 
-class ContentPageList extends Component {
-  onCreateClick = () => {
-    const {
-      handlePush,
-      match: { path },
-    } = this.props;
+const ContentPageList = ({ _, collection, data, handlePush, match: { path } }) => {
+  const onCreateClick = () => handlePush(`${path}/create`);
 
-    handlePush(`${path}/create`);
-  };
+  const onEditClick = ({ id }) => handlePush(`${path}/edit/${id}`);
 
-  onEditClick = ({ id }) => {
-    const {
-      handlePush,
-      match: { path },
-    } = this.props;
+  const columns = [
+    {
+      title: _('global.id'),
+      dataIndex: 'id',
+    },
+    {
+      title: _('global.name'),
+      dataIndex: 'title', // TODO: title key may not be available
+    },
+  ];
 
-    handlePush(`${path}/edit/${id}`);
-  };
+  return (
+    <div>
+      <SectionHeader
+        action={
+          <Button htmlType="submit" icon="plus" type="primary" onClick={onCreateClick}>
+            {_('global.create')}
+          </Button>
+        }
+        description={_('collection.description.list', collection)}
+        title={_('collection.title.list', collection)}
+      />
 
-  render() {
-    const { _, collection, data } = this.props;
-
-    const columns = [
-      {
-        title: _('global.id'),
-        dataIndex: 'id',
-      },
-      {
-        title: _('global.name'),
-        dataIndex: 'title', // TODO: title key may not be available
-      },
-    ];
-
-    return (
-      <div>
-        <SectionHeader
-          action={
-            <Button htmlType="submit" icon="plus" type="primary" onClick={this.onCreateClick}>
-              {_('global.create')}
-            </Button>
-          }
-          description={_('collection.description.list', collection)}
-          title={_('collection.title.list', collection)}
-        />
-
-        <Table
-          columns={[
-            ...columns,
-            {
-              title: _('global.action'),
-              key: 'action',
-              align: 'center',
-              render: (text, item) => (
-                <Button.Group>
-                  <Button htmlType="button" icon="edit" onClick={() => this.onEditClick(item)} />
-                  <Button htmlType="button" icon="delete" onClick={() => this.onEditClick(item)} />
-                </Button.Group>
-              ),
-            },
-          ]}
-          dataSource={data.toJS()}
-          rowKey="id"
-          size="small"
-        />
-      </div>
-    );
-  }
-}
+      <Table
+        columns={[
+          ...columns,
+          {
+            title: _('global.action'),
+            key: 'action',
+            align: 'center',
+            render: (text, item) => (
+              <Button.Group>
+                <Button htmlType="button" icon="edit" onClick={() => onEditClick(item)} />
+                <Button
+                  htmlType="button"
+                  icon="delete"
+                  type="danger"
+                  onClick={() => onEditClick(item)}
+                />
+              </Button.Group>
+            ),
+          },
+        ]}
+        dataSource={data.toJS()}
+        rowKey="id"
+        size="small"
+      />
+    </div>
+  );
+};
 
 ContentPageList.propTypes = {
   _: PropTypes.func.isRequired,

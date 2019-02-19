@@ -88,6 +88,7 @@ global:
   owners: Owners
   deleteQuestion: Are you sure?
   save: Save
+  searchPlaceholder: Search...
   selectUsers: Select users
   title: Title
   update: Update

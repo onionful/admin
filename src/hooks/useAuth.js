@@ -13,7 +13,7 @@ export default () => {
         .then(() => setAuthenticated(true))
         .catch(() => setAuthenticated(false));
     }
-  });
+  }, []);
 
   return {
     isAuthenticated,

@@ -110,7 +110,7 @@ const App = ({ _, error, errorInfo, handlePush, handleSetSpace, profile, space, 
           icon: 'file-add',
           component: CollectionsPage,
           permission: permissions.USERS_LIST,
-          disabled: !!space,
+          disabled: space.isEmpty(),
         }),
     },
     {

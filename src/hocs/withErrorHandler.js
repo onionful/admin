@@ -1,7 +1,7 @@
-import { Component, getDisplayName, React } from 'utils/create';
+import { getDisplayName, React } from 'utils/create';
 
 export default WrappedComponent => {
-  class WithErrorHandler extends Component {
+  class WithErrorHandler extends React.Component {
     static displayName = `WithErrorHandler(${getDisplayName(WrappedComponent)})`;
 
     state = {

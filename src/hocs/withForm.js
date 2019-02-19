@@ -1,17 +1,17 @@
 import { Form } from 'antd';
 import { isEmpty, memoize } from 'lodash';
 import { reduxForm } from 'redux-form/immutable';
-import { Component, PropTypes, React } from 'utils/create';
+import { PropTypes, React } from 'utils/create';
 
 const Field = memoize(FormComponent => {
   const FormComponentWrapper = ({
-    input: { onFocus, ...input },
-    meta: { touched, invalid, error },
-    children,
-    hasFeedback,
-    label,
-    ...rest
-  }) => {
+                                  input: { onFocus, ...input },
+                                  meta: { touched, invalid, error },
+                                  children,
+                                  hasFeedback,
+                                  label,
+                                  ...rest
+                                }) => {
     const hasError = touched && invalid;
     const value = isEmpty(input.value) ? undefined : input.value;
 
@@ -49,7 +49,7 @@ const Field = memoize(FormComponent => {
 });
 
 export default (form, formProps = {}) => WrappedComponent => {
-  class withForm extends Component {
+  class withForm extends React.Component {
     getChildContext() {
       return { createField: Field };
     }

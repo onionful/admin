@@ -2,6 +2,7 @@ import { Button, Icon } from 'antd';
 import { Logo } from 'components';
 import { withTranslate } from 'hocs';
 import { useAuth } from 'hooks';
+import { withRouter } from 'react-router';
 import { Redirect } from 'react-router-dom';
 import { PropTypes, compose, React, styled } from 'utils/create';
 
@@ -41,4 +42,7 @@ Login.propTypes = {
   _: PropTypes.func.isRequired,
 };
 
-export default compose(withTranslate)(Login);
+export default compose(
+  withRouter,
+  withTranslate,
+)(Login);

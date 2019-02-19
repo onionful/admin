@@ -17,7 +17,6 @@ const FieldRef = ({ _, fields, type, unset }, { createField }) => (
     component={createField(StyledSelect)}
     label={_('collections.attributes.fieldRef')}
     name={type}
-    placeholder="xxx"
     onChange={value => !value && unset()}
   >
     {fields
