@@ -1,10 +1,11 @@
-import { Button, Icon, Spin } from 'antd';
+import { Button, Icon } from 'antd';
 import { Logo } from 'components';
-import { noop } from 'lodash';
-import { connect } from 'react-redux';
+import { IWithTranslate, withTranslate } from 'hocs';
+import { useAuth } from 'hooks';
+import React, { FunctionComponent } from 'react';
+import { RouteComponentProps, StaticContext, withRouter } from 'react-router';
 import { Redirect } from 'react-router-dom';
-import { authenticate, login } from 'reducers/auth';
-import { Component, React, styled } from 'utils/create';
+import { compose, styled } from 'utils/create';
 
 const StyledRow = styled.section`
   display: flex;
@@ -22,65 +23,25 @@ const StyledLogo = styled(Logo)`
   max-width: 10rem;
 `;
 
-interface Props {
-  location: any;
-  handleAuthenticate(hash: string): void;
-  handleLogin(): void;
-  isAuthenticated(): void;
-}
+type Props = RouteComponentProps<any, StaticContext, any> & IWithTranslate;
 
-class Login extends Component<Props> {
-  static defaultProps = {
-    handleAuthenticate: noop,
-    handleLogin: noop,
-    isAuthenticated: false,
-  };
+const Login: FunctionComponent<Props> = ({ _ }) => {
+  const { isAuthenticated, login } = useAuth();
 
-  componentDidMount() {
-    const {
-      handleAuthenticate,
-      location: { hash },
-    } = this.props;
-
-    if (hash) {
-      handleAuthenticate(hash);
-    }
-  }
-
-  render() {
-    const {
-      handleLogin,
-      isAuthenticated,
-      location: { hash },
-    } = this.props;
-    return isAuthenticated ? (
-      <Redirect to="/" />
-    ) : (
-      <StyledRow>
-        <StyledLogo />
-        {hash ? (
-          <Spin />
-        ) : (
-          <Button ghost onClick={handleLogin}>
-            Login
-            <Icon type="login" />
-          </Button>
-        )}
-      </StyledRow>
-    );
-  }
-}
-
-const mapStateToProps = (state: any) => ({
-  isAuthenticated: state.getIn(['auth', 'isAuthenticated']),
-});
-
-const mapDispatchToProps = {
-  handleAuthenticate: authenticate,
-  handleLogin: login,
+  return isAuthenticated ? (
+    <Redirect to="/" />
+  ) : (
+    <StyledRow>
+      <StyledLogo />
+      <Button ghost htmlType="button" onClick={login}>
+        {_('global.login')}
+        <Icon type="login" />
+      </Button>
+    </StyledRow>
+  );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
+export default compose<FunctionComponent<Props>>(
+  withRouter,
+  withTranslate,
 )(Login);

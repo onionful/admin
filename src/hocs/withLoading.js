@@ -1,6 +1,7 @@
 import { Spin } from 'antd';
 import { noop } from 'lodash';
-import { Component, connect, PropTypes, React, styled } from 'utils/create';
+import { useEffect } from 'react';
+import { connect, PropTypes, React, styled } from 'utils/create';
 
 const Container = styled.section`
   display: flex;
@@ -15,35 +16,28 @@ export default ({
   condition = () => true,
   showSpinner = true,
 }) => WrappedComponent => {
-  class withLoading extends Component {
-    constructor(...args) {
-      super(...args);
-
-      const { handleAction, ...props } = this.props;
+  const WithLoading = ({ handleAction, isLoading, ...props }) => {
+    useEffect(() => {
       if (condition(props)) {
         handleAction(props);
       }
-    }
+    }, []);
 
-    render() {
-      const { isLoading } = this.props;
+    return isLoading && showSpinner ? (
+      <Container>
+        <Spin />
+      </Container>
+    ) : (
+      <WrappedComponent {...props} isLoading={isLoading} />
+    );
+  };
 
-      return isLoading && showSpinner ? (
-        <Container>
-          <Spin />
-        </Container>
-      ) : (
-        <WrappedComponent {...this.props} isLoading={isLoading} />
-      );
-    }
-  }
-
-  withLoading.propTypes = {
+  WithLoading.propTypes = {
     handleAction: PropTypes.func,
     isLoading: PropTypes.bool,
   };
 
-  withLoading.defaultProps = {
+  WithLoading.defaultProps = {
     handleAction: noop,
     isLoading: true,
   };
@@ -60,5 +54,5 @@ export default ({
   return connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(withLoading);
+  )(WithLoading);
 };

@@ -12,13 +12,6 @@ const initialState = fromJS({
 
 export default typeToReducer(
   {
-    [types.LOGIN_PENDING]: state => {
-      auth.login();
-      return state;
-    },
-    [types.LOGIN_SUCCESS]: state => state.merge({ isAuthenticated: true }),
-    [types.LOGIN_REJECTED]: state => state.merge({ isAuthenticated: false }),
-
     [types.LOGOUT_SUCCESS]: state => {
       auth.logout();
       return state.merge({

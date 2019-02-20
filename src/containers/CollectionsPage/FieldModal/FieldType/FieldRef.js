@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import { change, Field, formValueSelector } from 'redux-form/immutable';
@@ -17,7 +17,6 @@ const FieldRef = ({ _, fields, type, unset }, { createField }) => (
     component={createField(StyledSelect)}
     label={_('collections.attributes.fieldRef')}
     name={type}
-    placeholder="xxx"
     onChange={value => !value && unset()}
   >
     {fields

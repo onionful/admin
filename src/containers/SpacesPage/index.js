@@ -1,4 +1,4 @@
-import { withPermissions } from 'helpers';
+import { withPermissions } from 'hocs';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { compose, connect, PropTypes, push, React } from 'utils/create';
 import SpacesPageEdit from './Edit';

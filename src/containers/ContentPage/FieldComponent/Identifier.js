@@ -1,50 +1,30 @@
 import { Input } from 'antd';
 import { Lock } from 'components';
 import { isEmpty, kebabCase, noop } from 'lodash';
+import { useEffect, useState } from 'react';
 import { change, Field, formValueSelector } from 'redux-form/immutable';
-import { Component, connect, PropTypes, React } from 'utils/create';
+import { connect, PropTypes, React } from 'utils/create';
 
-class Identifier extends Component {
-  constructor(...args) {
-    super(...args);
+const Identifier = ({ field, handleChange, refValue }, { createField }) => {
+  const value = field.get('value');
+  const [locked, setLocked] = useState(isEmpty(value) || value === kebabCase(refValue));
 
-    const { field, refValue } = this.props;
-    const value = field.get('value');
-
-    this.state = { locked: isEmpty(value) || value === kebabCase(refValue) };
-  }
-
-  componentWillUpdate({ refValue }) {
-    const { field, handleChange, refValue: oldRefValue } = this.props;
-    const { locked } = this.state;
-
-    if (locked && oldRefValue !== refValue) {
+  useEffect(() => {
+    if (locked) {
       handleChange('content', field.get('id'), kebabCase(refValue));
     }
-  }
+  }, [refValue, locked]);
 
-  handleLock = () => {
-    const { locked } = this.state;
-
-    this.setState({ locked: !locked });
-  };
-
-  render() {
-    const { field } = this.props;
-    const { locked } = this.state;
-    const { createField } = this.context;
-
-    return (
-      <Field
-        addonAfter={<Lock locked={locked} onLock={this.handleLock} />}
-        component={createField(Input)}
-        disabled={locked}
-        label={field.get('name')}
-        name={field.get('id')}
-      />
-    );
-  }
-}
+  return (
+    <Field
+      addonAfter={<Lock locked={locked} onLock={() => setLocked(!locked)} />}
+      component={createField(Input)}
+      disabled={locked}
+      label={field.get('name')}
+      name={field.get('id')}
+    />
+  );
+};
 
 Identifier.propTypes = {
   field: PropTypes.map.isRequired,

@@ -1,6 +1,7 @@
-import { withPermissions } from 'helpers';
+import { withPermissions } from 'hocs';
+import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push } from 'utils/create';
 import CollectionsPageEdit from './Edit';
 import CollectionsPageList from './List';
 

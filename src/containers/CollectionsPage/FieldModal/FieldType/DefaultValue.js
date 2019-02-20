@@ -1,5 +1,5 @@
 import { Form, Input } from 'antd';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { compose, PropTypes, React } from 'utils/create';
 
 const DefaultValue = ({ _, form, type }) => (

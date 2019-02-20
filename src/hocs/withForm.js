@@ -1,7 +1,8 @@
 import { Form } from 'antd';
 import { isEmpty, memoize } from 'lodash';
+import React from 'react';
 import { reduxForm } from 'redux-form/immutable';
-import { Component, PropTypes, React } from 'utils/create';
+import { PropTypes } from 'utils/create';
 
 const Field = memoize(FormComponent => {
   const FormComponentWrapper = ({
@@ -49,7 +50,7 @@ const Field = memoize(FormComponent => {
 });
 
 export default (form, formProps = {}) => WrappedComponent => {
-  class withForm extends Component {
+  class withForm extends React.Component {
     getChildContext() {
       return { createField: Field };
     }

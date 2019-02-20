@@ -1,84 +1,78 @@
 import { Button, Input, message } from 'antd';
 import { SectionHeader } from 'components';
 import { Identifier, UsersSelect } from 'components/Form';
-import { withForm, withLoading, withPermissions, withTranslate } from 'helpers';
+import { withForm, withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
+import { useEffect } from 'react';
 import { createSpace, fetchSpace, getSpace, updateSpace } from 'reducers/spaces';
 import { fetchLabels } from 'reducers/users';
 import { Field, Fields, Form } from 'redux-form/immutable';
-import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push, React } from 'utils/create';
 
-class SpacesPageEdit extends Component {
-  componentDidMount() {
-    const { handleFetchLabels, item } = this.props;
+const SpacesPageEdit = (
+  {
+    _,
+    dirty,
+    handleCreateSpace,
+    handleFetchLabels,
+    handleSubmit,
+    handleUpdateSpace,
+    initialize,
+    isNew,
+    item,
+    path,
+    pushState,
+  },
+  { createField },
+) => {
+  useEffect(() => {
     const { owners = [], users = [] } = item.toJS();
     handleFetchLabels(owners, users);
-  }
+  }, [item]);
 
-  handleCancelClick = () => {
-    const { pushState, path } = this.props;
+  const handleCancelClick = () => pushState(path);
 
-    pushState(path);
-  };
-
-  handleSubmit = values => {
-    const {
-      _,
-      isNew,
-      item,
-      handleCreateSpace,
-      handleUpdateSpace,
-      initialize,
-      path,
-      pushState,
-    } = this.props;
-
+  const handleFormSubmit = values =>
     (isNew ? handleCreateSpace(values) : handleUpdateSpace(item.get('id'), values)).then(() => {
       message.success(_(`messages.spaces.${isNew ? 'created' : 'updated'}`));
       pushState(`${path}/edit/${values.get('id')}`);
       initialize(values);
     });
-  };
 
-  render() {
-    const { _, isNew, item, dirty, handleSubmit } = this.props;
-    const { createField } = this.context;
-
-    if (!isNew && item.isEmpty()) {
-      throw new Error(_('errors.collectionNotFound'));
-    }
-
-    return (
-      <Form layout="vertical" onSubmit={handleSubmit(this.handleSubmit)}>
-        <SectionHeader
-          action={
-            <Button.Group>
-              <Button htmlType="button" icon="rollback" onClick={this.handleCancelClick}>
-                {_(`global.${dirty ? 'cancel' : 'back'}`)}
-              </Button>
-              <Button disabled={!dirty} htmlType="submit" icon="save" type="primary">
-                {_('global.save')}
-              </Button>
-            </Button.Group>
-          }
-          description={_(`spaces.description.${isNew ? 'create' : 'edit'}`)}
-          title={_(`spaces.title.${isNew ? 'create' : 'edit'}`, item)}
-        />
-
-        <Fields autoGenerateId={isNew} component={Identifier} names={['name', 'id']} />
-        <Field component={createField(Input)} label={_('global.url')} name="url" type="url" />
-        <Field
-          currentUserRequired
-          component={createField(UsersSelect)}
-          label={_('global.owners')}
-          name="owners"
-        />
-        <Field component={createField(UsersSelect)} label={_('global.users')} name="users" />
-      </Form>
-    );
+  if (!isNew && item.isEmpty()) {
+    throw new Error(_('errors.collectionNotFound'));
   }
-}
+
+  return (
+    <Form layout="vertical" onSubmit={handleSubmit(handleFormSubmit)}>
+      <SectionHeader
+        action={
+          <Button.Group>
+            <Button htmlType="button" icon="rollback" onClick={handleCancelClick}>
+              {_(`global.${dirty ? 'cancel' : 'back'}`)}
+            </Button>
+            <Button disabled={!dirty} htmlType="submit" icon="save" type="primary">
+              {_('global.save')}
+            </Button>
+          </Button.Group>
+        }
+        description={_(`spaces.description.${isNew ? 'create' : 'edit'}`)}
+        title={_(`spaces.title.${isNew ? 'create' : 'edit'}`, item)}
+      />
+
+      <Fields autoGenerateId={isNew} component={Identifier} names={['name', 'id']} />
+      <Field component={createField(Input)} label={_('global.url')} name="url" type="url" />
+      <Field
+        currentUserRequired
+        component={createField(UsersSelect)}
+        label={_('global.owners')}
+        name="owners"
+      />
+      <Field component={createField(UsersSelect)} label={_('global.users')} name="users" />
+    </Form>
+  );
+};
 
 SpacesPageEdit.propTypes = {
   ...PropTypes.form,

@@ -1,107 +1,81 @@
 import { Button, message, Popconfirm, Table } from 'antd';
 import { SectionHeader } from 'components/index';
-import { withLoading, withPermissions, withTranslate } from 'helpers/index';
+import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import { deleteCollection, fetchCollections, getCollections } from 'reducers/collections';
-import { Component, compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push, React } from 'utils/create';
 
-class CollectionsPageList extends Component {
-  onCreateClick = () => {
-    const {
-      handlePush,
-      match: { path },
-    } = this.props;
+const CollectionsPageList = ({ _, data, handleDeleteCollection, handlePush, match: { path } }) => {
+  const onCreateClick = () => handlePush(`${path}/create`);
 
-    handlePush(`${path}/create`);
-  };
+  const handleEdit = ({ id }) => handlePush(`${path}/edit/${id}`);
 
-  handleDelete = ({ id }) => {
-    const {
-      _,
-      handleDeleteCollection,
-      handlePush,
-      match: { path },
-    } = this.props;
-
+  const handleDelete = ({ id }) =>
     handleDeleteCollection(id).then(() => {
       message.success(_('messages.collections.deleted'));
       handlePush(`${path}`);
     });
-  };
 
-  handleEdit = ({ id }) => {
-    const {
-      handlePush,
-      match: { path },
-    } = this.props;
+  const columns = [
+    {
+      title: _('global.id'),
+      dataIndex: 'id',
+    },
+    {
+      title: _('global.name'),
+      dataIndex: 'name',
+    },
+    {
+      title: _('global.description'),
+      dataIndex: 'description',
+    },
+    {
+      title: _('global.fields'),
+      dataIndex: 'fields',
+      render: value => value.length,
+    },
+  ];
 
-    handlePush(`${path}/edit/${id}`);
-  };
+  return (
+    <div>
+      <SectionHeader
+        action={
+          <Button htmlType="submit" icon="plus" type="primary" onClick={onCreateClick}>
+            {_('global.create')}
+          </Button>
+        }
+        description={_('collections.description.list')}
+        title={_('collections.title.list')}
+      />
 
-  render() {
-    const { _, data } = this.props;
-
-    const columns = [
-      {
-        title: _('global.id'),
-        dataIndex: 'id',
-      },
-      {
-        title: _('global.name'),
-        dataIndex: 'name',
-      },
-      {
-        title: _('global.description'),
-        dataIndex: 'description',
-      },
-      {
-        title: _('global.fields'),
-        dataIndex: 'fields',
-        render: value => value.length,
-      },
-    ];
-
-    return (
-      <div>
-        <SectionHeader
-          action={
-            <Button htmlType="submit" icon="plus" type="primary" onClick={this.onCreateClick}>
-              {_('global.create')}
-            </Button>
-          }
-          description={_('collections.description.list')}
-          title={_('collections.title.list')}
-        />
-
-        <Table
-          columns={[
-            ...columns,
-            {
-              title: _('global.action'),
-              key: 'action',
-              align: 'center',
-              render: (text, record) => (
-                <Button.Group>
-                  <Button htmlType="button" icon="edit" onClick={() => this.handleEdit(record)} />
-                  <Popconfirm
-                    title={_('global.deleteQuestion')}
-                    onConfirm={() => this.handleDelete(record)}
-                  >
-                    <Button htmlType="button" icon="delete" type="danger" />
-                  </Popconfirm>
-                </Button.Group>
-              ),
-            },
-          ]}
-          dataSource={data.toList().toJS()}
-          rowKey="id"
-          size="small"
-        />
-      </div>
-    );
-  }
-}
+      <Table
+        columns={[
+          ...columns,
+          {
+            title: _('global.action'),
+            key: 'action',
+            align: 'center',
+            render: (text, record) => (
+              <Button.Group>
+                <Button htmlType="button" icon="edit" onClick={() => handleEdit(record)} />
+                <Popconfirm
+                  title={_('global.deleteQuestion')}
+                  onConfirm={() => handleDelete(record)}
+                >
+                  <Button htmlType="button" icon="delete" type="danger" />
+                </Popconfirm>
+              </Button.Group>
+            ),
+          },
+        ]}
+        dataSource={data.toList().toJS()}
+        rowKey="id"
+        size="small"
+      />
+    </div>
+  );
+};
 
 CollectionsPageList.propTypes = {
   _: PropTypes.func.isRequired,

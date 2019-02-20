@@ -82,11 +82,13 @@ global:
   email: E-mail
   fields: Fields
   id: Identifier
+  login: Login
   name: Name
   none: none
   owners: Owners
   deleteQuestion: Are you sure?
   save: Save
+  searchPlaceholder: Search...
   selectUsers: Select users
   title: Title
   update: Update

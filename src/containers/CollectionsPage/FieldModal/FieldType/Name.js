@@ -1,5 +1,5 @@
 import { Identifier } from 'components/Form';
-import { withTranslate } from 'helpers';
+import { withTranslate } from 'hocs';
 import { Fields } from 'redux-form/immutable';
 import { compose, PropTypes, React } from 'utils/create';
 
