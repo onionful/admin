@@ -1,9 +1,9 @@
 import { Input } from 'antd';
 import { Lock } from 'components';
 import { isEmpty, kebabCase, noop } from 'lodash';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { change, Field, formValueSelector } from 'redux-form/immutable';
-import { connect, PropTypes, React } from 'utils/create';
+import { connect, PropTypes } from 'utils/create';
 
 const Identifier = ({ field, handleChange, refValue }, { createField }) => {
   const value = field.get('value');

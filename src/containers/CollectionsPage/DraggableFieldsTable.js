@@ -5,10 +5,10 @@ import FieldModal from 'containers/CollectionsPage/FieldModal';
 import { withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { get } from 'lodash';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { fieldArrayFieldsPropTypes } from 'redux-form/immutable';
 import { Throw } from 'utils';
-import { compose, PropTypes, React, styled } from 'utils/create';
+import { compose, PropTypes, styled } from 'utils/create';
 
 const FieldName = styled.strong`
   display: block;

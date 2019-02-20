@@ -1,6 +1,7 @@
 import { Col, Form, InputNumber, Row } from 'antd';
 import { withTranslate } from 'hocs';
-import { compose, PropTypes, React } from 'utils/create';
+import React from 'react';
+import { compose, PropTypes } from 'utils/create';
 
 const Range = ({ _, errors, form, type }) => (
   <Row>

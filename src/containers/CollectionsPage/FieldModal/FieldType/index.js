@@ -1,6 +1,8 @@
 import { types } from 'config';
+import React from 'react';
 import { Throw } from 'utils';
-import { PropTypes, React } from 'utils/create';
+import { PropTypes } from 'utils/create';
+
 import * as components from './components';
 
 const getAttribute = type => components[type] || Throw(`Unknown attribute: ${type}`);

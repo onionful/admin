@@ -2,8 +2,8 @@ import { Col, Form, Icon, Input, Row, Tooltip } from 'antd';
 import { Lock } from 'components';
 import { withTranslate } from 'hocs';
 import { get, isEmpty, kebabCase, zipObject } from 'lodash';
-import { useState } from 'react';
-import { compose, connect, PropTypes, React, styled } from 'utils/create';
+import React, { useState } from 'react';
+import { compose, connect, PropTypes, styled } from 'utils/create';
 
 const NoAutoGenerateIcon = styled(({ className, tooltip }) => (
   <Tooltip title={tooltip}>

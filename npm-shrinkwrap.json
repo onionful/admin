@@ -1492,6 +1492,18 @@
         "loader-utils": "^1.1.0"
       }
     },
+    "@types/auth0-js": {
+      "version": "8.11.11",
+      "resolved": "https://registry.npmjs.org/@types/auth0-js/-/auth0-js-8.11.11.tgz",
+      "integrity": "sha512-uKwTZHPBTTZFZwQhSR2gCLeRdWnWKq3F2WJIllvJH9b//Jq8S541c+P42yur3obbjkp7BnqQ5gpCd6GLCpgRww==",
+      "dev": true
+    },
+    "@types/flat": {
+      "version": "0.0.28",
+      "resolved": "https://registry.npmjs.org/@types/flat/-/flat-0.0.28.tgz",
+      "integrity": "sha1-XHiBSdhabPj/X18ACs3ZEs3qQnQ=",
+      "dev": true
+    },
     "@types/history": {
       "version": "4.7.2",
       "resolved": "https://registry.npmjs.org/@types/history/-/history-4.7.2.tgz",
@@ -1572,6 +1584,16 @@
       "requires": {
         "@types/react": "*",
         "redux": "^3.6.0 || ^4.0.0"
+      }
+    },
+    "@types/redux-immutable": {
+      "version": "4.0.1",
+      "resolved": "https://registry.npmjs.org/@types/redux-immutable/-/redux-immutable-4.0.1.tgz",
+      "integrity": "sha512-bksf7FrNMsoCy1Zn8F9zAYl5FCM6Qzt/Ln5C1knjdDUzczgtioy0Y01VPlm4aZacCr4nVrCsNyVdy36/4SMsKQ==",
+      "dev": true,
+      "requires": {
+        "immutable": "^4.0.0-rc.1",
+        "redux": "^4.0.0"
       }
     },
     "@types/tapable": {

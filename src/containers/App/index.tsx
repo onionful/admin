@@ -19,16 +19,16 @@ import {
   withTranslate,
 } from 'hocs';
 import { useAuth } from 'hooks';
-import { Map, Record } from 'immutable';
 import { noop } from 'lodash';
-import { ComponentClass, useState } from 'react';
+import React, { ComponentClass, FunctionComponent, useState } from 'react';
 import { Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { ApplicationState } from 'reducers';
 import { fetchProfile, getProfile, logout } from 'reducers/auth';
 import { getCollections } from 'reducers/collections';
-import { fetchSpaces, getCurrentSpace, getSpaces, setSpace } from 'reducers/spaces';
+import { fetchSpaces, getCurrentSpace, setSpace } from 'reducers/spaces';
 import { Collection, Profile, Space } from 'types';
-import { acronym, colors, media, permissions } from 'utils';
-import { compose, connect, FunctionComponent, push, React, styled } from 'utils/create';
+import { acronym, colors, media, Permission } from 'utils';
+import { compose, connect, push, styled } from 'utils/create';
 
 const Container = styled(Layout.Content)`
   position: relative;
@@ -97,12 +97,12 @@ interface MenuItemGroup {
   items: MenuItem[];
 }
 
-interface RouteProps {}
+interface OwnProps {}
 
 interface StateProps {
-  profile?: Record<Profile>;
-  space?: Record<Space>;
-  collections: Map<String, Record<Collection>>;
+  profile?: Profile;
+  space?: Space;
+  collections: { [key: string]: Collection };
 }
 
 interface DispatchProps {
@@ -110,7 +110,10 @@ interface DispatchProps {
   handlePush: (path: string) => void;
 }
 
-type Props = StateProps &
+interface RouteProps {}
+
+type Props = OwnProps &
+  StateProps &
   DispatchProps &
   RouteComponentProps<RouteProps> &
   IWithErrorHandler &
@@ -142,25 +145,23 @@ const App: FunctionComponent<Props> = ({
   const handleErrorDismiss = () => {};
 
   // const hasPermissions = ({ permission }) => hasPermission(permission) || true;
-  const profileName = profile ? profile.get('name') || profile.get('nickname') : '';
+  const profileName = profile ? profile.name || profile.nickname : '';
 
   const menuItems: MenuItemGroup[] = [
     {
       key: 'collection',
-      items: collections
-        .toList()
+      items: Object.values(collections)
         .map<MenuItem>(collection => ({
-          key: `collection/${collection.get('id')}`,
+          key: `collection/${collection.id}`,
           icon: 'file',
-          name: collection.get('name'),
+          name: collection.name,
           render: props => <ContentPage {...props} collection={collection} />,
         }))
-        .toArray()
         .concat({
           key: 'collections',
           icon: 'file-add',
           component: CollectionsPage,
-          permission: permissions.USERS_LIST,
+          permission: Permission.USERS_LIST,
           disabled: !!space,
         }),
     },
@@ -172,7 +173,7 @@ const App: FunctionComponent<Props> = ({
           key: 'users',
           icon: 'user',
           component: UsersPage,
-          permission: permissions.USERS_LIST,
+          permission: Permission.USERS_LIST,
         },
         { key: 'settings', icon: 'setting' },
         { key: 'logout', icon: 'logout' },
@@ -195,7 +196,7 @@ const App: FunctionComponent<Props> = ({
               trigger={collapsed ? 'hover' : undefined}
             >
               <UserInfo>
-                <Avatar size="large" src={profile.get('picture')} />
+                <Avatar size="large" src={profile.picture} />
                 {!collapsed && <div>{profileName}</div>}
               </UserInfo>
             </Tooltip>
@@ -203,13 +204,9 @@ const App: FunctionComponent<Props> = ({
         )}
 
         {space && (
-          <Tooltip
-            placement="right"
-            title={space.get('name')}
-            trigger={collapsed ? 'hover' : undefined}
-          >
+          <Tooltip placement="right" title={space.name} trigger={collapsed ? 'hover' : undefined}>
             <SpaceInfo onClick={() => setSpacesModalVisible(true)}>
-              {collapsed ? acronym(space.get('name')) : space.get('name')}
+              {collapsed ? acronym(space.name) : space.name}
             </SpaceInfo>
           </Tooltip>
         )}
@@ -271,16 +268,18 @@ const App: FunctionComponent<Props> = ({
 
 App.defaultProps = {
   _: noop,
-  collections: Map(),
+  collections: {},
   handlePush: noop,
 };
 
-const mapStateToProps = (state: any) => ({
-  profile: getProfile(state),
-  space: getCurrentSpace(state),
-  spaces: getSpaces(state),
-  collections: getCollections(state),
-});
+const mapStateToProps = (state: ApplicationState) => {
+  console.log('state', state);
+  return {
+    profile: getProfile(state),
+    space: getCurrentSpace(state) as Space,
+    collections: getCollections(state),
+  };
+};
 
 const mapDispatchToProps = {
   handlePush: push,
@@ -288,7 +287,7 @@ const mapDispatchToProps = {
 };
 
 export default compose<FunctionComponent<Props>>(
-  connect(
+  connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     mapStateToProps,
     mapDispatchToProps,
   ),

@@ -3,8 +3,9 @@ import { SectionHeader } from 'components/index';
 import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { noop } from 'lodash';
+import React from 'react';
 import { fetchContentList, getContentList } from 'reducers/content';
-import { compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push } from 'utils/create';
 
 const ContentPageList = ({ _, collection, data, handlePush, match: { path } }) => {
   const onCreateClick = () => handlePush(`${path}/create`);

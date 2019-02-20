@@ -7,7 +7,7 @@ const media = {
   xxl: 1600,
 };
 
-const min = value => `@media (min-width: ${value}px)`;
+const min = (value: number) => `@media (min-width: ${value}px)`;
 
 export default {
   ...media,

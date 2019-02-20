@@ -1,6 +1,0 @@
-export const LOGIN_PENDING = 'LOGIN_PENDING';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_REJECTED = 'LOGIN_REJECTED';
-export const PROFILE_GET = 'PROFILE_GET';
-export const PROFILE_UPDATE = 'PROFILE_UPDATE';
-export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';

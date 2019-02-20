@@ -4,6 +4,8 @@
     "paths": {
       "components": ["src/components"],
       "components/*": ["src/components/*"],
+      "config": ["src/config"],
+      "config/*": ["src/config/*"],
       "containers": ["src/containers"],
       "containers/*": ["src/containers/*"],
       "hocs": ["src/hocs"],
@@ -12,9 +14,13 @@
       "hooks/*": ["src/hooks/*"],
       "reducers": ["src/reducers"],
       "reducers/*": ["src/reducers/*"],
+      "sagas": ["src/sagas"],
+      "sagas/*": ["src/sagas/*"],
       "store": ["src/store"],
-      "types": ["src/types"],
-      "types/*": ["src/types/*"],
+      "store/*": ["src/store/*"],
+      "translations": ["src/translations"],
+      "translations/*": ["src/translations/*"],
+      "types": ["src/types.ts"],
       "utils": ["src/utils"],
       "utils/*": ["src/utils/*"]
     }

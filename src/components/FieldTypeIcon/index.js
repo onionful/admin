@@ -1,6 +1,7 @@
 import { types } from 'config';
+import React from 'react';
 import { Icon } from 'react-fa';
-import { PropTypes, React, styled } from 'utils/create';
+import { PropTypes, styled } from 'utils/create';
 import { colors } from 'utils/index';
 
 const Wrapper = styled.span`

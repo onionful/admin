@@ -3,8 +3,9 @@ import { SectionHeader } from 'components/index';
 import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
+import React from 'react';
 import { deleteCollection, fetchCollections, getCollections } from 'reducers/collections';
-import { compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push } from 'utils/create';
 
 const CollectionsPageList = ({ _, data, handleDeleteCollection, handlePush, match: { path } }) => {
   const onCreateClick = () => handlePush(`${path}/create`);

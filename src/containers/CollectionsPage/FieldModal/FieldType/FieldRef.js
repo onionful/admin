@@ -2,8 +2,9 @@ import { Select } from 'antd';
 import { withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { noop } from 'lodash';
+import React from 'react';
 import { change, Field, formValueSelector } from 'redux-form/immutable';
-import { compose, connect, PropTypes, React, styled } from 'utils/create';
+import { compose, connect, PropTypes, styled } from 'utils/create';
 
 const allowedRefTypes = ['string'];
 

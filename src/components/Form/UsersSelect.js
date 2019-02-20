@@ -3,10 +3,10 @@ import { UserLabel } from 'components';
 import { withTranslate } from 'hocs';
 import { fromJS, List } from 'immutable';
 import { debounce, noop } from 'lodash';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getId } from 'reducers/auth';
 import { findUsers } from 'reducers/users';
-import { compose, connect, PropTypes, React } from 'utils/create';
+import { compose, connect, PropTypes } from 'utils/create';
 
 const UsersSelect = ({ _, currentUser, currentUserRequired, onChange, value }) => {
   const [data, setData] = useState([]);

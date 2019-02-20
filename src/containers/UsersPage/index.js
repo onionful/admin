@@ -3,10 +3,10 @@ import { withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchUsers } from 'reducers/users';
-import { permissions } from 'utils';
-import { compose, connect, PropTypes, React, styled } from 'utils/create';
+import { Permission } from 'utils';
+import { compose, connect, PropTypes, styled } from 'utils/create';
 
 const SearchWrapper = styled.div`
   margin-bottom: 1rem;
@@ -155,6 +155,6 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  withPermissions(permissions.USERS_LIST),
+  withPermissions(Permission.USERS_LIST),
   withTranslate,
 )(UsersPage);

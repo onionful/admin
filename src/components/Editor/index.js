@@ -1,10 +1,10 @@
 import { fromJS, Map } from 'immutable';
 import { isEqual } from 'lodash';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Value } from 'slate';
 import Plain from 'slate-plain-serializer';
 import { Editor as SlateEditor } from 'slate-react';
-import { PropTypes, React } from 'utils/create';
+import { PropTypes } from 'utils/create';
 
 const initialValue = Plain.deserialize('');
 const equal = (a, b) => isEqual(a.toJSON(), b.toJSON());

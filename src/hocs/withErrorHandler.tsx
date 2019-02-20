@@ -1,9 +1,9 @@
 import { IWithErrorHandler } from 'hocs/types';
-import React, { ComponentClass, ErrorInfo } from 'react';
+import React, { Component, ComponentClass, ErrorInfo } from 'react';
 import { getDisplayName } from 'utils/create';
 
 export default <P, S>(WrappedComponent: ComponentClass<P & IWithErrorHandler, S>) => {
-  class WithErrorHandler extends React.Component {
+  class WithErrorHandler extends Component {
     static displayName = `WithErrorHandler(${getDisplayName(WrappedComponent)})`;
 
     readonly state: IWithErrorHandler = {

@@ -1,5 +1,6 @@
 import { Icon } from 'antd';
-import { PropTypes, React, styled } from 'utils/create';
+import React from 'react';
+import { PropTypes, styled } from 'utils/create';
 
 const Lock = styled(({ locked, onLock, ...props }) => (
   <Icon {...props} type={locked ? 'lock' : 'unlock'} onClick={onLock} />

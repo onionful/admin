@@ -1,6 +1,7 @@
 import { Form, Input } from 'antd';
 import { withTranslate } from 'hocs';
-import { compose, PropTypes, React } from 'utils/create';
+import React from 'react';
+import { compose, PropTypes } from 'utils/create';
 
 const DefaultValue = ({ _, form, type }) => (
   <Form.Item label={_(`collections.attributes.${type}`)}>

@@ -1,6 +1,7 @@
 import { ClassNames } from '@emotion/core';
+import React from 'react';
 import { colors } from 'utils';
-import { PropTypes, React } from 'utils/create';
+import { PropTypes } from 'utils/create';
 
 const BodyRow = ({
   isOver,

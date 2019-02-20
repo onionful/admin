@@ -1,7 +1,7 @@
 import { Spin } from 'antd';
-import { noop } from 'lodash';
-import { useEffect } from 'react';
-import { connect, PropTypes, React, styled } from 'utils/create';
+import { get, noop } from 'lodash';
+import React, { useEffect } from 'react';
+import { connect, PropTypes, styled } from 'utils/create';
 
 const Container = styled.section`
   display: flex;
@@ -44,7 +44,7 @@ export default ({
 
   const mapStateToProps = (state, props) => ({
     isLoading:
-      condition(props) && [].concat(type).some(key => state.getIn(['loading'].concat(key), true)),
+      condition(props) && [].concat(type).some(key => get(state, ['loading'].concat(key), true)),
   });
 
   const mapDispatchToProps = dispatch => ({

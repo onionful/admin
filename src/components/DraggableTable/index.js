@@ -1,7 +1,8 @@
 import { Table } from 'antd';
+import React from 'react';
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { PropTypes, React, styled } from 'utils/create';
+import { PropTypes, styled } from 'utils/create';
 import BodyRow from './BodyRow';
 
 const StyledTable = styled(Table)`

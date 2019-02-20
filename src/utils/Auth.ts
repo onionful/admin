@@ -1,4 +1,4 @@
-import auth0 from 'auth0-js';
+import auth0, { Auth0DecodedHash } from 'auth0-js';
 import config from 'config';
 
 export default class Auth {
@@ -25,7 +25,7 @@ export default class Auth {
       }),
     );
 
-  isAuthenticated = () => new Date().getTime() < JSON.parse(localStorage.getItem('expires_at'));
+  isAuthenticated = () => new Date().getTime() < +(localStorage.getItem('expires_at') || 0);
 
   login = () => this.auth0.authorize();
 
@@ -35,11 +35,11 @@ export default class Auth {
     localStorage.removeItem('expires_at');
   };
 
-  setSession = authResult => {
-    const expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
-    localStorage.setItem('access_token', authResult.accessToken);
-    localStorage.setItem('id_token', authResult.idToken);
-    localStorage.setItem('expires_at', expiresAt);
+  setSession = (authResult: Auth0DecodedHash) => {
+    const expiresAt = +(authResult.expiresIn || 0) * 1000 + new Date().getTime();
+    localStorage.setItem('access_token', authResult.accessToken || '');
+    localStorage.setItem('id_token', authResult.idToken || '');
+    localStorage.setItem('expires_at', expiresAt.toString());
   };
 
   getAccessToken = () => {

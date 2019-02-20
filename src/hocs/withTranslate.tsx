@@ -1,8 +1,8 @@
 import { IWithTranslate } from 'hocs';
-import { fromJS } from 'immutable';
 import { noop } from 'lodash';
 import React, { ComponentClass, FunctionComponent } from 'react';
 import { getTranslate, withLocalize } from 'react-localize-redux';
+import { ApplicationState } from 'reducers';
 import { compose, connect, getDisplayName } from 'utils/create';
 
 export default (WrappedComponent: ComponentClass) => {
@@ -14,13 +14,12 @@ export default (WrappedComponent: ComponentClass) => {
     _: noop,
   };
 
-  const mapStateToProps = (state: any): IWithTranslate => ({
-    _: (id, data, options) =>
-      getTranslate(state.get('localize'))(id, fromJS(data || {}).toJS(), options),
+  const mapStateToProps = (state: ApplicationState) => ({
+    _: getTranslate(state.localize),
   });
 
   return compose(
-    connect(
+    connect<IWithTranslate, any, any, ApplicationState>(
       mapStateToProps,
       null,
       null,

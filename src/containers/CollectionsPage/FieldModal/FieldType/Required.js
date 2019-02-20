@@ -1,6 +1,7 @@
 import { Checkbox, Form } from 'antd';
 import { withTranslate } from 'hocs';
-import { compose, PropTypes, React } from 'utils/create';
+import React from 'react';
+import { compose, PropTypes } from 'utils/create';
 
 const Required = ({ _, form, type }) => (
   <Form.Item>

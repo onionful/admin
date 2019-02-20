@@ -1,5 +1,6 @@
+import React from 'react';
 import { Link as BaseLink } from 'react-router-dom';
-import { PropTypes, React } from 'utils/create';
+import { PropTypes } from 'utils/create';
 
 const Link = ({ to, children, ...props }) =>
   to.startsWith('/') ? (

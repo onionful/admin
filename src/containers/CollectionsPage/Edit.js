@@ -4,6 +4,7 @@ import { Identifier } from 'components/Form';
 import { withForm, withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
+import React from 'react';
 import {
   createCollection,
   fetchCollection,
@@ -11,7 +12,7 @@ import {
   updateCollection,
 } from 'reducers/collections';
 import { Field, FieldArray, Fields } from 'redux-form/immutable';
-import { compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push } from 'utils/create';
 import DraggableFieldsTable from './DraggableFieldsTable';
 
 const CollectionsPageEdit = (

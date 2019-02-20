@@ -1,7 +1,8 @@
 import { Button } from 'antd';
 import { Logo } from 'components';
+import React from 'react';
 import { colors } from 'utils';
-import { PropTypes, React, styled } from 'utils/create';
+import { PropTypes, styled } from 'utils/create';
 
 const StyledLogo = styled(Logo)`
   width: 10rem;

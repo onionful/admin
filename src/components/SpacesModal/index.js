@@ -2,8 +2,9 @@ import { Button, List, Modal } from 'antd';
 import { Logo } from 'components';
 import { withTranslate } from 'hocs';
 import { Map } from 'immutable';
+import React from 'react';
 import { colors } from 'utils';
-import { compose, connect, PropTypes, React, styled } from 'utils/create';
+import { compose, connect, PropTypes, styled } from 'utils/create';
 
 const StyledLogo = styled(Logo)`
   display: block;

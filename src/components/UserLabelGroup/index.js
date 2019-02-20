@@ -1,6 +1,7 @@
 import { Tooltip } from 'antd';
 import { UserLabel } from 'components';
-import { PropTypes, React, styled } from 'utils/create';
+import React from 'react';
+import { PropTypes, styled } from 'utils/create';
 
 const StyledTooltip = styled(Tooltip)`
   display: flex;

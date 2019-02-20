@@ -3,8 +3,9 @@ import { Link, SectionHeader, UserLabelGroup } from 'components';
 import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
+import React from 'react';
 import { deleteSpace, fetchSpaces, getSpaces } from 'reducers/spaces';
-import { compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push } from 'utils/create';
 
 const SpacesPageList = ({ _, data, handleDeleteSpace, handlePush, match: { path } }) => {
   const onCreateClick = () => handlePush(`${path}/create`);

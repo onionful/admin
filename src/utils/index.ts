@@ -4,7 +4,7 @@ import config from 'config';
 export { default as Auth } from './Auth';
 export { default as colors } from './colors';
 export { default as media } from './media';
-export { default as permissions } from './permissions';
+export { Permission } from './permission';
 
 export const api = axios.create({
   baseURL: config.api.endpoint,
@@ -16,8 +16,8 @@ api.interceptors.request.use(request => {
   return request;
 });
 
-export const Throw = message => () => {
+export const Throw = (message: string) => () => {
   throw new Error(message);
 };
 
-export const acronym = string => string.match(/\b(\w)/g).join('');
+export const acronym = (string: string) => (string.match(/\b(\w)/g) || []).join('');

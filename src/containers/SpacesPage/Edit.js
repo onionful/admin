@@ -4,11 +4,11 @@ import { Identifier, UsersSelect } from 'components/Form';
 import { withForm, withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { createSpace, fetchSpace, getSpace, updateSpace } from 'reducers/spaces';
 import { fetchLabels } from 'reducers/users';
 import { Field, Fields, Form } from 'redux-form/immutable';
-import { compose, connect, PropTypes, push, React } from 'utils/create';
+import { compose, connect, PropTypes, push } from 'utils/create';
 
 const SpacesPageEdit = (
   {

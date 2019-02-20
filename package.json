@@ -52,8 +52,11 @@
     "typescript": "^3.3.3"
   },
   "devDependencies": {
+    "@types/auth0-js": "^8.11.11",
+    "@types/flat": "0.0.28",
     "@types/react-router": "^4.4.4",
     "@types/redux-form": "^7.5.2",
+    "@types/redux-immutable": "^4.0.1",
     "babel-plugin-emotion": "^10.0.7",
     "babel-plugin-import": "^1.11.0",
     "customize-cra": "^0.2.11",
