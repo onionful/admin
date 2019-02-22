@@ -20,7 +20,7 @@ import {
 } from 'hocs';
 import { useAuth } from 'hooks';
 import { noop } from 'lodash';
-import React, { ComponentClass, FunctionComponent, useState } from 'react';
+import React, { ComponentClass, ComponentType, FunctionComponent, useState } from 'react';
 import { Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'reducers';
 import { fetchProfile, getProfile, logout } from 'reducers/auth';
@@ -88,7 +88,7 @@ interface MenuItem {
   name?: string;
   permission?: string;
   disabled?: boolean;
-  component?: ComponentClass;
+  component?: ComponentType;
   render?: (props: any) => JSX.Element;
 }
 
@@ -267,26 +267,22 @@ const App: FunctionComponent<Props> = ({
 };
 
 App.defaultProps = {
-  _: noop,
   collections: {},
   handlePush: noop,
 };
 
-const mapStateToProps = (state: ApplicationState) => {
-  console.log('state', state);
-  return {
-    profile: getProfile(state),
-    space: getCurrentSpace(state) as Space,
-    collections: getCollections(state),
-  };
-};
+const mapStateToProps = (state: ApplicationState) => ({
+  profile: getProfile(state),
+  space: getCurrentSpace(state) as Space,
+  collections: getCollections(state),
+});
 
 const mapDispatchToProps = {
   handlePush: push,
   handleSetSpace: setSpace,
 };
 
-export default compose<FunctionComponent<Props>>(
+export default compose<FunctionComponent<OwnProps>>(
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     mapStateToProps,
     mapDispatchToProps,

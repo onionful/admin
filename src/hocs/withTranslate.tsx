@@ -1,5 +1,4 @@
 import { IWithTranslate } from 'hocs';
-import { noop } from 'lodash';
 import React, { ComponentClass, FunctionComponent } from 'react';
 import { getTranslate, withLocalize } from 'react-localize-redux';
 import { ApplicationState } from 'reducers';
@@ -11,7 +10,7 @@ export default (WrappedComponent: ComponentClass) => {
   WithTranslate.displayName = `WithTranslate(${getDisplayName(WrappedComponent)})`;
 
   WithTranslate.defaultProps = {
-    _: noop,
+    _: () => '',
   };
 
   const mapStateToProps = (state: ApplicationState) => ({

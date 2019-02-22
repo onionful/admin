@@ -3,7 +3,7 @@ import typeToReducer from 'type-to-reducer';
 import { UsersActionTypes, UsersState } from './types';
 import { set, merge } from 'lodash';
 
-const initialState = {
+const initialState: UsersState = {
   data: {
     users: [],
     total: 0,

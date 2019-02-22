@@ -1,9 +1,9 @@
 import { Avatar, Icon, Input, Table } from 'antd';
-import { withPermissions, withTranslate } from 'hocs';
-import { Map } from 'immutable';
+import { IWithTranslate, withPermissions, withTranslate } from 'hocs';
 import { noop } from 'lodash';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { ApplicationState } from 'reducers';
 import { fetchUsers } from 'reducers/users';
 import { Permission } from 'utils';
 import { compose, connect, PropTypes, styled } from 'utils/create';
@@ -16,7 +16,19 @@ const SearchQuery = styled.div`
   margin-bottom: 1rem;
 `;
 
-const UsersPage = ({ _, handleFetchUsers, isLoading, data }) => {
+interface OwnProps {}
+
+interface StateProps {
+  data: any;
+}
+
+interface DispatchProps {
+  handleFetchUsers: (params: any) => void;
+}
+
+type Props = OwnProps & StateProps & DispatchProps & IWithTranslate;
+
+const UsersPage: FunctionComponent<Props> = ({ _, handleFetchUsers, data }) => {
   const [search, setSearch] = useState('');
   const [searchCurrent, setSearchCurrent] = useState('');
   const [pagination, setPagination] = useState({});
@@ -25,7 +37,7 @@ const UsersPage = ({ _, handleFetchUsers, isLoading, data }) => {
     handleFetchUsers({ ...pagination, q: search });
   }, [pagination, search]);
 
-  const handleTableChange = (currentPagination, filters, sorter) => {
+  const handleTableChange = (currentPagination: any, filters: any, sorter: any) => {
     setPagination({
       limit: currentPagination.pageSize,
       page: currentPagination.current - 1,
@@ -34,7 +46,7 @@ const UsersPage = ({ _, handleFetchUsers, isLoading, data }) => {
     });
   };
 
-  const handleSearchChange = ({ target: { value } }) => setSearchCurrent(value);
+  const handleSearchChange = ({ target: { value } }: any) => setSearchCurrent(value);
 
   const handleSearchReset = () => {
     setSearchCurrent('');
@@ -50,7 +62,7 @@ const UsersPage = ({ _, handleFetchUsers, isLoading, data }) => {
   const columns = [
     {
       dataIndex: 'picture',
-      render: value => <Avatar src={value} />,
+      render: (value: string) => <Avatar src={value} />,
     },
     {
       title: _('global.name'),
@@ -63,20 +75,21 @@ const UsersPage = ({ _, handleFetchUsers, isLoading, data }) => {
     {
       title: _('global.createdAt'),
       dataIndex: 'created_at',
-      render: value => <span title={value}>{moment(value).fromNow()}</span>,
-      sorter: (a, b) => moment(a.created_at) - moment(b.created_at),
+      render: (value: any) => <span title={value}>{moment(value).fromNow()}</span>,
+      sorter: (a: any, b: any) => +moment(a.created_at) - +moment(b.created_at),
     },
     {
       title: 'Last login',
       dataIndex: 'last_login',
-      render: value => <span title={value}>{moment(value).fromNow()}</span>,
-      sorter: (a, b) => moment(a.last_login) - moment(b.last_login),
+      render: (value: any) => <span title={value}>{moment(value).fromNow()}</span>,
+      sorter: (a: any, b: any) => +moment(a.last_login) - +moment(b.last_login),
     },
     {
       title: 'Service',
       dataIndex: 'identities',
-      render: value =>
-        value.map(({ provider }) => (
+      render: (value:any) =>
+        value.map(({ provider }: any) => (
+          // @ts-ignore
           <Icon key={provider} type={{ 'google-oauth2': 'google' }[provider] || provider} />
         )),
     },
@@ -97,7 +110,7 @@ const UsersPage = ({ _, handleFetchUsers, isLoading, data }) => {
       <SearchWrapper>
         <Input.Search
           enterButton
-          placeholder={_('global.searchPlaceholder')}
+          placeholder={_('global.searchPlaceholder').toString()}
           suffix={<SearchReset type="close-circle" onClick={handleSearchReset} />}
           value={searchCurrent}
           onChange={handleSearchChange}
@@ -114,11 +127,11 @@ const UsersPage = ({ _, handleFetchUsers, isLoading, data }) => {
 
       <Table
         columns={columns}
-        dataSource={data.get('users').toJS()}
-        loading={isLoading}
+        dataSource={data.users}
+        loading={false}
         pagination={{
-          pageSize: data.get('limit'),
-          total: data.get('total'),
+          pageSize: data.limit,
+          total: data.total,
         }}
         rowKey={({ email, logins_count: count }) => `${email}_${count}`}
         size="small"
@@ -128,30 +141,16 @@ const UsersPage = ({ _, handleFetchUsers, isLoading, data }) => {
   );
 };
 
-UsersPage.propTypes = {
-  _: PropTypes.func.isRequired,
-  data: PropTypes.map,
-  handleFetchUsers: PropTypes.func,
-  isLoading: PropTypes.bool,
-};
-
-UsersPage.defaultProps = {
-  data: Map(),
-  handleFetchUsers: noop,
-  isLoading: false,
-};
-
-const mapStateToProps = state => ({
-  data: state.getIn(['users', 'data']),
-  isLoading: state.getIn(['users', 'isLoading']),
+const mapStateToProps = (state: ApplicationState) => ({
+  data: state.users.data,
 });
 
 const mapDispatchToProps = {
   handleFetchUsers: fetchUsers,
 };
 
-export default compose(
-  connect(
+export default compose<FunctionComponent<OwnProps>>(
+  connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     mapStateToProps,
     mapDispatchToProps,
   ),

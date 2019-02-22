@@ -1,7 +1,5 @@
 import { Permission } from 'utils';
 
-export type NoOp = () => void;
-
 export interface Collection {
   id?: string;
   name?: string;
@@ -12,14 +10,39 @@ export interface Profile {
   user_metadata: any;
   name: string;
   nickname: string;
-  permissions: Permission[],
+  permissions: Permission[];
   picture: string;
 }
 
 export interface Space {
+  id: string;
   name: string;
 }
 
+interface UserIdentity {
+  connection: string;
+  isSocial: boolean;
+  provider: string;
+  user_id: string;
+}
+
+export interface User {
+  created_at: string;
+  email: string;
+  identities: UserIdentity[];
+  last_login: string;
+  logins_count: number;
+  foo: string;
+  name: string;
+  nickname: string;
+  picture: string;
+  user_id: string;
+  user_metadata: {
+    space: string;
+  };
+}
+
+// TODO: type-to-reducer temporary definition; remove when PR merged
 interface reducerMapFunction<S, A> {
   (state: S, action?: A): S;
 }
