@@ -5,7 +5,6 @@ const {
   fixBabelImports,
 } = require('customize-cra');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 const PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -34,7 +33,6 @@ module.exports = override(
   config => ({
     ...config,
     plugins: config.plugins.concat([
-      new HardSourceWebpackPlugin({ environmentHash: { files: ['npm-shrinkwrap.json', '.env'] } }),
       ...(PRODUCTION ? [new BundleAnalyzerPlugin()] : []),
     ]),
   }),
