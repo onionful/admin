@@ -4,7 +4,6 @@ const {
   override,
   fixBabelImports,
 } = require('customize-cra');
-const rewireYAML = require('react-app-rewire-yaml');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
@@ -39,5 +38,4 @@ module.exports = override(
       ...(PRODUCTION ? [new BundleAnalyzerPlugin()] : []),
     ]),
   }),
-  rewireYAML,
 );

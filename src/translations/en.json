@@ -1,0 +1,126 @@
+{
+  "collections": {
+    "title": {
+      "list": "Collections",
+      "create": "New collection",
+      "edit": "${name}"
+    },
+    "description": {
+      "list": "Create and update your collections",
+      "create": "Create new type of your collection",
+      "edit": "Edit existing collection"
+    },
+    "addField": "Add new field",
+    "types": {
+      "string": "Titles, names, single paragraphs",
+      "number": "Everything that is a number",
+      "text": "Description, text paragraphs, articles",
+      "media": "Images, videos, PDFs",
+      "date": "Event date, opening hours",
+      "email": "User's e-mail",
+      "bool": "Yes/no, true/false, 1/0"
+    },
+    "attributes": {
+      "id": "Identifier",
+      "name": "Name",
+      "defaultValue": "Default value",
+      "fieldRef": "Copy value from",
+      "required": "Required",
+      "unique": "Unique",
+      "range": "Range",
+      "multiline": "Multiline text",
+      "numberFormat": "Number format",
+      "multiple": "Multiple images",
+      "identifier": "Generate identifier",
+      "identifier_placeholder": "identifier name, i.e. `id` or `slug`"
+    }
+  },
+  "collection": {
+    "title": {
+      "list": "${name}",
+      "create": "New item",
+      "edit": "${name}"
+    },
+    "description": {
+      "list": "Create and update your \"${name}\" collection's items",
+      "create": "Create new item inside your \"${name}\" collection",
+      "edit": "Edit exisiting item"
+    }
+  },
+  "spaces": {
+    "title": {
+      "list": "Spaces",
+      "create": "Create space",
+      "edit": "Edit space - ${name}"
+    },
+    "description": {
+      "list": "Create and update your spaces",
+      "create": "Create new space",
+      "edit": "Edit existing space"
+    }
+  },
+  "spacesModal": {
+    "noData": "No space is available",
+    "select": "Select space",
+    "create": "Create new space"
+  },
+  "components": {
+    "identifier": {
+      "idTooltip": "Type a capital letter to separate",
+      "noAutoGenerator": "Auto-generating disabled - unlock to edit"
+    }
+  },
+  "menu": {
+    "content": "Content",
+    "collection": "Collections",
+    "collections": "Manage collections",
+    "system": "System",
+    "spaces": "Spaces",
+    "users": "Users",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "global": {
+    "action": "Action",
+    "back": "Back",
+    "copyrights": "Onionful (MIT) created by Jakub Chrzanowski",
+    "cancel": "Cancel",
+    "create": "Create",
+    "createdAt": "Created at",
+    "description": "Description",
+    "email": "E-mail",
+    "fields": "Fields",
+    "id": "Identifier",
+    "login": "Login",
+    "name": "Name",
+    "none": "none",
+    "owners": "Owners",
+    "deleteQuestion": "Are you sure?",
+    "save": "Save",
+    "searchPlaceholder": "Search...",
+    "selectUsers": "Select users",
+    "title": "Title",
+    "update": "Update",
+    "updatedAt": "Updated at",
+    "url": "Website address",
+    "users": "Users"
+  },
+  "errors": {
+    "collectionNotFound": "Collection not found",
+    "nameTaken": "Name is already taken by another field",
+    "required": "Field is required"
+  },
+  "messages": {
+    "collections": {
+      "created": "Collection has been created",
+      "updated": "Collection has been updated",
+      "deleted": "Collection has been deleted"
+    },
+    "spaces": {
+      "created": "Space has been created",
+      "updated": "Space has been updated",
+      "deleted": "Space has been deleted",
+      "currentUserRequired": "You cannot remove yourself from the list"
+    }
+  }
+}

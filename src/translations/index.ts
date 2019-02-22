@@ -2,10 +2,8 @@ import config from 'config';
 import flat from 'flat';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { InitializePayload, NamedLanguage } from 'react-localize-redux';
-// @ts-ignore
-import en from './en.yml';
-// @ts-ignore
-import pl from './pl.yml';
+import en from './en.json';
+import pl from './pl.json';
 
 const { defaultLanguage } = config;
 
