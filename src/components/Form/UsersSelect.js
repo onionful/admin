@@ -8,7 +8,7 @@ import { getId } from 'reducers/auth';
 import { findUsers } from 'reducers/users';
 import { compose, connect, PropTypes, React } from 'utils/create';
 
-const UsersSelect = ({ _, currentUser, currentUserRequired, onChange, value }) => {
+const UsersSelect = ({ _, currentUser, currentUserRequired, handleFindUsers, onChange, value }) => {
   const [data, setData] = useState([]);
   const [fetching, setFetching] = useState(false);
 
@@ -18,7 +18,7 @@ const UsersSelect = ({ _, currentUser, currentUserRequired, onChange, value }) =
     if (searchValue.trim().length >= 3) {
       setFetching(true);
 
-      findUsers(searchValue).then(({ data: { users } }) => {
+      handleFindUsers(searchValue).then(({ value: { data: { users } } }) => {
         setFetching(false);
         setData(users.map(user => ({ ...user, id: user.user_id })));
       });
@@ -72,6 +72,7 @@ UsersSelect.propTypes = {
   _: PropTypes.func.isRequired,
   currentUser: PropTypes.string,
   currentUserRequired: PropTypes.bool,
+  handleFindUsers: PropTypes.func,
   onChange: PropTypes.func,
   value: PropTypes.list,
 };
@@ -79,6 +80,7 @@ UsersSelect.propTypes = {
 UsersSelect.defaultProps = {
   currentUser: null,
   currentUserRequired: false,
+  handleFindUsers: noop,
   onChange: noop,
   value: List(),
 };
@@ -87,7 +89,14 @@ const mapStateToProps = state => ({
   currentUser: getId(state),
 });
 
+const mapDispatchToProps = {
+  handleFindUsers: findUsers,
+};
+
 export default compose(
-  connect(mapStateToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
   withTranslate,
 )(UsersSelect);

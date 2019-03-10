@@ -18,6 +18,9 @@ export const fetchLabels = (...args) => {
   };
 };
 
-export const findUsers = query => api.get(`/users/find/${query}`);
+export const findUsers = query => ({
+  type: types.USERS_FIND,
+  payload: api.get(`/users/find/${query}`),
+});
 
 export const getUserLabel = (state, id) => state.getIn(['users', 'labels', id]);
