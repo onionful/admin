@@ -1,22 +1,15 @@
-import { Map } from 'immutable';
 import { ErrorInfo } from 'react';
-import {
-  LocalizedElement,
-  LocalizedElementMap,
-  TranslateOptions,
-  TranslatePlaceholderData,
-  TranslateValue,
-} from 'react-localize-redux';
+import { TranslateFunction } from 'react-localize-redux';
 
-export interface IWithErrorHandler {
+export interface WithErrorHandlerProps {
   error?: Error;
   errorInfo?: ErrorInfo;
 }
 
-export interface IWithTranslate {
-  _: (
-    id: TranslateValue,
-    data?: TranslatePlaceholderData | Map<string, string>,
-    options?: TranslateOptions,
-  ) => LocalizedElement | LocalizedElementMap;
+export interface WithLoadingProps {
+  isLoading: boolean;
+}
+
+export interface WithTranslateProps {
+  _: TranslateFunction;
 }

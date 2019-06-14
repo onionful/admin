@@ -100,6 +100,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 export default compose(
-  connect(mapStateToProps),
   withTranslate,
+  connect(mapStateToProps),
 )(Identifier);

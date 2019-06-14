@@ -33,10 +33,10 @@ const mapDispatchToProps = {
 };
 
 export default compose(
+  withPermissions(),
+  withRouter,
   connect(
     null,
     mapDispatchToProps,
   ),
-  withPermissions(),
-  withRouter,
 )(ContentPage);

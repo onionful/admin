@@ -1,6 +1,6 @@
 import { Button, Icon } from 'antd';
 import { Logo } from 'components';
-import { IWithTranslate, withTranslate } from 'hocs';
+import { WithTranslateProps, withTranslate } from 'hocs';
 import { useAuth } from 'hooks';
 import React, { FunctionComponent } from 'react';
 import { RouteComponentProps, StaticContext, withRouter } from 'react-router';
@@ -23,7 +23,7 @@ const StyledLogo = styled(Logo)`
   max-width: 10rem;
 `;
 
-type Props = RouteComponentProps<any, StaticContext, any> & IWithTranslate;
+type Props = RouteComponentProps<any, StaticContext, any> & WithTranslateProps;
 
 const Login: FunctionComponent<Props> = ({ _ }) => {
   const { isAuthenticated, login } = useAuth();

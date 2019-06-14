@@ -13,7 +13,7 @@ const Identifier = ({ field, handleChange, refValue }, { createField }) => {
     if (locked) {
       handleChange('content', field.get('id'), kebabCase(refValue));
     }
-  }, [refValue, locked]);
+  }, [field, handleChange, locked, refValue]);
 
   return (
     <Field

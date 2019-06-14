@@ -1,12 +1,7 @@
 import { Permission } from 'utils';
 
-export interface Collection {
-  id?: string;
-  name?: string;
-}
-
 export interface Profile {
-  user_id: number;
+  user_id: string;
   user_metadata: any;
   name: string;
   nickname: string;
@@ -14,9 +9,21 @@ export interface Profile {
   picture: string;
 }
 
+export interface Collection {
+  id: string;
+  name: string;
+}
+
+export interface Content {
+  id: string;
+}
+
 export interface Space {
   id: string;
   name: string;
+  owners: string[];
+  users: string[];
+  [key: string]: string | string[];
 }
 
 interface UserIdentity {
@@ -27,6 +34,7 @@ interface UserIdentity {
 }
 
 export interface User {
+  id: string;
   created_at: string;
   email: string;
   identities: UserIdentity[];
@@ -42,22 +50,4 @@ export interface User {
   };
 }
 
-// TODO: type-to-reducer temporary definition; remove when PR merged
-interface reducerMapFunction<S, A> {
-  (state: S, action?: A): S;
-}
-
-interface reducerMapReturnFunction<S, A> {
-  (state: S | undefined, action?: A): S;
-}
-
-interface reducerMap<S, A> {
-  [key: string]: reducerMap<S, A> | reducerMapFunction<S, A>;
-}
-
-declare module 'type-to-reducer' {
-  export default function typeToReducer<S, A = any>(
-    reducerMap: reducerMap<S, A>,
-    initialState: S,
-  ): reducerMapReturnFunction<S, A>;
-}
+export type Dictionary<T> = Record<string, T>;

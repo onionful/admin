@@ -97,16 +97,16 @@ const mapDispatchToProps = {
 };
 
 export default compose(
+  withPermissions(),
+  // withLoading({
+  //   type: 'contentGet',
+  //   action: ({ collection, id }) => fetchContent(collection.get('id'), id),
+  //   condition: ({ id }) => !!id,
+  // }),
+  withForm('content', { enableReinitialize: true }),
+  withTranslate,
   connect(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  withPermissions(),
-  withLoading({
-    type: 'contentGet',
-    action: ({ collection, id }) => fetchContent(collection.get('id'), id),
-    condition: ({ id }) => !!id,
-  }),
-  withForm('content', { enableReinitialize: true }),
-  withTranslate,
 )(ContentPageEdit);

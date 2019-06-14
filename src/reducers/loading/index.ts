@@ -1,5 +1,11 @@
-import { camelCase, set } from 'lodash';
+import { camelCase, get, set } from 'lodash';
+import { ApplicationState } from 'reducers/index';
 
+// Selectors
+export const isSomeLoading = (state: ApplicationState, types: string[]) =>
+  types.some(key => get(state, ['loading'].concat(key), true));
+
+// Reducer
 export default (state = {}, { type, meta: { distinctLoading = false } = {} }: any) => {
   const matches = /(.*)_(PENDING|FULFILLED|REJECTED)/.exec(type);
 

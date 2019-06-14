@@ -15,10 +15,10 @@ interface Translations extends InitializePayload {
   languages: Array<Language>;
 }
 
-export default <Translations>{
+export default {
   languages: [
     { name: 'English', code: 'en', data: flat(en) },
     { name: 'Polish', code: 'pl', data: flat(pl) },
   ],
   options: { renderToStaticMarkup, defaultLanguage },
-};
+} as Translations;

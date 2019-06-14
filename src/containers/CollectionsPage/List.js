@@ -4,7 +4,7 @@ import { withLoading, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import React from 'react';
-import { deleteCollection, fetchCollections, getCollections } from 'reducers/collections';
+import { deleteCollection, fetchCollectionsList, getCollections } from 'reducers/collections';
 import { compose, connect, PropTypes, push } from 'utils/create';
 
 const CollectionsPageList = ({ _, data, handleDeleteCollection, handlePush, match: { path } }) => {
@@ -102,14 +102,14 @@ const mapDispatchToProps = {
 };
 
 export default compose(
+  withPermissions(),
+  // withLoading({
+  //   type: 'collectionsList',
+  //   action: fetchCollections,
+  // }),
+  withTranslate,
   connect(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  withPermissions(),
-  withLoading({
-    type: 'collectionsList',
-    action: fetchCollections,
-  }),
-  withTranslate,
 )(CollectionsPageList);

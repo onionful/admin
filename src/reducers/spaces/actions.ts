@@ -1,46 +1,43 @@
-import { ApplicationState } from 'reducers';
 import { Space } from 'types';
-import { api } from 'utils';
-import { SpacesActionTypes } from './types';
+import { createAsyncAction, createStandardAction } from 'typesafe-actions';
 
-export const createSpace = (data: Space) => ({
-  type: SpacesActionTypes.SPACES_CREATE,
-  payload: api.post('/spaces', data),
-});
+const createSpaceAction = createAsyncAction(
+  'SPACES_CREATE_PENDING',
+  'SPACES_CREATE_FULFILLED',
+  'SPACES_CREATE_REJECTED',
+)<Space, Space, any>();
 
-export const deleteSpace = (id: string) => ({
-  type: SpacesActionTypes.SPACES_DELETE,
-  payload: api.delete(`/spaces/${id}`),
-});
+const deleteSpaceAction = createAsyncAction(
+  'SPACES_DELETE_PENDING',
+  'SPACES_DELETE_FULFILLED',
+  'SPACES_DELETE_REJECTED',
+)<string, Space, any>();
 
-export const fetchSpace = (id: string) => ({
-  type: SpacesActionTypes.SPACES_ITEM,
-  payload: api.get(`/spaces/${id}`),
-});
+const fetchSpaceAction = createAsyncAction(
+  'SPACES_ITEM_PENDING',
+  'SPACES_ITEM_FULFILLED',
+  'SPACES_ITEM_REJECTED',
+)<string, Space, any>();
 
-export const fetchSpaces = () => ({
-  type: SpacesActionTypes.SPACES_LIST,
-  payload: api.get('/spaces'),
-});
+const fetchSpacesListAction = createAsyncAction(
+  'SPACES_LIST_PENDING',
+  'SPACES_LIST_FULFILLED',
+  'SPACES_LIST_REJECTED',
+)<undefined, Space[], any>();
 
-export const updateSpace = (id: string, data: Space) => ({
-  type: SpacesActionTypes.SPACES_UPDATE,
-  payload: api.put(`/spaces/${id}`, data),
-  meta: { id },
-});
+const updateSpaceAction = createAsyncAction(
+  'SPACES_UPDATE_PENDING',
+  'SPACES_UPDATE_FULFILLED',
+  'SPACES_UPDATE_REJECTED',
+)<{ id: string; data: Space }, { id: string; data: Space }, any>();
 
-export const setSpace = (space: string) => {
-  localStorage.setItem('space', space);
+const setSpaceAction = createStandardAction('SPACES_SET')<string>();
 
-  return {
-    type: SpacesActionTypes.SET_SPACE,
-    payload: space,
-  };
+export default {
+  createSpaceAction,
+  deleteSpaceAction,
+  fetchSpaceAction,
+  fetchSpacesListAction,
+  updateSpaceAction,
+  setSpaceAction,
 };
-
-export const getSpace = (state: ApplicationState, id: string) => state.spaces.data[id];
-
-export const getSpaces = (state: ApplicationState) => state.spaces.data;
-
-export const getCurrentSpace = (state: ApplicationState) =>
-  state.spaces.current && state.spaces.data[state.spaces.current];

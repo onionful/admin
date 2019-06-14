@@ -57,9 +57,9 @@ const mapDispatchToProps = (dispatch, { type }) => ({
 });
 
 export default compose(
+  withTranslate,
   connect(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  withTranslate,
 )(FieldRef);

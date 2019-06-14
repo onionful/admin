@@ -61,6 +61,7 @@
   },
   "spacesModal": {
     "noData": "No space is available",
+    "notSelected": "No space selected",
     "select": "Select space",
     "create": "Create new space"
   },

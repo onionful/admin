@@ -1,24 +1,20 @@
-import { IWithTranslate } from 'hocs';
-import React, { ComponentClass, FunctionComponent } from 'react';
+import { WithTranslateProps } from 'hocs';
+import React, { ComponentClass, ComponentType } from 'react';
 import { getTranslate, withLocalize } from 'react-localize-redux';
 import { ApplicationState } from 'reducers';
 import { compose, connect, getDisplayName } from 'utils/create';
 
-export default (WrappedComponent: ComponentClass) => {
-  const WithTranslate: FunctionComponent<IWithTranslate> = props => <WrappedComponent {...props} />;
+export default <P extends {}>(WrappedComponent: ComponentClass) => {
+  const WithTranslate: ComponentType<WithTranslateProps> = props => <WrappedComponent {...props} />;
 
   WithTranslate.displayName = `WithTranslate(${getDisplayName(WrappedComponent)})`;
 
-  WithTranslate.defaultProps = {
-    _: () => '',
-  };
-
-  const mapStateToProps = (state: ApplicationState) => ({
+  const mapStateToProps = (state: ApplicationState): WithTranslateProps => ({
     _: getTranslate(state.localize),
   });
 
   return compose(
-    connect<IWithTranslate, any, any, ApplicationState>(
+    connect(
       mapStateToProps,
       null,
       null,

@@ -1,6 +1,6 @@
-import { Avatar, Icon, Layout, Menu, Tooltip } from 'antd';
+import { Icon, Layout, Menu } from 'antd';
 import { ClickParam } from 'antd/es/menu';
-import { Logo, SpacesModal } from 'components';
+import { Logo } from 'components';
 import {
   CollectionsPage,
   ContentPage,
@@ -11,24 +11,27 @@ import {
   UsersPage,
 } from 'containers';
 import {
-  IWithErrorHandler,
-  IWithTranslate,
   withAuthCheck,
   withErrorHandler,
+  WithErrorHandlerProps,
   withLoading,
+  WithLoadingProps,
   withTranslate,
+  WithTranslateProps,
 } from 'hocs';
 import { useAuth } from 'hooks';
-import { noop } from 'lodash';
-import React, { ComponentClass, ComponentType, FunctionComponent, useState } from 'react';
-import { Link, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import React, { ComponentType, FunctionComponent, useEffect, useState } from 'react';
+import { ResolveThunks } from 'react-redux';
+import { Link, Route, Switch, withRouter } from 'react-router-dom';
 import { ApplicationState } from 'reducers';
-import { fetchProfile, getProfile, logout } from 'reducers/auth';
 import { getCollections } from 'reducers/collections';
-import { fetchSpaces, getCurrentSpace, setSpace } from 'reducers/spaces';
-import { Collection, Profile, Space } from 'types';
-import { acronym, colors, media, Permission } from 'utils';
+import { fetchProfile } from 'reducers/profile';
+import { getCurrentSpace } from 'reducers/spaces';
+import { Collection, Space } from 'types';
+import { media, Permission } from 'utils';
 import { compose, connect, push, styled } from 'utils/create';
+import ProfileBox from './ProfileBox';
+import SpacesBox from './SpacesBox';
 
 const Container = styled(Layout.Content)`
   position: relative;
@@ -45,41 +48,6 @@ const StyledLogo = styled(Logo)`
   display: block;
   margin: 2rem auto;
   width: 50%;
-`;
-
-const UserInfo = styled.div`
-  cursor: pointer;
-  background-color: ${colors.background};
-  padding: 1rem 0;
-  text-align: center;
-  transition: box-shadow 0.5s;
-
-  &:hover {
-    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);
-  }
-
-  div {
-    color: ${colors.white};
-    padding-top: 1rem;
-    opacity: 0.65;
-  }
-`;
-
-const SpaceInfo = styled.div`
-  cursor: pointer;
-  background-color: ${colors.background};
-  border-top: 1px solid ${colors.black};
-  color: ${colors.white};
-  font-weight: bold;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  text-align: center;
-  transition: box-shadow 0.5s, color 0.5s;
-
-  &:hover {
-    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);
-    color: ${colors.onion};
-  },
 `;
 
 interface MenuItem {
@@ -100,37 +68,37 @@ interface MenuItemGroup {
 interface OwnProps {}
 
 interface StateProps {
-  profile?: Profile;
   space?: Space;
   collections: { [key: string]: Collection };
 }
 
 interface DispatchProps {
-  handleSetSpace: (spaceId: string) => void;
-  handlePush: (path: string) => void;
+  handleFetchProfile: typeof fetchProfile;
+  handlePush: typeof push;
 }
-
-interface RouteProps {}
 
 type Props = OwnProps &
   StateProps &
-  DispatchProps &
-  RouteComponentProps<RouteProps> &
-  IWithErrorHandler &
-  IWithTranslate;
+  ResolveThunks<DispatchProps> &
+  WithErrorHandlerProps &
+  WithLoadingProps &
+  WithTranslateProps;
 
 const App: FunctionComponent<Props> = ({
   _,
   error,
   errorInfo,
+  handleFetchProfile,
   handlePush,
-  handleSetSpace,
-  profile,
+  isLoading,
   space,
   collections,
 }) => {
+  useEffect(() => {
+    handleFetchProfile();
+  }, [handleFetchProfile]);
+
   const [collapsed, setCollapsed] = useState(false);
-  const [spacesModalVisible, setSpacesModalVisible] = useState(false);
   const { logout } = useAuth();
 
   const handleMenuClick = ({ key }: ClickParam) => {
@@ -145,7 +113,6 @@ const App: FunctionComponent<Props> = ({
   const handleErrorDismiss = () => {};
 
   // const hasPermissions = ({ permission }) => hasPermission(permission) || true;
-  const profileName = profile ? profile.name || profile.nickname : '';
 
   const menuItems: MenuItemGroup[] = [
     {
@@ -183,33 +150,18 @@ const App: FunctionComponent<Props> = ({
 
   return (
     <Layout style={{ minHeight: '100vh', maxWidth: media.xl }}>
-      <Layout.Sider collapsible breakpoint="lg" collapsed={collapsed} onCollapse={setCollapsed}>
+      <Layout.Sider
+        collapsible
+        breakpoint="lg"
+        collapsed={collapsed}
+        onCollapse={value => setCollapsed(value)}
+      >
         <Link to="/">
           <StyledLogo />
         </Link>
 
-        {profile && (
-          <Link to="/profile">
-            <Tooltip
-              placement="right"
-              title={profileName}
-              trigger={collapsed ? 'hover' : undefined}
-            >
-              <UserInfo>
-                <Avatar size="large" src={profile.picture} />
-                {!collapsed && <div>{profileName}</div>}
-              </UserInfo>
-            </Tooltip>
-          </Link>
-        )}
-
-        {space && (
-          <Tooltip placement="right" title={space.name} trigger={collapsed ? 'hover' : undefined}>
-            <SpaceInfo onClick={() => setSpacesModalVisible(true)}>
-              {collapsed ? acronym(space.name) : space.name}
-            </SpaceInfo>
-          </Tooltip>
-        )}
+        <ProfileBox collapsed={collapsed} />
+        <SpacesBox collapsed={collapsed} />
 
         <Menu defaultSelectedKeys={['4']} mode="inline" theme="dark" onClick={handleMenuClick}>
           {menuItems.map(group => (
@@ -226,22 +178,10 @@ const App: FunctionComponent<Props> = ({
         </Menu>
       </Layout.Sider>
 
-      <SpacesModal
-        visible={spacesModalVisible}
-        onCreate={() => {
-          setSpacesModalVisible(false);
-          handlePush('/spaces/create');
-        }}
-        onSetSpace={(spaceId: string) => {
-          setSpacesModalVisible(false);
-          handleSetSpace(spaceId);
-        }}
-      />
-
-      {(!spacesModalVisible || error) && (
-        <Layout>
-          <Container>
-            {error ? (
+      <Layout>
+        <Container>
+          {!isLoading &&
+            (error ? (
               <ErrorPage error={error} errorInfo={errorInfo} onDismiss={handleErrorDismiss} />
             ) : (
               <Content>
@@ -255,44 +195,34 @@ const App: FunctionComponent<Props> = ({
                   <Route component={NotFoundPage} />
                 </Switch>
               </Content>
-            )}
-          </Container>
-          <Layout.Footer style={{ textAlign: 'center' }}>
-            {_('global.copyrights') || ''}
-          </Layout.Footer>
-        </Layout>
-      )}
+            ))}
+        </Container>
+        <Layout.Footer style={{ textAlign: 'center' }}>
+          {_('global.copyrights') || ''}
+        </Layout.Footer>
+      </Layout>
     </Layout>
   );
 };
 
-App.defaultProps = {
-  collections: {},
-  handlePush: noop,
-};
-
-const mapStateToProps = (state: ApplicationState) => ({
-  profile: getProfile(state),
+const mapStateToProps = (state: ApplicationState): StateProps => ({
   space: getCurrentSpace(state) as Space,
   collections: getCollections(state),
 });
 
-const mapDispatchToProps = {
+const mapDispatchToProps: DispatchProps = {
+  handleFetchProfile: fetchProfile,
   handlePush: push,
-  handleSetSpace: setSpace,
 };
 
 export default compose<FunctionComponent<OwnProps>>(
+  withRouter,
+  withAuthCheck,
+  withErrorHandler,
+  withLoading('profileFetch'),
+  withTranslate,
   connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  withAuthCheck,
-  withErrorHandler,
-  withLoading({
-    type: ['app', 'profileGet'],
-    action: [fetchProfile, fetchSpaces],
-  }),
-  withRouter,
-  withTranslate,
 )(App);

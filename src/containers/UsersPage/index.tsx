@@ -1,12 +1,12 @@
 import { Avatar, Icon, Input, Table } from 'antd';
-import { IWithTranslate, withPermissions, withTranslate } from 'hocs';
-import { noop } from 'lodash';
+import { WithTranslateProps, withPermissions, withTranslate } from 'hocs';
 import moment from 'moment';
 import React, { FunctionComponent, useEffect, useState } from 'react';
+import { ResolveThunks } from 'react-redux';
 import { ApplicationState } from 'reducers';
-import { fetchUsers } from 'reducers/users';
+import { fetchUsersList } from 'reducers/users';
 import { Permission } from 'utils';
-import { compose, connect, PropTypes, styled } from 'utils/create';
+import { compose, connect, styled } from 'utils/create';
 
 const SearchWrapper = styled.div`
   margin-bottom: 1rem;
@@ -26,7 +26,7 @@ interface DispatchProps {
   handleFetchUsers: (params: any) => void;
 }
 
-type Props = OwnProps & StateProps & DispatchProps & IWithTranslate;
+type Props = OwnProps & StateProps & ResolveThunks<DispatchProps> & WithTranslateProps;
 
 const UsersPage: FunctionComponent<Props> = ({ _, handleFetchUsers, data }) => {
   const [search, setSearch] = useState('');
@@ -35,7 +35,7 @@ const UsersPage: FunctionComponent<Props> = ({ _, handleFetchUsers, data }) => {
 
   useEffect(() => {
     handleFetchUsers({ ...pagination, q: search });
-  }, [pagination, search]);
+  }, [handleFetchUsers, pagination, search]);
 
   const handleTableChange = (currentPagination: any, filters: any, sorter: any) => {
     setPagination({
@@ -87,7 +87,7 @@ const UsersPage: FunctionComponent<Props> = ({ _, handleFetchUsers, data }) => {
     {
       title: 'Service',
       dataIndex: 'identities',
-      render: (value:any) =>
+      render: (value: any) =>
         value.map(({ provider }: any) => (
           // @ts-ignore
           <Icon key={provider} type={{ 'google-oauth2': 'google' }[provider] || provider} />
@@ -141,12 +141,12 @@ const UsersPage: FunctionComponent<Props> = ({ _, handleFetchUsers, data }) => {
   );
 };
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps = (state: ApplicationState): StateProps => ({
   data: state.users.data,
 });
 
-const mapDispatchToProps = {
-  handleFetchUsers: fetchUsers,
+const mapDispatchToProps: DispatchProps = {
+  handleFetchUsers: fetchUsersList,
 };
 
 export default compose<FunctionComponent<OwnProps>>(

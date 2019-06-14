@@ -1,11 +1,15 @@
 import { withPermissions } from 'hocs';
-import React from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import { compose, connect, PropTypes, push } from 'utils/create';
+import React, { FunctionComponent } from 'react';
+import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { compose } from 'utils/create';
 import CollectionsPageEdit from './Edit';
 import CollectionsPageList from './List';
 
-const CollectionsPage = ({ match: { path } }) => (
+interface OwnProps {}
+
+type Props = OwnProps & RouteComponentProps;
+
+const CollectionsPage: FunctionComponent<Props> = ({ match: { path } }) => (
   <Switch>
     <Route exact component={CollectionsPageList} path={path} />
     <Route
@@ -19,19 +23,7 @@ const CollectionsPage = ({ match: { path } }) => (
   </Switch>
 );
 
-CollectionsPage.propTypes = {
-  match: PropTypes.match.isRequired,
-};
-
-const mapDispatchToProps = {
-  handlePush: push,
-};
-
-export default compose(
-  connect(
-    null,
-    mapDispatchToProps,
-  ),
+export default compose<FunctionComponent<OwnProps>>(
   withPermissions(),
   withRouter,
 )(CollectionsPage);

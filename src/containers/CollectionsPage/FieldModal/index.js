@@ -101,7 +101,7 @@ const mapStateToProps = (state, { field }) => ({
 });
 
 export default compose(
-  connect(mapStateToProps),
   withTranslate,
   withForm('fieldModal', { enableReinitialize: true }),
+  connect(mapStateToProps),
 )(FieldModal);

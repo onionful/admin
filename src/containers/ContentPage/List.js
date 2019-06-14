@@ -85,14 +85,14 @@ const mapDispatchToProps = {
 };
 
 export default compose(
+  withPermissions(),
+  // withLoading({
+  //   type: 'contentList',
+  //   action: ({ collection }) => fetchContentList(collection.get('id')),
+  // }),
+  withTranslate,
   connect(
     mapStateToProps,
     mapDispatchToProps,
   ),
-  withPermissions(),
-  withLoading({
-    type: 'contentList',
-    action: ({ collection }) => fetchContentList(collection.get('id')),
-  }),
-  withTranslate,
 )(ContentPageList);

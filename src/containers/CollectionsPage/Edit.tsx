@@ -1,37 +1,43 @@
 import { Button, Form, Input, message } from 'antd';
 import { SectionHeader } from 'components';
 import { Identifier } from 'components/Form';
-import { withForm, withLoading, withPermissions, withTranslate } from 'hocs';
+import { withForm, withPermissions, withTranslate, WithTranslateProps } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
-import React from 'react';
-import {
-  createCollection,
-  fetchCollection,
-  getCollection,
-  updateCollection,
-} from 'reducers/collections';
+import React, { FunctionComponent } from 'react';
+import { ApplicationState } from 'reducers';
+import { createCollection, getCollection, updateCollection } from 'reducers/collections';
+import { InjectedFormProps } from 'redux-form';
 import { Field, FieldArray, Fields } from 'redux-form/immutable';
+import { Collection } from 'types';
 import { compose, connect, PropTypes, push } from 'utils/create';
 import DraggableFieldsTable from './DraggableFieldsTable';
 
-const CollectionsPageEdit = (
-  {
-    _,
-    dirty,
-    handleSubmit,
-    isNew,
-    item,
-    handleCreateCollection,
-    handleUpdateCollection,
-    path,
-    pushState,
-  },
+interface OwnProps {
+  path: string;
+}
+
+interface StateProps {}
+
+interface DispatchProps {}
+
+type Props = OwnProps & StateProps & DispatchProps & InjectedFormProps & WithTranslateProps;
+
+const CollectionsPageEdit: FunctionComponent<Props> = (
+  { _, dirty, handleSubmit, path },
   { createField },
 ) => {
+  const pushState = (path: string) => {};
+  const handleCreateCollection = () => {};
+  const handleUpdateCollection = () => {};
+  const isNew = true;
+  const item = null;
+
   const handleCancelClick = () => pushState(path);
 
+  // @ts-ignore
   const handleFormSubmit = values =>
+    // @ts-ignore
     (isNew ? handleCreateCollection(values) : handleUpdateCollection(item.get('id'), values)).then(
       () => {
         message.success(_(`messages.collections.${isNew ? 'created' : 'updated'}`));
@@ -39,7 +45,8 @@ const CollectionsPageEdit = (
       },
     );
 
-  if (!isNew && !item.has('id')) {
+  if (!isNew && !item) {
+    // @ts-ignore
     throw new Error(_('errors.collectionNotFound'));
   }
 
@@ -57,6 +64,7 @@ const CollectionsPageEdit = (
           </Button.Group>
         }
         description={_(`collections.description.${isNew ? 'create' : 'edit'}`)}
+        // @ts-ignore
         title={_(`collections.title.${isNew ? 'create' : 'edit'}`, item)}
       />
 
@@ -73,30 +81,12 @@ const CollectionsPageEdit = (
   );
 };
 
-CollectionsPageEdit.propTypes = {
-  ...PropTypes.form,
-  _: PropTypes.func.isRequired,
-  path: PropTypes.string.isRequired,
-  handleCreateCollection: PropTypes.func,
-  handleUpdateCollection: PropTypes.func,
-  isNew: PropTypes.bool,
-  item: PropTypes.map,
-  pushState: PropTypes.func,
-};
-
-CollectionsPageEdit.defaultProps = {
-  handleCreateCollection: noop,
-  handleUpdateCollection: noop,
-  isNew: true,
-  item: Map(),
-  pushState: noop,
-};
-
 CollectionsPageEdit.contextTypes = {
   createField: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state, { match: { params } }) => {
+// @ts-ignore
+const mapStateToProps = (state: ApplicationState, { match: { params } }) => {
   const item = getCollection(state, params.id);
 
   return {
@@ -107,23 +97,8 @@ const mapStateToProps = (state, { match: { params } }) => {
   };
 };
 
-const mapDispatchToProps = {
-  pushState: push,
-  handleCreateCollection: createCollection,
-  handleUpdateCollection: updateCollection,
-};
-
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
   withPermissions(),
-  withLoading({
-    type: 'collectionsGet',
-    action: ({ id }) => fetchCollection(id),
-    condition: ({ id }) => !!id,
-  }),
   withForm('collections', { enableReinitialize: true }),
   withTranslate,
 )(CollectionsPageEdit);

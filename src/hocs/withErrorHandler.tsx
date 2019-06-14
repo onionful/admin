@@ -1,12 +1,12 @@
-import { IWithErrorHandler } from 'hocs/types';
+import { WithErrorHandlerProps } from 'hocs/types';
 import React, { Component, ComponentClass, ErrorInfo } from 'react';
 import { getDisplayName } from 'utils/create';
 
-export default <P, S>(WrappedComponent: ComponentClass<P & IWithErrorHandler, S>) => {
-  class WithErrorHandler extends Component {
+export default <P, S>(WrappedComponent: ComponentClass<P & WithErrorHandlerProps, S>) => {
+  class WithErrorHandler extends Component<P> {
     static displayName = `WithErrorHandler(${getDisplayName(WrappedComponent)})`;
 
-    readonly state: IWithErrorHandler = {
+    readonly state: WithErrorHandlerProps = {
       error: undefined,
       errorInfo: undefined,
     };
@@ -17,7 +17,7 @@ export default <P, S>(WrappedComponent: ComponentClass<P & IWithErrorHandler, S>
 
     render() {
       const { error, errorInfo } = this.state;
-      return <WrappedComponent {...this.props as P} error={error} errorInfo={errorInfo} />;
+      return <WrappedComponent {...this.props} error={error} errorInfo={errorInfo} />;
     }
   }
 

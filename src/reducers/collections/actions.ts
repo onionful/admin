@@ -1,39 +1,40 @@
-import { ApplicationState } from 'reducers';
 import { Collection } from 'types';
-import { api } from 'utils';
-import { CollectionsActionTypes } from './types';
+import { createAsyncAction } from 'typesafe-actions';
 
-export const fetchCollection = (id: string) => ({
-  type: CollectionsActionTypes.COLLECTIONS_GET,
-  payload: api.get(`/collections/${id}`),
-});
+const fetchCollectionAction = createAsyncAction(
+  'COLLECTIONS_GET_PENDING',
+  'COLLECTIONS_GET_FULFILLED',
+  'COLLECTIONS_GET_REJECTED',
+)<string, Collection, any>();
 
-export const fetchCollections = (params?: any) => ({
-  type: CollectionsActionTypes.COLLECTIONS_LIST,
-  payload: api.get('/collections', params),
-});
+const fetchCollectionsListAction = createAsyncAction(
+  'COLLECTIONS_LIST_PENDING',
+  'COLLECTIONS_LIST_FULFILLED',
+  'COLLECTIONS_LIST_REJECTED',
+)<any, Collection[], any>();
 
-export const createCollection = (data: any) => ({
-  type: CollectionsActionTypes.COLLECTIONS_CREATE,
-  payload: api.post('/collections', data),
-});
+const createCollectionAction = createAsyncAction(
+  'COLLECTIONS_CREATE_PENDING',
+  'COLLECTIONS_CREATE_FULFILLED',
+  'COLLECTIONS_CREATE_REJECTED',
+)<Collection, Collection, any>();
 
-export const updateCollection = (id: string, data: any) => ({
-  type: CollectionsActionTypes.COLLECTIONS_UPDATE,
-  payload: api.put(`/collections/${id}`, data),
-});
+const updateCollectionAction = createAsyncAction(
+  'COLLECTIONS_UPDATE_PENDING',
+  'COLLECTIONS_UPDATE_FULFILLED',
+  'COLLECTIONS_UPDATE_REJECTED',
+)<{ id: string; data: Collection }, { id: string; data: Collection }, any>();
 
-export const deleteCollection = (id: string) => ({
-  type: CollectionsActionTypes.COLLECTIONS_DELETE,
-  payload: api.delete(`/collections/${id}`),
-});
+const deleteCollectionAction = createAsyncAction(
+  'COLLECTIONS_DELETE_PENDING',
+  'COLLECTIONS_DELETE_FULFILLED',
+  'COLLECTIONS_DELETE_REJECTED',
+)<string, Collection, any>();
 
-export const getCollections = (state: ApplicationState) => state.collections.data;
-
-export const getCollection = (state: ApplicationState, id: string) =>
-  state.collections.data[id] ||
-  ({
-    id: undefined,
-    name: undefined,
-    fields: [{ id: 'id', name: 'ID', type: 'identifier', fieldRef: null }],
-  } as Collection);
+export default {
+  fetchCollectionAction,
+  fetchCollectionsListAction,
+  createCollectionAction,
+  updateCollectionAction,
+  deleteCollectionAction,
+};

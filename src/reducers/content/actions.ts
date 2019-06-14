@@ -1,39 +1,47 @@
-import { ApplicationState } from 'reducers';
-import { ContentActionTypes } from 'reducers/content/types';
-import { api } from 'utils';
+import { Collection, Content } from 'types';
+import { createAsyncAction } from 'typesafe-actions';
 
-export const fetchContent = (collection: string, id: string) => ({
-  type: ContentActionTypes.CONTENT_GET,
-  payload: api.get(`/content/${collection}/${id}`),
-  meta: { collection, id },
-});
+const fetchContentAction = createAsyncAction(
+  'CONTENT_GET_PENDING',
+  'CONTENT_GET_FULFILLED',
+  'CONTENT_GET_REJECTED',
+)<
+  { collection: string; id: string },
+  {
+    collection: string;
+    data: Collection;
+  },
+  any
+>();
 
-export const fetchContentList = (collection: string, params: any) => ({
-  type: ContentActionTypes.CONTENT_LIST,
-  payload: api.get(`/content/${collection}`, params),
-  meta: { collection },
-});
+const fetchContentListAction = createAsyncAction(
+  'CONTENT_LIST_PENDING',
+  'CONTENT_LIST_FULFILLED',
+  'CONTENT_LIST_REJECTED',
+)<{ collection: string; params: any }, { collection: string; data: Content[] }, any>();
 
-export const createContent = (collection: string, data: any) => ({
-  type: ContentActionTypes.CONTENT_CREATE,
-  payload: api.post(`/content/${collection}`, data),
-  meta: { collection },
-});
+const createContentAction = createAsyncAction(
+  'CONTENT_CREATE_PENDING',
+  'CONTENT_CREATE_FULFILLED',
+  'CONTENT_CREATE_REJECTED',
+)<{ collection: string; data: Content }, { id: string; data: Content }, any>();
 
-export const updateContent = (collection: string, id: string, data: any) => ({
-  type: ContentActionTypes.CONTENT_UPDATE,
-  payload: api.put(`/content/${collection}/${id}`, data),
-  meta: { collection, id },
-});
+const updateContentAction = createAsyncAction(
+  'CONTENT_UPDATE_PENDING',
+  'CONTENT_UPDATE_FULFILLED',
+  'CONTENT_UPDATE_REJECTED',
+)<{ collection: string; id: string; data: Content }, { id: string; data: Content }, any>();
 
-export const deleteContent = (collection: string, id: string) => ({
-  type: ContentActionTypes.CONTENT_DELETE,
-  payload: api.delete(`/content/${collection}/${id}`),
-  meta: { collection, id },
-});
+const deleteContentAction = createAsyncAction(
+  'CONTENT_DELETE_PENDING',
+  'CONTENT_DELETE_FULFILLED',
+  'CONTENT_DELETE_REJECTED',
+)<{ collection: string; id: string }, Content, any>();
 
-export const getContentList = (state: ApplicationState, collection: string) =>
-  state.content[collection];
-
-export const getContent = (state: ApplicationState, collection: string, id: string) =>
-  state.content[collection][id];
+export default {
+  fetchContentAction,
+  fetchContentListAction,
+  createContentAction,
+  updateContentAction,
+  deleteContentAction,
+};

@@ -1,7 +1,8 @@
 import { noop } from 'lodash';
 import React, { Component } from 'react';
-import { isAllowed } from 'reducers/auth';
 import { connect, PropTypes } from 'utils/create';
+
+const isAllowed = () => true;
 
 export default componentPermission => WrappedComponent =>
   connect(state => ({
