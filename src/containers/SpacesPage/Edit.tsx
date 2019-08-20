@@ -1,64 +1,72 @@
+import { createSpace, updateSpace } from 'actions/spaces';
 import { Button, Input, message } from 'antd';
 import { SectionHeader } from 'components';
-import { Identifier, UsersSelect } from 'components/Form';
-import { withForm, withPermissions, withTranslate, WithTranslateProps } from 'hocs';
+import { Identifier, renderField, UsersSelect } from 'components/Form';
+import { withPermissions, withTranslate, WithTranslateProps } from 'hocs';
 import React, { FunctionComponent, useCallback, useEffect } from 'react';
-import { ResolveThunks, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RouteComponentProps } from 'react-router';
 import { ApplicationState } from 'reducers';
-import { createSpace, getSpace, updateSpace } from 'reducers/spaces';
+import { getSpace } from 'reducers/spaces';
 import { fetchLabels } from 'reducers/users';
-import { InjectedFormProps } from 'redux-form';
-import { Field, Fields, Form } from 'redux-form/immutable';
+import { Field, Fields, Form, InjectedFormProps, reduxForm } from 'redux-form';
 import { Space } from 'types';
-import { compose, connect, PropTypes, push } from 'utils/create';
+import { compose, connect, push } from 'utils/create';
 
 interface OwnProps {
   path: string;
+  create?: boolean;
 }
 
-interface StateProps {
-  id: string;
-  isNew: boolean;
-  item?: Space;
-  initialValues?: Space;
-}
+type Props = OwnProps &
+  InjectedFormProps &
+  RouteComponentProps<{ id: string }> &
+  WithTranslateProps;
 
-type Props = OwnProps & StateProps & InjectedFormProps & WithTranslateProps;
-
-const SpacesPageEdit: FunctionComponent<Props> = (
-  { _, dirty, handleSubmit, initialize, isNew, item, path },
-  { createField },
-) => {
+const SpacesPageEdit: FunctionComponent<Props> = ({
+  _,
+  create,
+  dirty,
+  handleSubmit,
+  initialize,
+  path,
+  match: {
+    params: { id },
+  },
+}) => {
   const dispatch = useDispatch();
+  const space = useSelector((state: ApplicationState) => getSpace(state, id));
+
   const handleCreateSpace = useCallback((space: Space) => createSpace(space)(dispatch), [dispatch]);
   const handleUpdateSpace = useCallback(
     (id: string, space: Space) => updateSpace(id, space)(dispatch),
     [dispatch],
   );
   const handleFetchLabels = useCallback(
-    () => item && dispatch(fetchLabels(...item.owners, ...item.users)),
-    [dispatch],
+    () => space && dispatch(fetchLabels(...space.owners, ...space.users)),
+    [dispatch, space],
   );
   const handlePush = useCallback((path: string) => dispatch(push(path)), [dispatch]);
 
   useEffect(() => {
     handleFetchLabels();
-  }, [item]);
+  }, [space, handleFetchLabels]);
 
   const handleCancelClick = () => handlePush(path);
 
   const handleFormSubmit = (values: any) => {
     console.log('values', values);
-    return (isNew || !item ? handleCreateSpace(values) : handleUpdateSpace(item.id, values)).then(
-      () => {
-        message.success(_(`messages.spaces.${isNew ? 'created' : 'updated'}`));
-        // pushState(`${path}/edit/${values.id}`);
-        initialize(values);
-      },
-    );
+    return (create || !space
+      ? handleCreateSpace(values)
+      : handleUpdateSpace(space.id, values)
+    ).then(() => {
+      message.success(_(`messages.spaces.${create ? 'created' : 'updated'}`));
+      // pushState(`${path}/edit/${values.id}`);
+      initialize(values);
+    });
   };
 
-  if (!isNew && item) {
+  if (!create && space) {
     throw new Error(_('errors.collectionNotFound').toString());
   }
 
@@ -76,46 +84,36 @@ const SpacesPageEdit: FunctionComponent<Props> = (
             </Button>
           </Button.Group>
         }
-        description={_(`spaces.description.${isNew ? 'create' : 'edit'}`)}
-        title={_(`spaces.title.${isNew ? 'create' : 'edit'}`, item)}
+        description={_(`spaces.description.${create ? 'create' : 'edit'}`)}
+        title={_(`spaces.title.${create ? 'create' : 'edit'}`, space)}
       />
-      <Fields autoGenerateId={isNew} component={Identifier} names={['name', 'id']} />
-      <Field component={createField(Input)} label={_('global.url')} name="url" type="url" />
+      <Fields autoGenerateId={create} component={Identifier} names={['name', 'id']} />
+      <Field component={renderField(Input)} label={_('global.url')} name="url" type="url" />
       <Field
         currentUserRequired
-        component={createField(UsersSelect)}
+        component={renderField(UsersSelect)}
         label={_('global.owners')}
         name="owners"
       />
-      <Field component={createField(UsersSelect)} label={_('global.users')} name="users" />
+      <Field component={renderField(UsersSelect)} label={_('global.users')} name="users" />
     </Form>
   );
 };
 
-SpacesPageEdit.contextTypes = {
-  createField: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state: ApplicationState, { match: { params } }: any): StateProps => {
-  console.log('params', params);
-  const item = getSpace(state, params.id);
-
-  return {
-    id: params.id,
-    isNew: !params.id,
-    item,
-    initialValues: item,
-  };
-};
+const mapStateToProps = (
+  state: ApplicationState,
+  {
+    match: {
+      params: { id },
+    },
+  }: Props,
+) => ({
+  initialValues: getSpace(state, id),
+});
 
 export default compose<FunctionComponent<OwnProps>>(
-  withPermissions(),
-  // withLoading({
-  //   type: ['spacesList', 'spacesItem'],
-  //   action: ({ id }) => fetchSpace(id),
-  //   condition: ({ id }) => !!id,
-  // }),
-  withTranslate,
-  withForm('spaces'),
   connect(mapStateToProps),
+  reduxForm({ form: 'spaces' }),
+  withPermissions(),
+  withTranslate,
 )(SpacesPageEdit);

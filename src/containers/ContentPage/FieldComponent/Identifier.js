@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import { Lock } from 'components';
 import { isEmpty, kebabCase, noop } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { change, Field, formValueSelector } from 'redux-form/immutable';
+import { change, Field, formValueSelector } from 'redux-form';
 import { connect, PropTypes } from 'utils/create';
 
 const Identifier = ({ field, handleChange, refValue }, { createField }) => {

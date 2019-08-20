@@ -1,10 +1,10 @@
 import { WithTranslateProps } from 'hocs';
-import React, { ComponentClass, ComponentType } from 'react';
+import React, { ComponentType } from 'react';
 import { getTranslate, withLocalize } from 'react-localize-redux';
 import { ApplicationState } from 'reducers';
 import { compose, connect, getDisplayName } from 'utils/create';
 
-export default <P extends {}>(WrappedComponent: ComponentClass) => {
+export default <P extends {}>(WrappedComponent: ComponentType) => {
   const WithTranslate: ComponentType<WithTranslateProps> = props => <WrappedComponent {...props} />;
 
   WithTranslate.displayName = `WithTranslate(${getDisplayName(WrappedComponent)})`;

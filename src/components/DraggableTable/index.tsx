@@ -1,9 +1,14 @@
 import { Table } from 'antd';
-import React from 'react';
-import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
+import React, { FunctionComponent } from 'react';
+import { DndProvider, DragSource, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import { PropTypes, styled } from 'utils/create';
+import { styled } from 'utils/create';
 import BodyRow from './BodyRow';
+
+interface Props {
+  onSort: (dragIndex: number, index: number) => void;
+  index: number;
+}
 
 const StyledTable = styled(Table)`
   & table {
@@ -16,7 +21,7 @@ const StyledTable = styled(Table)`
   }
 `;
 
-const DraggableBodyRow = DropTarget(
+const DraggableBodyRow = DropTarget<Props>(
   'row',
   {
     drop: ({ index, onSort }, monitor) => {
@@ -34,7 +39,7 @@ const DraggableBodyRow = DropTarget(
     sourceClientOffset: monitor.getSourceClientOffset(),
   }),
 )(
-  DragSource('row', { beginDrag: ({ index }) => ({ index }) }, (connect, monitor) => ({
+  DragSource<Props>('row', { beginDrag: ({ index }) => ({ index }) }, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
     dragRow: monitor.getItem(),
     clientOffset: monitor.getClientOffset(),
@@ -42,16 +47,14 @@ const DraggableBodyRow = DropTarget(
   }))(BodyRow),
 );
 
-const DraggableTable = ({ onSort, ...props }) => (
-  <StyledTable
-    {...props}
-    components={{ body: { row: DraggableBodyRow } }}
-    onRow={(record, index) => ({ index, onSort })}
-  />
+const DraggableTable: FunctionComponent<Props> = ({ onSort, ...props }) => (
+  <DndProvider backend={HTML5Backend}>
+    <StyledTable
+      {...props}
+      components={{ body: { row: DraggableBodyRow } }}
+      onRow={(record, index) => ({ index, onSort })}
+    />
+  </DndProvider>
 );
 
-DraggableTable.propTypes = {
-  onSort: PropTypes.func.isRequired,
-};
-
-export default DragDropContext(HTML5Backend)(DraggableTable);
+export default DraggableTable;

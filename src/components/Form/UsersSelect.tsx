@@ -1,49 +1,41 @@
 import { message, Select, Spin } from 'antd';
 import { LabeledValue } from 'antd/lib/select';
 import { UserLabel } from 'components';
-import { withTranslate, WithTranslateProps } from 'hocs';
 import { debounce, isEmpty } from 'lodash';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import { ApplicationState } from 'reducers';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { getUserId } from 'reducers/profile';
 import { findUsers } from 'reducers/users';
 import { User } from 'types';
-import { compose, connect } from 'utils/create';
 
-interface OwnProps {
+interface Props {
   currentUserRequired: boolean;
   onChange: any;
   value: string[];
 }
 
-interface StateProps {
-  currentUserId?: string;
-}
-
-type Props = OwnProps & StateProps & WithTranslateProps;
-
-const UsersSelect: FunctionComponent<Props> = ({
-  _,
-  currentUserId,
-  currentUserRequired,
-  onChange,
-  value = [],
-}) => {
+const UsersSelect: FunctionComponent<Props> = ({ currentUserRequired, onChange, value = [] }) => {
+  const { t } = useTranslation();
   const [data, setData] = useState<User[]>([]);
   const [fetching, setFetching] = useState(false);
+  const currentUserId = useSelector(getUserId);
 
-  const handleSearch = debounce(searchValue => {
-    setData([]);
+  const handleSearch = useCallback(
+    debounce(searchValue => {
+      setData([]);
 
-    if (searchValue.trim().length >= 3) {
-      setFetching(true);
+      if (searchValue.trim().length >= 3) {
+        setFetching(true);
 
-      findUsers(searchValue).then(users => {
-        setFetching(false);
-        setData(users.map(user => ({ ...user, id: user.user_id })));
-      });
-    }
-  }, 500);
+        findUsers(searchValue).then(users => {
+          setFetching(false);
+          setData(users.map(user => ({ ...user, id: user.user_id })));
+        });
+      }
+    }, 500),
+    [],
+  );
 
   const handleChange = useCallback(
     (values: LabeledValue[] = []) => {
@@ -64,15 +56,18 @@ const UsersSelect: FunctionComponent<Props> = ({
 
   useEffect(() => {
     if (currentUserRequired && isEmpty(value)) {
-      handleChange();
+      // handleChange();
     }
   }, [currentUserRequired, handleChange, value]);
 
-  const handleDeselect = ({ key }: LabeledValue = {} as LabeledValue) => {
-    if (currentUserRequired && key === currentUserId) {
-      message.warning(_('messages.spaces.currentUserRequired'));
-    }
-  };
+  const handleDeselect = useCallback(
+    ({ key }: LabeledValue = {} as LabeledValue) => {
+      if (currentUserRequired && key === currentUserId) {
+        message.warning(t('messages.spaces.currentUserRequired'));
+      }
+    },
+    [currentUserRequired, currentUserId, t],
+  );
 
   return (
     <Select
@@ -80,7 +75,7 @@ const UsersSelect: FunctionComponent<Props> = ({
       filterOption={false}
       mode="multiple"
       notFoundContent={fetching ? <Spin size="small" /> : null}
-      placeholder={_('global.selectUsers')}
+      placeholder={t('global.selectUsers')}
       value={value.map(id => ({ key: id, label: <UserLabel id={id} /> }))}
       onChange={handleChange}
       onDeselect={handleDeselect}
@@ -95,11 +90,4 @@ const UsersSelect: FunctionComponent<Props> = ({
   );
 };
 
-const mapStateToProps = (state: ApplicationState): StateProps => ({
-  currentUserId: getUserId(state),
-});
-
-export default compose<FunctionComponent<OwnProps>>(
-  withTranslate,
-  connect(mapStateToProps),
-)(UsersSelect);
+export default UsersSelect;

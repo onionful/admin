@@ -31,7 +31,7 @@ export default () => {
   );
 
   const store = createStore(reducers(history), initialState, composedEnhancers);
-  sagaMiddleware.run(sagas);
+  sagaMiddleware.run(sagas, store);
 
   store.dispatch(initialize(translations));
   translations.languages.forEach(({ code, data }: Language) => {

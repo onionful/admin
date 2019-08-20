@@ -1,7 +1,7 @@
 import { Checkbox } from 'antd';
 import { withTranslate } from 'hocs';
 import React from 'react';
-import { Field } from 'redux-form/immutable';
+import { Field } from 'redux-form';
 import { compose, PropTypes } from 'utils/create';
 
 const Editor = ({ _, type }, { createField }) => (

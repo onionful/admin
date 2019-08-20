@@ -1,3 +1,4 @@
+import { fetchProfile } from 'actions/profile';
 import { Icon, Layout, Menu } from 'antd';
 import { ClickParam } from 'antd/es/menu';
 import { Logo } from 'components';
@@ -16,22 +17,36 @@ import {
   WithErrorHandlerProps,
   withLoading,
   WithLoadingProps,
-  withTranslate,
   WithTranslateProps,
 } from 'hocs';
 import { useAuth } from 'hooks';
-import React, { ComponentType, FunctionComponent, useEffect, useState } from 'react';
-import { ResolveThunks } from 'react-redux';
+import React, { ComponentType, FunctionComponent, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, Switch, withRouter } from 'react-router-dom';
-import { ApplicationState } from 'reducers';
 import { getCollections } from 'reducers/collections';
-import { fetchProfile } from 'reducers/profile';
 import { getCurrentSpace } from 'reducers/spaces';
-import { Collection, Space } from 'types';
 import { media, Permission } from 'utils';
-import { compose, connect, push, styled } from 'utils/create';
+import { compose, push, styled } from 'utils/create';
 import ProfileBox from './ProfileBox';
 import SpacesBox from './SpacesBox';
+
+interface MenuItem {
+  key: string;
+  icon: string;
+  name?: string;
+  permission?: string;
+  disabled?: boolean;
+  component?: ComponentType;
+  render?: (props: any) => JSX.Element;
+}
+
+interface MenuItemGroup {
+  key: string;
+  items: MenuItem[];
+}
+
+type Props = WithErrorHandlerProps & WithLoadingProps & WithTranslateProps;
 
 const Container = styled(Layout.Content)`
   position: relative;
@@ -50,67 +65,33 @@ const StyledLogo = styled(Logo)`
   width: 50%;
 `;
 
-interface MenuItem {
-  key: string;
-  icon: string;
-  name?: string;
-  permission?: string;
-  disabled?: boolean;
-  component?: ComponentType;
-  render?: (props: any) => JSX.Element;
-}
-
-interface MenuItemGroup {
-  key: string;
-  items: MenuItem[];
-}
-
-interface OwnProps {}
-
-interface StateProps {
-  space?: Space;
-  collections: { [key: string]: Collection };
-}
-
-interface DispatchProps {
-  handleFetchProfile: typeof fetchProfile;
-  handlePush: typeof push;
-}
-
-type Props = OwnProps &
-  StateProps &
-  ResolveThunks<DispatchProps> &
-  WithErrorHandlerProps &
-  WithLoadingProps &
-  WithTranslateProps;
-
-const App: FunctionComponent<Props> = ({
-  _,
-  error,
-  errorInfo,
-  handleFetchProfile,
-  handlePush,
-  isLoading,
-  space,
-  collections,
-}) => {
-  useEffect(() => {
-    handleFetchProfile();
-  }, [handleFetchProfile]);
-
+const App: FunctionComponent<Props> = ({ error, errorInfo, isLoading }) => {
+  const dispatch = useDispatch();
+  const collections = useSelector(getCollections);
+  const space = useSelector(getCurrentSpace);
   const [collapsed, setCollapsed] = useState(false);
+  const { t } = useTranslation();
   const { logout } = useAuth();
 
-  const handleMenuClick = ({ key }: ClickParam) => {
-    switch (key) {
-      case 'logout':
-        logout();
-        return handlePush('/login');
-      default:
-        return handlePush(`/${key}`);
-    }
-  };
-  const handleErrorDismiss = () => {};
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
+
+  const handlePush = useCallback((path: string) => dispatch(push(path)), [dispatch]);
+
+  const handleMenuClick = useCallback(
+    ({ key }: ClickParam) => {
+      switch (key) {
+        case 'logout':
+          logout();
+          return handlePush('/login');
+        default:
+          return handlePush(`/${key}`);
+      }
+    },
+    [handlePush, logout],
+  );
+  const handleErrorDismiss = useCallback(() => {}, []);
 
   // const hasPermissions = ({ permission }) => hasPermission(permission) || true;
 
@@ -161,16 +142,16 @@ const App: FunctionComponent<Props> = ({
         </Link>
 
         <ProfileBox collapsed={collapsed} />
-        <SpacesBox collapsed={collapsed} />
+        <SpacesBox collapsed={collapsed} space={space} />
 
         <Menu defaultSelectedKeys={['4']} mode="inline" theme="dark" onClick={handleMenuClick}>
           {menuItems.map(group => (
-            <Menu.ItemGroup key={group.key} title={_(`menu.${group.key}`)}>
+            <Menu.ItemGroup key={group.key} title={t(`menu.${group.key}`)}>
               {/*{group.items.filter(hasPermissions)}*/}
               {group.items.map(item => (
                 <Menu.Item key={item.key} disabled={item.disabled}>
                   <Icon type={item.icon} />
-                  <span>{item.name || _(`menu.${item.key}`) || ''}</span>
+                  <span>{item.name || t(`menu.${item.key}`) || ''}</span>
                 </Menu.Item>
               ))}
             </Menu.ItemGroup>
@@ -197,32 +178,15 @@ const App: FunctionComponent<Props> = ({
               </Content>
             ))}
         </Container>
-        <Layout.Footer style={{ textAlign: 'center' }}>
-          {_('global.copyrights') || ''}
-        </Layout.Footer>
+        <Layout.Footer style={{ textAlign: 'center' }}>{t('global.copyrights')}</Layout.Footer>
       </Layout>
     </Layout>
   );
 };
 
-const mapStateToProps = (state: ApplicationState): StateProps => ({
-  space: getCurrentSpace(state) as Space,
-  collections: getCollections(state),
-});
-
-const mapDispatchToProps: DispatchProps = {
-  handleFetchProfile: fetchProfile,
-  handlePush: push,
-};
-
-export default compose<FunctionComponent<OwnProps>>(
+export default compose<FunctionComponent>(
   withRouter,
   withAuthCheck,
   withErrorHandler,
   withLoading('profileFetch'),
-  withTranslate,
-  connect<StateProps, DispatchProps, OwnProps, ApplicationState>(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
 )(App);

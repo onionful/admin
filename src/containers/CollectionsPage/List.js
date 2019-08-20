@@ -1,10 +1,11 @@
+import { deleteCollection } from 'actions/collections';
 import { Button, message, Popconfirm, Table } from 'antd';
-import { SectionHeader } from 'components/index';
-import { withLoading, withPermissions, withTranslate } from 'hocs';
+import { SectionHeader } from 'components';
+import { withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import React from 'react';
-import { deleteCollection, fetchCollectionsList, getCollections } from 'reducers/collections';
+import { getCollections } from 'reducers/collections';
 import { compose, connect, PropTypes, push } from 'utils/create';
 
 const CollectionsPageList = ({ _, data, handleDeleteCollection, handlePush, match: { path } }) => {
@@ -39,7 +40,7 @@ const CollectionsPageList = ({ _, data, handleDeleteCollection, handlePush, matc
   ];
 
   return (
-    <div>
+    <>
       <SectionHeader
         action={
           <Button htmlType="submit" icon="plus" type="primary" onClick={onCreateClick}>
@@ -74,7 +75,7 @@ const CollectionsPageList = ({ _, data, handleDeleteCollection, handlePush, matc
         rowKey="id"
         size="small"
       />
-    </div>
+    </>
   );
 };
 
@@ -103,10 +104,6 @@ const mapDispatchToProps = {
 
 export default compose(
   withPermissions(),
-  // withLoading({
-  //   type: 'collectionsList',
-  //   action: fetchCollections,
-  // }),
   withTranslate,
   connect(
     mapStateToProps,

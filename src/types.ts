@@ -2,11 +2,14 @@ import { Permission } from 'utils';
 
 export interface Profile {
   user_id: string;
-  user_metadata: any;
+  user_metadata: {
+    space: string;
+  };
   name: string;
   nickname: string;
   permissions: Permission[];
   picture: string;
+  space: string;
 }
 
 export interface Collection {

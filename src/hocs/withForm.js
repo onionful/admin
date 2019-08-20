@@ -1,7 +1,7 @@
 import { Form } from 'antd';
 import { isEmpty, memoize } from 'lodash';
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form/immutable';
+import { reduxForm } from 'redux-form';
 import { PropTypes } from 'utils/create';
 
 const Field = memoize(FormComponent => {

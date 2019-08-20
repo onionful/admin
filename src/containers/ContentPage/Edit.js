@@ -1,10 +1,10 @@
 import { Button, Form, message } from 'antd';
 import { SectionHeader } from 'components';
-import { withForm, withLoading, withPermissions, withTranslate } from 'hocs';
+import { withForm, withPermissions, withTranslate } from 'hocs';
 import { Map } from 'immutable';
 import { noop } from 'lodash';
 import React from 'react';
-import { createContent, fetchContent, getContent, updateContent } from 'reducers/content';
+import { createContent, getContent, updateContent } from 'reducers/content';
 import { compose, connect, PropTypes, push } from 'utils/create';
 import FieldComponent from './FieldComponent';
 
@@ -98,11 +98,6 @@ const mapDispatchToProps = {
 
 export default compose(
   withPermissions(),
-  // withLoading({
-  //   type: 'contentGet',
-  //   action: ({ collection, id }) => fetchContent(collection.get('id'), id),
-  //   condition: ({ id }) => !!id,
-  // }),
   withForm('content', { enableReinitialize: true }),
   withTranslate,
   connect(

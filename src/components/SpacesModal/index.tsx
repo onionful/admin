@@ -1,23 +1,19 @@
 import { Button, List, Modal } from 'antd';
 import { Logo } from 'components';
-import { WithTranslateProps, withTranslate } from 'hocs';
 import React, { FunctionComponent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { ApplicationState } from 'reducers';
+import { getCurrentSpace } from 'reducers/spaces';
 import { Space } from 'types';
 import { colors } from 'utils';
-import { compose, connect, styled } from 'utils/create';
+import { styled } from 'utils/create';
 
-interface OwnProps {
+interface Props {
   onCreate: () => void;
-  onSetSpace: (spaceId: string) => void;
+  onSetSpace: (space: Space) => void;
   visible: boolean;
 }
-
-interface StateProps {
-  spaces: Space[];
-}
-
-type Props = OwnProps & StateProps & WithTranslateProps;
 
 const StyledLogo = styled(Logo)`
   display: block;
@@ -37,7 +33,8 @@ const Item = styled(List.Item)`
   color: ${colors.white};
   font-size: 1.2rem;
 
-  &:hover {
+  &:hover,
+  &.selected {
     background: ${colors.onion};
     color: ${colors.black};
   }
@@ -59,34 +56,40 @@ const EmptyText = styled.span`
   font-style: italic;
 `;
 
-const SpacesModal: FunctionComponent<Props> = ({ _, onCreate, onSetSpace, spaces, visible }) => (
-  <Modal
-    bodyStyle={{ backgroundColor: colors.background, color: colors.white }}
-    closable={false}
-    footer={null}
-    visible={visible}
-  >
-    <StyledLogo />
-    <Header>{_('spacesModal.select')}</Header>
-    <List
-      bordered
-      dataSource={spaces}
-      locale={{ emptyText: <EmptyText>{_('spacesModal.noData')}</EmptyText> }}
-      renderItem={(item: Space) => <Item onClick={() => onSetSpace(item.id)}>{item.name}</Item>}
-    />
-    <CreateSpace>
-      <Button ghost icon="rocket" onClick={onCreate}>
-        {_('spacesModal.create')}
-      </Button>
-    </CreateSpace>
-  </Modal>
-);
+const SpacesModal: FunctionComponent<Props> = ({ onCreate, onSetSpace, visible }) => {
+  const { t } = useTranslation();
+  const spaces = useSelector((state: ApplicationState) => Object.values(state.spaces.data));
+  const current = useSelector(getCurrentSpace);
 
-const mapStateToProps = (state: ApplicationState): StateProps => ({
-  spaces: Object.values(state.spaces.data),
-});
+  return (
+    <Modal
+      bodyStyle={{ backgroundColor: colors.background, color: colors.white }}
+      closable={false}
+      footer={null}
+      visible={visible}
+    >
+      <StyledLogo />
+      <Header>{t('spacesModal.select')}</Header>
+      <List
+        bordered
+        dataSource={spaces}
+        locale={{ emptyText: <EmptyText>{t('spacesModal.noData')}</EmptyText> }}
+        renderItem={(item: Space) => (
+          <Item
+            className={item === current ? 'selected' : undefined}
+            onClick={() => onSetSpace(item)}
+          >
+            {item.name}
+          </Item>
+        )}
+      />
+      <CreateSpace>
+        <Button ghost icon="rocket" onClick={onCreate}>
+          {t('spacesModal.create')}
+        </Button>
+      </CreateSpace>
+    </Modal>
+  );
+};
 
-export default compose<FunctionComponent<OwnProps>>(
-  withTranslate,
-  connect(mapStateToProps),
-)(SpacesModal);
+export default SpacesModal;

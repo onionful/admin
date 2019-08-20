@@ -8,6 +8,7 @@ import { LocalizeProvider } from 'react-localize-redux';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import createStore, { history } from 'store';
+import 'translations/i18n';
 import { css } from 'utils/create';
 import * as serviceWorker from './serviceWorker';
 

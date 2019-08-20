@@ -1,27 +1,18 @@
+import {  setSpace, fetchSpacesList } from 'actions/spaces';
 import { Icon, Tooltip } from 'antd';
 import { SpacesModal } from 'components';
-import { WithTranslateProps, withTranslate } from 'hocs';
-import React, { Fragment, FunctionComponent, useState } from 'react';
-import { ResolveThunks } from 'react-redux';
-import { ApplicationState } from 'reducers';
-import { getCurrentSpace } from 'reducers/spaces';
+import { withLoading } from 'hocs';
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { Space } from 'types';
 import { acronym, colors } from 'utils';
-import { compose, connect, push, styled } from 'utils/create';
+import { push, styled } from 'utils/create';
 
-interface OwnProps {
+interface Props {
   collapsed: boolean;
-}
-
-interface StateProps {
   space?: Space;
 }
-
-interface DispatchProps {
-  handlePush: typeof push;
-}
-
-type Props = OwnProps & StateProps & ResolveThunks<DispatchProps> & WithTranslateProps;
 
 const Text = styled.div`
   cursor: pointer;
@@ -48,12 +39,31 @@ const NoSpaceLabel = styled.div`
   color: ${colors.onion};
 `;
 
-const SpacesBox: FunctionComponent<Props> = ({ _, collapsed, handlePush, space }) => {
-  const [spacesModalVisible, setSpacesModalVisible] = useState(space === undefined);
-  const noSpaceLabel = <NoSpaceLabel>{_('spacesModal.notSelected')}</NoSpaceLabel>;
+const SpacesBox: FunctionComponent<Props> = ({ collapsed, space }) => {
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const [spacesModalVisible, setSpacesModalVisible] = useState(false);
+
+  const handleOnCreate = useCallback(() => {
+    setSpacesModalVisible(false);
+    dispatch(push('/spaces/create'));
+  }, [dispatch]);
+  const handleSetSpace = useCallback(
+    (space: Space) => {
+      setSpacesModalVisible(false);
+      dispatch(setSpace(space));
+    },
+    [dispatch],
+  );
+
+  useEffect(() => {
+    dispatch(fetchSpacesList());
+  }, [dispatch]);
+
+  const noSpaceLabel = <NoSpaceLabel>{t('spacesModal.notSelected')}</NoSpaceLabel>;
 
   return (
-    <Fragment>
+    <>
       <Tooltip
         placement="right"
         title={collapsed ? (space ? space.name : noSpaceLabel) : undefined}
@@ -67,41 +77,20 @@ const SpacesBox: FunctionComponent<Props> = ({ _, collapsed, handlePush, space }
               space.name
             )
           ) : (
-            <Fragment>
+            <>
               <NoSpaceIcon type="warning" />
               {!collapsed && noSpaceLabel}
-            </Fragment>
+            </>
           )}
         </Text>
       </Tooltip>
       <SpacesModal
         visible={spacesModalVisible}
-        onCreate={() => {
-          setSpacesModalVisible(false);
-          handlePush('/spaces/create');
-        }}
-        // TODO test onSetSpace
-        onSetSpace={(spaceId: string) => {
-          setSpacesModalVisible(false);
-          // handleSetSpace(spaceId);
-        }}
+        onCreate={handleOnCreate}
+        onSetSpace={handleSetSpace}
       />
-    </Fragment>
+    </>
   );
 };
 
-const mapStateToProps = (state: ApplicationState): StateProps => ({
-  space: getCurrentSpace(state),
-});
-
-const mapDispatchToProps: DispatchProps = {
-  handlePush: push,
-};
-
-export default compose<FunctionComponent<OwnProps>>(
-  withTranslate,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
-)(SpacesBox);
+export default withLoading('profileFetch')(SpacesBox);

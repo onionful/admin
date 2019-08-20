@@ -2,15 +2,19 @@ import { ClassNames } from '@emotion/core';
 import { Spin } from 'antd';
 import { WithLoadingProps } from 'hocs/types';
 import React, { ComponentType, FunctionComponent } from 'react';
+import { useSelector } from 'react-redux';
 import { ApplicationState } from 'reducers';
 import { isSomeLoading } from 'reducers/loading';
-import { connect } from 'utils/create';
 
-export default <P extends {}>(type: string | string[], showSpinner = true) => (
+export default (type: string | string[], showSpinner = true) => <P extends {}>(
   WrappedComponent: ComponentType<P & WithLoadingProps>,
 ) => {
-  const WithLoading: FunctionComponent<WithLoadingProps> = ({ isLoading, ...props }) =>
-    showSpinner ? (
+  const WithLoading: FunctionComponent<P> = props => {
+    const isLoading = useSelector((state: ApplicationState) =>
+      isSomeLoading(state, ([] as string[]).concat(type)),
+    );
+
+    return showSpinner ? (
       <ClassNames>
         {({ css }) => (
           <Spin
@@ -19,17 +23,14 @@ export default <P extends {}>(type: string | string[], showSpinner = true) => (
               width: 100%;
             `}
           >
-            <WrappedComponent {...props as P} isLoading={isLoading} />
+            <WrappedComponent {...(props as P)} isLoading={isLoading} />
           </Spin>
         )}
       </ClassNames>
     ) : (
-      <WrappedComponent {...props as P} isLoading={isLoading} />
+      <WrappedComponent {...(props as P)} isLoading={isLoading} />
     );
+  };
 
-  const mapStateToProps = (state: ApplicationState): WithLoadingProps => ({
-    isLoading: isSomeLoading(state, ([] as string[]).concat(type)),
-  });
-
-  return connect(mapStateToProps)(WithLoading);
+  return WithLoading;
 };

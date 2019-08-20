@@ -1,9 +1,9 @@
 import { ActionType } from 'typesafe-actions';
 
-declare module 'typesafe-actions' {
-  import { ActionType } from 'typesafe-actions';
+export type RootAction = ActionType<typeof import('actions').default>;
 
+declare module 'typesafe-actions' {
   interface Types {
-    RootAction: ActionType<typeof import('./actions').default>;
+    RootAction: RootAction;
   }
 }

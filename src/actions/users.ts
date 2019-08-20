@@ -11,7 +11,7 @@ const fetchLabelsAction = createAsyncAction(
   'USERS_LABELS_FETCH_PENDING',
   'USERS_LABELS_FETCH_FULFILLED',
   'USERS_LABELS_FETCH_REJECTED',
-)<undefined, User[], any>();
+)<string[], User[], any>();
 
 export default {
   fetchUsersListAction,

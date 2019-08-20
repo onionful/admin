@@ -3,7 +3,7 @@ import { withTranslate } from 'hocs';
 import { List } from 'immutable';
 import { noop } from 'lodash';
 import React from 'react';
-import { change, Field, formValueSelector } from 'redux-form/immutable';
+import { change, Field, formValueSelector } from 'redux-form';
 import { compose, connect, PropTypes, styled } from 'utils/create';
 
 const allowedRefTypes = ['string'];

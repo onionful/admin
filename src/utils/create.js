@@ -5,7 +5,7 @@ import {
   fieldInputPropTypes,
   fieldMetaPropTypes,
   propTypes as RFPropTypes,
-} from 'redux-form/immutable';
+} from 'redux-form';
 
 export { default as styled } from '@emotion/styled';
 export { css } from '@emotion/core';

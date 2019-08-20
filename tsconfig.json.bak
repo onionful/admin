@@ -19,6 +19,8 @@
     "noEmit": true,
     "jsx": "preserve",
     "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "downlevelIteration": true
   },
   "include": [

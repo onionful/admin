@@ -1,28 +1,16 @@
 import { Avatar, Spin } from 'antd';
 import { get, isEmpty } from 'lodash';
 import React, { FunctionComponent, useEffect } from 'react';
-import { HandleThunkActionCreator, ResolveThunks } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'reducers';
 import { fetchLabels, getUserLabel } from 'reducers/users';
-import { User } from 'types';
-import { connect, styled } from 'utils/create';
+import { styled } from 'utils/create';
 
-interface OwnProps {
+interface Props {
   id: string;
   className?: string;
   simple?: boolean;
 }
-
-interface StateProps {
-  isLoading: boolean;
-  user?: User;
-}
-
-interface DispatchProps {
-  handleFetchLabels: typeof fetchLabels;
-}
-
-type Props = OwnProps & StateProps & ResolveThunks<DispatchProps>;
 
 const Container = styled.span`
   display: flex;
@@ -32,19 +20,20 @@ const UserName = styled.span`
   margin-left: 0.5rem;
 `;
 
-const UserLabel: FunctionComponent<Props> = ({
-  className,
-  handleFetchLabels,
-  id,
-  isLoading,
-  simple,
-  user,
-}) => {
+const UserLabel: FunctionComponent<Props> = ({ className, id, simple }) => {
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state: ApplicationState) =>
+    get(state.loading, ['usersLabels', id]),
+  );
+  const user = useSelector((state: ApplicationState) => getUserLabel(state, id));
+
+  console.log('isLoading', id, isLoading);
+
   useEffect(() => {
     if (!isLoading && isEmpty(user)) {
-      handleFetchLabels(id);
+      dispatch(fetchLabels(id));
     }
-  }, [handleFetchLabels, id, isLoading, user]);
+  }, [dispatch, fetchLabels, id, isLoading, user]);
 
   return (
     // TODO check if className is required here
@@ -57,16 +46,4 @@ const UserLabel: FunctionComponent<Props> = ({
   );
 };
 
-const mapStateToProps = (state: ApplicationState, { id }: OwnProps): StateProps => ({
-  isLoading: get(state.loading, ['usersLabels', id]),
-  user: getUserLabel(state, id),
-});
-
-const mapDispatchToProps: DispatchProps = {
-  handleFetchLabels: fetchLabels,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(UserLabel);
+export default UserLabel;

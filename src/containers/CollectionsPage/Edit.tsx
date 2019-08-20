@@ -2,15 +2,10 @@ import { Button, Form, Input, message } from 'antd';
 import { SectionHeader } from 'components';
 import { Identifier } from 'components/Form';
 import { withForm, withPermissions, withTranslate, WithTranslateProps } from 'hocs';
-import { Map } from 'immutable';
-import { noop } from 'lodash';
 import React, { FunctionComponent } from 'react';
-import { ApplicationState } from 'reducers';
-import { createCollection, getCollection, updateCollection } from 'reducers/collections';
 import { InjectedFormProps } from 'redux-form';
-import { Field, FieldArray, Fields } from 'redux-form/immutable';
-import { Collection } from 'types';
-import { compose, connect, PropTypes, push } from 'utils/create';
+import { Field, FieldArray, Fields } from 'redux-form';
+import { compose, PropTypes } from 'utils/create';
 import DraggableFieldsTable from './DraggableFieldsTable';
 
 interface OwnProps {
@@ -85,17 +80,16 @@ CollectionsPageEdit.contextTypes = {
   createField: PropTypes.func.isRequired,
 };
 
-// @ts-ignore
-const mapStateToProps = (state: ApplicationState, { match: { params } }) => {
-  const item = getCollection(state, params.id);
-
-  return {
-    id: params.id,
-    item,
-    isNew: !params.id,
-    initialValues: item,
-  };
-};
+// const mapStateToProps = (state: ApplicationState, { match: { params } }) => {
+//   const item = getCollection(state, params.id);
+//
+//   return {
+//     id: params.id,
+//     item,
+//     isNew: !params.id,
+//     initialValues: item,
+//   };
+// };
 
 export default compose(
   withPermissions(),

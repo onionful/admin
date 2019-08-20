@@ -1,7 +1,11 @@
 import { Tooltip } from 'antd';
 import { UserLabel } from 'components';
-import React from 'react';
-import { PropTypes, styled } from 'utils/create';
+import React, { FunctionComponent } from 'react';
+import { styled } from 'utils/create';
+
+interface Props {
+  ids: string[];
+}
 
 const StyledTooltip = styled(Tooltip)`
   display: flex;
@@ -12,15 +16,15 @@ const StyledUserLabel = styled(UserLabel)`
   margin: 0.5rem 0.1rem;
 `;
 
-const UserLabelGroup = ({ ids }) => (
+const UserLabelGroup: FunctionComponent<Props> = ({ ids }) => (
   <StyledTooltip
     placement="left"
     title={
-      <div>
+      <>
         {ids.map(id => (
           <StyledUserLabel key={id} id={id} />
         ))}
-      </div>
+      </>
     }
   >
     {ids.map(id => (
@@ -28,13 +32,5 @@ const UserLabelGroup = ({ ids }) => (
     ))}
   </StyledTooltip>
 );
-
-UserLabelGroup.propTypes = {
-  ids: PropTypes.arrayOf(PropTypes.string),
-};
-
-UserLabelGroup.defaultProps = {
-  ids: [],
-};
 
 export default UserLabelGroup;
