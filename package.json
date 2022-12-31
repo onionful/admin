@@ -15,7 +15,7 @@
     "auth0-js": "^9.10.0",
     "axios": "^0.18.0",
     "connected-react-router": "^6.3.1",
-    "flat": "^4.1.0",
+    "flat": "^5.0.1",
     "history": "^4.7.2",
     "http-errors": "^1.7.2",
     "immutable": "^4.0.0-rc.12",
